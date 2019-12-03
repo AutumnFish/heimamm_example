@@ -6,9 +6,11 @@ import router from '@/router/index.js'
 // 整合Element-ui
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-
 // use Element-ui
 Vue.use(ElementUI)
+
+// 导入全局样式
+import '@/styles/base.less'
 
 Vue.config.productionTip = false
 
