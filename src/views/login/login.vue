@@ -53,9 +53,9 @@
         </el-form-item>
         <el-form-item class="btn-box">
           <el-button type="primary" @click="submitForm('ruleForm')"
-            >立即创建</el-button
+            >登录</el-button
           >
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+          <el-button @click="registerFormVisible = true">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -63,6 +63,65 @@
     <div class="right">
       <img src="@/assets/login_bg.png" alt="" />
     </div>
+    <!-- 注册对话框 -->
+    <el-dialog
+      title="用户注册"
+      class="register-dialog"
+      :visible.sync="registerFormVisible"
+    >
+      <el-form :model="regForm">
+        <el-form-item label="头像" :label-width="formLabelWidth">
+          <el-upload
+            class="avatar-uploader"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="昵称" :label-width="formLabelWidth">
+          <el-input v-model="regForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" :label-width="formLabelWidth">
+          <el-input v-model="regForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" :label-width="formLabelWidth">
+          <el-input v-model="regForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" :label-width="formLabelWidth">
+          <el-input v-model="regForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="图形码" :label-width="formLabelWidth">
+          <el-row>
+            <el-col :span="16">
+              <el-input v-model="regForm.name" autocomplete="off"></el-input>
+            </el-col>
+            <el-col :span="7" offset="1">
+              <img class="captcha" src="@/assets/login_captcha.png" alt="" />
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="验证码" :label-width="formLabelWidth">
+          <el-row>
+            <el-col :span="16">
+              <el-input v-model="regForm.name" autocomplete="off"></el-input>
+            </el-col>
+            <el-col :span="7" offset="1">
+              <el-button>获取用户验证码</el-button>
+            </el-col>
+          </el-row>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="registerFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="registerFormVisible = false"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -72,7 +131,11 @@ export default {
   data() {
     return {
       ruleForm: {},
-      rules: {}
+      rules: {},
+      registerFormVisible: false,
+      formLabelWidth: "60px",
+      regForm: {},
+      imageUrl: ""
     };
   },
   methods: {
@@ -88,6 +151,21 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
     }
   }
 };
@@ -151,12 +229,58 @@ export default {
         }
       }
     }
-    .btn-box{
-      .el-button{
+    .btn-box {
+      .el-button {
         width: 100%;
         margin-left: 0;
-        margin-bottom:28px ;
+        margin-bottom: 28px;
       }
+    }
+  }
+  .register-dialog {
+    .el-dialog {
+      width: 600px;
+    }
+    .el-dialog__header {
+      background: linear-gradient(
+        right,
+        rgba(1, 198, 250, 1),
+        rgba(20, 147, 250, 1)
+      );
+      text-align: center;
+      .el-dialog__title {
+        color: white;
+      }
+    }
+    .captcha {
+      width: 100%;
+    }
+    .avatar-uploader{
+      display: flex;
+      justify-content: center;
+    }
+    .avatar-uploader .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+      border-color: #409eff;
+    }
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 178px;
+      height: 178px;
+      line-height: 178px;
+      text-align: center;
+    }
+    .avatar {
+      width: 178px;
+      height: 178px;
+      display: block;
     }
   }
 }
