@@ -135,7 +135,8 @@ export default {
       registerFormVisible: false,
       formLabelWidth: "60px",
       regForm: {},
-      imageUrl: ""
+      imageUrl: "",
+      checked:false
     };
   },
   methods: {
