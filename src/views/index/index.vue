@@ -3,7 +3,7 @@
     <el-header class="header">
       <div class="left">
         <span
-          class="icon el-icon-s-fold"
+          class="icon el-icon-s-operation"
           @click="isCollapse = !isCollapse"
         ></span>
         <img src="@/assets/index_icon.png" alt="" />
