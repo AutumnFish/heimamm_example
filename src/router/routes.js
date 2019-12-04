@@ -8,6 +8,8 @@ import subject from '@/views/index/subject/subject.vue'
 import enterprise from '@/views/index/enterprise/enterprise.vue'
 // 导入  嵌套路由 用户页面
 import user from '@/views/index/user/user.vue'
+// 导入  嵌套路由 数据页面
+import chart from '@/views/index/chart/chart.vue'
 
 // 暴露路由规则
 export default [
@@ -31,6 +33,10 @@ export default [
             {
                 path:"user",
                 component:user
+            },
+            {
+                path:"chart",
+                component:chart
             }
         ]
     }

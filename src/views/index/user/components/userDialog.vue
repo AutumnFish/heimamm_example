@@ -41,7 +41,7 @@
 
 <script>
 export default {
-  name: "subject-add",
+  name: "user-add",
   data() {
     return {
       form: {},

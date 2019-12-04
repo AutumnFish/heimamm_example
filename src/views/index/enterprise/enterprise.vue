@@ -72,7 +72,7 @@
 // 导入并使用
 import enterpriseDialog from './components/enterpriseDialog.vue'
 export default {
-  name: "subject",
+  name: "enterprise",
   // 注册组件
   components:{
     enterpriseDialog

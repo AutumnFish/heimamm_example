@@ -72,7 +72,7 @@
 // 导入并使用
 import userDialog from './components/userDialog.vue'
 export default {
-  name: "subject",
+  name: "user",
   // 注册组件
   components:{
     userDialog

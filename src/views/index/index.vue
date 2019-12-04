@@ -21,7 +21,7 @@
           router
           :collapse="isCollapse"
         >
-          <el-menu-item index="ch">
+          <el-menu-item index="/index/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据概览</span>
           </el-menu-item>
