@@ -7,7 +7,10 @@ Vue.use(VueRouter)
 // 导入 路由规则
 import routes from '@/router/routes.js'
 
-
-export default new VueRouter({
+const router =  new VueRouter({
     routes
 })
+
+export default router
+
+window.console.log(router)

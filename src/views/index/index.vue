@@ -2,13 +2,16 @@
   <el-container class="index-container">
     <el-header class="header">
       <div class="left">
-        <span class="icon el-icon-s-fold" @click="isCollapse=!isCollapse"></span>
+        <span
+          class="icon el-icon-s-fold"
+          @click="isCollapse = !isCollapse"
+        ></span>
         <img src="@/assets/index_icon.png" alt="" />
         <span class="title">黑马面面</span>
       </div>
       <div class="right">
         <img src="@/assets/avatar.png" alt="" />
-        <span class="name" >李代沫,您好</span>
+        <span class="name">李代沫,您好</span>
         <el-button size="mini" type="primary">退出</el-button>
       </div>
     </el-header>
@@ -21,25 +24,13 @@
           router
           :collapse="isCollapse"
         >
-          <el-menu-item index="/index/chart">
-            <i class="el-icon-pie-chart"></i>
-            <span slot="title">数据概览</span>
-          </el-menu-item>
-          <el-menu-item index="/index/user">
-            <i class="el-icon-user"></i>
-            <span slot="title">用户列表</span>
-          </el-menu-item>
-          <el-menu-item index="question">
-            <i class="el-icon-edit-outline"></i>
-            <span slot="title">题库列表</span>
-          </el-menu-item>
-          <el-menu-item index="/index/enterprise">
-            <i class="el-icon-office-building"></i>
-            <span slot="title">企业列表</span>
-          </el-menu-item>
-          <el-menu-item index="/index/subject">
-            <i class="el-icon-notebook-2"></i>
-            <span slot="title">学科列表</span>
+          <el-menu-item
+            v-for="(item, index) in routes[1].children"
+            :key="index"
+            :index="item.meta.fullPath"
+          >
+            <i :class="item.meta.icon"></i>
+            <span slot="title">{{ item.meta.title }}</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -51,14 +42,17 @@
 </template>
 
 <script>
+// 导入路由信息
+import routes from "@/router/routes.js";
 export default {
   name: "index",
-  data(){
+  data() {
     return {
-      isCollapse:false
-    }
-  },
- 
+      isCollapse: false,
+      // 路由信息
+      routes
+    };
+  }
 };
 </script>
 
@@ -106,7 +100,7 @@ export default {
     width: 200px;
     min-height: 400px;
   }
-  .main{
+  .main {
     background-color: #e8e9ec;
   }
 }
