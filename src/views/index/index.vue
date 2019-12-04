@@ -33,7 +33,7 @@
             <i class="el-icon-edit-outline"></i>
             <span slot="title">题库列表</span>
           </el-menu-item>
-          <el-menu-item index="enterprise">
+          <el-menu-item index="/index/enterprise">
             <i class="el-icon-office-building"></i>
             <span slot="title">企业列表</span>
           </el-menu-item>
@@ -63,6 +63,7 @@ export default {
 
 <style lang="less">
 .index-container {
+  height: 100%;
   .header {
     display: flex;
     justify-content: space-between;
