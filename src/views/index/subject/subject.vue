@@ -21,7 +21,12 @@
         <el-form-item>
           <el-button type="primary">查询</el-button>
           <el-button>清除</el-button>
-          <el-button type="primary" @click="addFormVisible=true" icon="el-icon-plus">新增学科</el-button>
+          <el-button
+            type="primary"
+            @click="addFormVisible = true"
+            icon="el-icon-plus"
+            >新增学科</el-button
+          >
         </el-form-item>
       </el-form>
     </el-card>
@@ -44,27 +49,36 @@
         <el-table-column prop="h" label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button
-              type="text"
-              >{{scope.row.g===0?"启用":"禁用"}}</el-button
-            >
+            <el-button type="text">{{
+              scope.row.g === 0 ? "启用" : "禁用"
+            }}</el-button>
             <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页器 -->
+      <el-pagination
+        :current-page="1"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="5"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="20"
+        background
+      >
+      </el-pagination>
     </el-card>
     <!-- 对话框 -->
-    <subjectDialog/>
+    <subjectDialog />
   </div>
 </template>
 
 <script>
 // 导入并使用
-import subjectDialog from './components/subjectDialog.vue'
+import subjectDialog from "./components/subjectDialog.vue";
 export default {
   name: "subject",
   // 注册组件
-  components:{
+  components: {
     subjectDialog
   },
   data() {
@@ -89,7 +103,7 @@ export default {
         }
       ],
       // 是否显示新增框
-      addFormVisible:false
+      addFormVisible: false
     };
   }
 };

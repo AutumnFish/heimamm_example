@@ -1,5 +1,5 @@
 <template>
-  <div class="subject-container">
+  <div class="enterprise-container">
     <!-- 头部 -->
     <el-card class="card-header">
       <el-form :inline="true" :model="filterForm" class="demo-form-inline">
@@ -52,6 +52,16 @@
           </template>
         </el-table-column>
       </el-table>
+       <!-- 分页器 -->
+      <el-pagination
+        :current-page="1"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="5"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="20"
+        background
+      >
+      </el-pagination>
     </el-card>
     <!-- 对话框 -->
     <enterpriseDialog/>
@@ -96,7 +106,7 @@ export default {
 </script>
 
 <style lang="less">
-.subject-container {
+.enterprise-container {
   .card-header {
     height: 103px;
     // 短的输入框

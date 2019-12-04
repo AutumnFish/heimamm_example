@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     title="企业编号"
-    class="subject-dialog"
+    class="enterprise-dialog"
     :visible.sync="$parent.addFormVisible"
   >
     <el-form :model="form">
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="less">
-.subject-dialog {
+.enterprise-dialog {
   .el-dialog {
     width: 603px;
   }

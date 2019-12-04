@@ -16,7 +16,7 @@
       <el-aside style="width:auto" width="200px">
         <!-- 导航 -->
         <el-menu
-          :default-active="$router.path"
+          :default-active="$route.path"
           class="el-menu-vertical-demo"
           router
           :collapse="isCollapse"
@@ -57,7 +57,8 @@ export default {
     return {
       isCollapse:false
     }
-  }
+  },
+ 
 };
 </script>
 
