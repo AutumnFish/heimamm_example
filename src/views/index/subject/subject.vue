@@ -21,7 +21,7 @@
         <el-form-item>
           <el-button type="primary">查询</el-button>
           <el-button>清除</el-button>
-          <el-button type="primary" icon="el-icon-plus">新增学科</el-button>
+          <el-button type="primary" @click="addFormVisible=true" icon="el-icon-plus">新增学科</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -53,12 +53,20 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <!-- 对话框 -->
+    <subjectDialog/>
   </div>
 </template>
 
 <script>
+// 导入并使用
+import subjectDialog from './components/subjectDialog.vue'
 export default {
   name: "subject",
+  // 注册组件
+  components:{
+    subjectDialog
+  },
   data() {
     return {
       filterForm: {},
@@ -79,7 +87,9 @@ export default {
           f: "2019-12-5",
           g: 1
         }
-      ]
+      ],
+      // 是否显示新增框
+      addFormVisible:false
     };
   }
 };

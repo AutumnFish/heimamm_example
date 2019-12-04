@@ -1,8 +1,24 @@
-html,body{
-    height: 100%;
+html,
+body {
+  height: 100%;
 }
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+// 对话框的布局抽取到全局
+.el-dialog__header {
+  text-align: center;
+  background: linear-gradient(
+    225deg,
+    rgba(1, 198, 250, 1),
+    rgba(20, 147, 250, 1)
+  );
+  .el-dialog__title {
+    color: white;
+  }
+  .el-icon {
+    color: white;
+  }
 }
