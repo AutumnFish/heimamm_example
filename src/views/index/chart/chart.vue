@@ -1,5 +1,5 @@
 <template>
-  <div class="user-container">
+  <div class="chart-container">
     <!-- 头部 -->
     <el-card class="card-header">
       <ul class="circle-box">
@@ -98,7 +98,7 @@ export default {
 </script>
 
 <style lang="less">
-.user-container {
+.chart-container {
   .card-header {
     height: 149px;
     .el-card__body {
