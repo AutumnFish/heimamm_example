@@ -1,0 +1,109 @@
+<template>
+  <div class="subject-container">
+    <!-- 头部 -->
+    <el-card class="card-header">
+      <el-form :inline="true" :model="filterForm" class="demo-form-inline">
+        <el-form-item label="学科编号">
+          <el-input v-model="filterForm.user" class="short-input"></el-input>
+        </el-form-item>
+        <el-form-item label="学科名称">
+          <el-input v-model="filterForm.user"></el-input>
+        </el-form-item>
+        <el-form-item label="创建者">
+          <el-input v-model="filterForm.user" class="short-input"></el-input>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="filterForm.region" placeholder="请选择状态">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary">查询</el-button>
+          <el-button>清除</el-button>
+          <el-button type="primary" icon="el-icon-plus">新增学科</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
+    <!-- 底部 -->
+    <el-card class="card-main">
+      <el-table :data="subjectTable">
+        <el-table-column type="index" label="序号"></el-table-column>
+        <el-table-column prop="b" label="学科编号"></el-table-column>
+        <el-table-column prop="c" label="学科名称"></el-table-column>
+        <el-table-column prop="d" label="简称"></el-table-column>
+        <el-table-column prop="e" label="创建者"></el-table-column>
+        <el-table-column prop="f" label="创建日期"></el-table-column>
+        <el-table-column prop="g" label="状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.g === 1">启用</span>
+            <span v-else class="red">禁用</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="h" label="操作">
+          <template slot-scope="scope">
+            <el-button type="text">编辑</el-button>
+            <el-button
+              type="text"
+              >{{scope.row.g===0?"启用":"禁用"}}</el-button
+            >
+            <el-button type="text">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "subject",
+  data() {
+    return {
+      filterForm: {},
+      subjectTable: [
+        {
+          b: "subject1",
+          c: "前端与移动开发",
+          d: "前端",
+          e: "管理员",
+          f: "2019-12-4",
+          g: 0
+        },
+        {
+          b: "subject2",
+          c: "Java",
+          d: "后端",
+          e: "管理员",
+          f: "2019-12-5",
+          g: 1
+        }
+      ]
+    };
+  }
+};
+</script>
+
+<style lang="less">
+.subject-container {
+  .card-header {
+    height: 103px;
+    // 短的输入框
+    .short-input {
+      width: 100px;
+    }
+    // 文本
+    .el-form-item__label {
+      font-weight: 700;
+    }
+  }
+  .card-main {
+    margin-top: 19px;
+    // 红色的高亮span
+    span.red {
+      color: red;
+    }
+  }
+}
+</style>

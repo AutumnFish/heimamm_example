@@ -37,13 +37,13 @@
             <i class="el-icon-office-building"></i>
             <span slot="title">企业列表</span>
           </el-menu-item>
-          <el-menu-item index="subjet">
+          <el-menu-item index="/index/subject">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main>
+      <el-main class="main">
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -55,7 +55,7 @@ export default {
   name: "index",
   data(){
     return {
-      isCollapse:true
+      isCollapse:false
     }
   }
 };
@@ -103,6 +103,9 @@ export default {
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;
+  }
+  .main{
+    background-color: #e8e9ec;
   }
 }
 </style>

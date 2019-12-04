@@ -2,6 +2,8 @@
 import login from '@/views/login/login.vue'
 // 导入 首页
 import index from '@/views/index/index.vue'
+// 导入  嵌套路由 学科页面
+import subject from '@/views/index/subject/subject.vue'
 
 // 暴露路由规则
 export default [
@@ -11,6 +13,13 @@ export default [
     },
     {
         path:"/index",
-        component:index
+        component:index,
+        // 嵌套路由
+        children:[
+            {
+                path:"subject",
+                component:subject
+            }
+        ]
     }
 ]
