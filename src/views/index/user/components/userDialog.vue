@@ -1,28 +1,32 @@
 <template>
   <el-dialog
-    title="新增学科"
-    class="subject-dialog"
+    title="新增用户"
+    class="user-dialog"
     :visible.sync="$parent.addFormVisible"
   >
     <el-form :model="form">
-      <el-form-item label="学科编号" :label-width="formLabelWidth">
+      <el-form-item label="用户名" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="学科名称" :label-width="formLabelWidth">
+      <el-form-item label="邮箱" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="学科简称" :label-width="formLabelWidth">
+      <el-form-item label="电话" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="学科简介" :label-width="formLabelWidth">
-        <el-input
-          type="textarea"
-          rows="3"
-          v-model="form.name"
-          autocomplete="off"
-        ></el-input>
+      <el-form-item label="所属角色" :label-width="formLabelWidth">
+        <el-select v-model="form.region" placeholder="请选择角色">
+          <el-option label="区域一" value="shanghai"></el-option>
+          <el-option label="区域二" value="beijing"></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="学科备注" :label-width="formLabelWidth">
+      <el-form-item label="所属状态" :label-width="formLabelWidth">
+        <el-select v-model="form.region" placeholder="请选择状态">
+          <el-option label="区域一" value="shanghai"></el-option>
+          <el-option label="区域二" value="beijing"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="用户备注" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
@@ -48,10 +52,9 @@ export default {
 </script>
 
 <style lang="less">
-.subject-dialog {
+.user-dialog {
   .el-dialog {
     width: 603px;
   }
- 
 }
 </style>

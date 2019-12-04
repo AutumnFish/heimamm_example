@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="企业编号"
+    title="新增企业"
     class="enterprise-dialog"
     :visible.sync="$parent.addFormVisible"
   >
