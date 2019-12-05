@@ -131,6 +131,8 @@
 import { login } from "@/api/login.js";
 // 验证逻辑的导入
 import { checkMobile, checkAgree } from "./validator.js";
+// 数据 获取的接口
+import { setToken } from "@/utils/token.js";
 export default {
   name: "login",
   data() {
@@ -177,7 +179,11 @@ export default {
         if (valid) {
           // 登录接口
           login(this.logForm).then(res => {
-            console.log(res);
+            // console.log(res);
+            // 保存token
+            setToken(res.data.data.token);
+            // 跳转到首页
+            this.$router.push("/index");
           });
         } else {
           this.$message.warning("请检查输入的内容");
