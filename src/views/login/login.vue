@@ -35,7 +35,7 @@
               ></el-input>
             </el-col>
             <el-col :span="7">
-              <img class="captcha"  src="@/assets/login_captcha.png" alt="" />
+              <img class="captcha" @click="randomLoginCaptcha"  :src="actions" alt="" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -152,13 +152,20 @@ export default {
       regForm: {},
       imageUrl: "",
       checked: false,
+      // 验证码
+      actions:process.env.VUE_APP_BASEURL +"/captcha?type=login"
     };
   },
   methods: {
+    // 重新获取注册验证码
+    randomLoginCaptcha(){
+      // 通过时间戳来重新获取验证码
+      this.actions = `${process.env.VUE_APP_BASEURL}/captcha?type=login&t=${Date.now()}`
+    },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          window.alert('success')
+          console.log("123")
         } else {
           this.$message.warning("请检查输入的内容")
           return false;
