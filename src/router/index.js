@@ -17,10 +17,12 @@ const router = new VueRouter({
   routes
 });
 
+// 地址白名单
+const whitePaths = ['/login']
 // 增加导航守卫
 router.beforeEach((to, from, next) => {
   // 首页才需要判断token
-  if (to.path === "/index") {
+  if (!whitePaths.includes(to.path)) {
     if (!getToken()) {
       Message.error("必须登录才可以访问首页");
       return next("/login");
