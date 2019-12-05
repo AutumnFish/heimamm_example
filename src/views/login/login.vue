@@ -35,12 +35,17 @@
               ></el-input>
             </el-col>
             <el-col :span="7">
-              <img class="captcha" @click="randomLoginCaptcha"  :src="actions" alt="" />
+              <img
+                class="captcha"
+                @click="randomLoginCaptcha"
+                :src="actions"
+                alt=""
+              />
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item class="rule-box">
-          <el-checkbox v-model="checked">
+        <el-form-item class="rule-box" prop="checked">
+          <el-checkbox v-model="logForm.checked">
             我已阅读并同意
             <el-link type="primary">用户协议</el-link>
             <span>和</span>
@@ -122,16 +127,19 @@
 </template>
 
 <script>
+// 导入登录接口
+import { login } from "@/api/login.js";
 // 验证逻辑的导入
-import { checkMobile } from "./validator.js";
+import { checkMobile, checkAgree } from "./validator.js";
 export default {
   name: "login",
   data() {
     return {
       logForm: {
-        phone:"18888888888",
-        password:"88888888",
-        code:"1234"
+        phone: "18888888888",
+        password: "88888888",
+        code: "1234",
+        checked: false
       },
       rules: {
         phone: [
@@ -140,34 +148,39 @@ export default {
         ],
         password: [
           { required: true, message: "密码不能为空" },
-          { min:6,max:12,message:"密码长度为6~12个字符" }
+          { min: 6, max: 12, message: "密码长度为6~12个字符" }
         ],
         code: [
           { required: true, message: "验证码不能为空" },
-          { min:4,max:4, message:"验证码长度为4" }
-        ]
+          { min: 4, max: 4, message: "验证码长度为4" }
+        ],
+        checked: [{ validator: checkAgree }]
       },
       registerFormVisible: false,
       formLabelWidth: "60px",
       regForm: {},
       imageUrl: "",
-      checked: false,
       // 验证码
-      actions:process.env.VUE_APP_BASEURL +"/captcha?type=login"
+      actions: process.env.VUE_APP_BASEURL + "/captcha?type=login"
     };
   },
   methods: {
     // 重新获取注册验证码
-    randomLoginCaptcha(){
+    randomLoginCaptcha() {
       // 通过时间戳来重新获取验证码
-      this.actions = `${process.env.VUE_APP_BASEURL}/captcha?type=login&t=${Date.now()}`
+      this.actions = `${
+        process.env.VUE_APP_BASEURL
+      }/captcha?type=login&t=${Date.now()}`;
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log("123")
+          // 登录接口
+          login(this.logForm).then(res => {
+            console.log(res);
+          });
         } else {
-          this.$message.warning("请检查输入的内容")
+          this.$message.warning("请检查输入的内容");
           return false;
         }
       });
