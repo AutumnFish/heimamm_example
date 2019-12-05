@@ -9,37 +9,33 @@
         <span class="sub-title">用户登录</span>
       </div>
       <!-- 表单 -->
-      <el-form
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        class="login-form"
-      >
-        <el-form-item prop="name">
+      <el-form :model="logForm" :rules="rules" ref="logForm" class="login-form">
+        <el-form-item prop="phone">
           <el-input
             placeholder="请输入手机号"
-            v-model="ruleForm.name"
+            v-model="logForm.phone"
             prefix-icon="el-icon-user"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="name">
+        <el-form-item prop="password">
           <el-input
             placeholder="请输入密码"
-            v-model="ruleForm.name"
+            v-model="logForm.password"
             prefix-icon="el-icon-lock"
+            type="password"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="name">
+        <el-form-item prop="code">
           <el-row>
             <el-col :span="17">
               <el-input
                 placeholder="请输入验证码"
-                v-model="ruleForm.name"
+                v-model="logForm.code"
                 prefix-icon="el-icon-key"
               ></el-input>
             </el-col>
             <el-col :span="7">
-              <img class="captcha" src="@/assets/login_captcha.png" alt="" />
+              <img class="captcha"  src="@/assets/login_captcha.png" alt="" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -52,7 +48,7 @@
           </el-checkbox>
         </el-form-item>
         <el-form-item class="btn-box">
-          <el-button type="primary" @click="submitForm('ruleForm')"
+          <el-button type="primary" @click="submitForm('logForm')"
             >登录</el-button
           >
           <el-button @click="registerFormVisible = true">注册</el-button>
@@ -126,26 +122,45 @@
 </template>
 
 <script>
+// 验证逻辑的导入
+import { checkMobile } from "./validator.js";
 export default {
   name: "login",
   data() {
     return {
-      ruleForm: {},
-      rules: {},
+      logForm: {
+        phone:"18888888888",
+        password:"88888888",
+        code:"1234"
+      },
+      rules: {
+        phone: [
+          { required: true, message: "手机号不能为空" },
+          { validator: checkMobile }
+        ],
+        password: [
+          { required: true, message: "密码不能为空" },
+          { min:6,max:12,message:"密码长度为6~12个字符" }
+        ],
+        code: [
+          { required: true, message: "验证码不能为空" },
+          { min:4,max:4, message:"验证码长度为4" }
+        ]
+      },
       registerFormVisible: false,
       formLabelWidth: "60px",
       regForm: {},
       imageUrl: "",
-      checked:false
+      checked: false,
     };
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          window.alert("submit!");
+          window.alert('success')
         } else {
-          window.console.log("error submit!!");
+          this.$message.warning("请检查输入的内容")
           return false;
         }
       });
@@ -256,7 +271,7 @@ export default {
     .captcha {
       width: 100%;
     }
-    .avatar-uploader{
+    .avatar-uploader {
       display: flex;
       justify-content: center;
     }
