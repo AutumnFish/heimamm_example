@@ -52,7 +52,8 @@ export default {
       // 路由信息
       routes
     };
-  }
+  },
+
 };
 </script>
 
