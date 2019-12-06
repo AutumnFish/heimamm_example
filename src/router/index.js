@@ -21,7 +21,7 @@ const router = new VueRouter({
 });
 
 // 地址白名单
-const whitePaths = ["/login"];
+const whitePaths = ["/login"]; 
 // 增加导航守卫
 router.beforeEach((to, from, next) => {
   // 首页才需要判断token
