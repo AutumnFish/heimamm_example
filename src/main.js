@@ -1,21 +1,25 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
 // 导入路由
-import router from '@/router/index.js'
+import router from "@/router/index.js";
+// 导入仓库
+import store from "@/store/store.js";
 
 // 整合Element-ui
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
 // use Element-ui
-Vue.use(ElementUI)
+Vue.use(ElementUI);
 
 // 导入全局样式
-import '@/styles/base.less'
+import "@/styles/base.less";
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   render: h => h(App),
   // 挂载到Vue实例上
-  router
-}).$mount('#app')
+  router,
+  // 挂载到Vue实例上
+  store
+}).$mount("#app");
