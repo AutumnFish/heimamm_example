@@ -69,6 +69,7 @@
       title="用户注册"
       class="register-dialog"
       :visible.sync="registerFormVisible"
+      @closed="closedRegDialog"
     >
       <el-form :model="regForm" :rules="rules" ref="regForm">
         <el-form-item label="头像" :label-width="formLabelWidth" prop="avatar">
@@ -188,12 +189,13 @@ export default {
       registerFormVisible: false,
       formLabelWidth: "80px",
       regForm: {
-        imgCode: "",
         phone: "",
         username: "",
         rcode: "",
         avatar: "",
-        password: ""
+        password: "",
+        // 图形验证码
+        imgCode: ""
       },
       imageUrl: "",
       // 验证码
@@ -207,6 +209,11 @@ export default {
     };
   },
   methods: {
+    // 关闭注册框
+    closedRegDialog() {
+      this.$refs.regForm.resetFields();
+      this.regForm.imgCode =''
+    },
     // 用户注册
     submitRegForm() {
       this.$refs.regForm.validate(valid => {
@@ -215,8 +222,6 @@ export default {
           register(this.regForm).then(res => {
             // console.log(res);
             if (res.data.code === 200) {
-              // 清空表单;
-              this.$refs.regForm.resetFields();
               // 头像也要清空哦
               this.imageUrl = "";
               // 关闭弹框
