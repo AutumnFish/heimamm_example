@@ -74,10 +74,11 @@
         <el-form-item label="头像" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :action="avatarAction"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
+            name="image"
           >
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -165,7 +166,9 @@ export default {
       // 验证码
       actions: process.env.VUE_APP_BASEURL + "/captcha?type=login",
       // 注册验证码
-      regActions: process.env.VUE_APP_BASEURL + "/captcha?type=sendsms"
+      regActions: process.env.VUE_APP_BASEURL + "/captcha?type=sendsms",
+      // 头像上传地址
+      avatarAction:process.env.VUE_APP_BASEURL +"/uploads"
     };
   },
   methods: {
@@ -204,7 +207,10 @@ export default {
       this.$refs[formName].resetFields();
     },
     handleAvatarSuccess(res, file) {
+      // 生成本地的预览
       this.imageUrl = URL.createObjectURL(file.raw);
+      // 准备提交的数据
+      this.regForm.avatar = res.data.file_path
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
