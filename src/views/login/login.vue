@@ -100,8 +100,8 @@
             <el-col :span="16">
               <el-input v-model="regForm.name" autocomplete="off"></el-input>
             </el-col>
-            <el-col :span="7" offset="1">
-              <img class="captcha" src="@/assets/login_captcha.png" alt="" />
+            <el-col :span="7" :offset="1">
+              <img class="captcha" :src="regActions" @click="randomRegisterCaptcha" alt="" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -110,7 +110,7 @@
             <el-col :span="16">
               <el-input v-model="regForm.name" autocomplete="off"></el-input>
             </el-col>
-            <el-col :span="7" offset="1">
+            <el-col :span="7" :offset="1">
               <el-button>获取用户验证码</el-button>
             </el-col>
           </el-row>
@@ -163,16 +163,25 @@ export default {
       regForm: {},
       imageUrl: "",
       // 验证码
-      actions: process.env.VUE_APP_BASEURL + "/captcha?type=login"
+      actions: process.env.VUE_APP_BASEURL + "/captcha?type=login",
+      // 注册验证码
+      regActions: process.env.VUE_APP_BASEURL + "/captcha?type=sendsms"
     };
   },
   methods: {
-    // 重新获取注册验证码
+    // 重新获取登录验证码
     randomLoginCaptcha() {
       // 通过时间戳来重新获取验证码
       this.actions = `${
         process.env.VUE_APP_BASEURL
       }/captcha?type=login&t=${Date.now()}`;
+    },
+    // 重新获取注册验证码
+    randomRegisterCaptcha() {
+      // 通过时间戳来重新获取验证码
+      this.regActions = `${
+        process.env.VUE_APP_BASEURL
+      }/captcha?type=sendsms&t=${Date.now()}`;
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
