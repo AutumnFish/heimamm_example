@@ -91,7 +91,7 @@
           <el-input v-model="regForm.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" :label-width="formLabelWidth">
-          <el-input v-model="regForm.name" autocomplete="off"></el-input>
+          <el-input v-model="regForm.phone" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
           <el-input v-model="regForm.name" autocomplete="off"></el-input>
@@ -99,10 +99,15 @@
         <el-form-item label="图形码" :label-width="formLabelWidth">
           <el-row>
             <el-col :span="16">
-              <el-input v-model="regForm.name" autocomplete="off"></el-input>
+              <el-input v-model="regForm.imgCode" autocomplete="off"></el-input>
             </el-col>
             <el-col :span="7" :offset="1">
-              <img class="captcha" :src="regActions" @click="randomRegisterCaptcha" alt="" />
+              <img
+                class="captcha"
+                :src="regActions"
+                @click="randomRegisterCaptcha"
+                alt=""
+              />
             </el-col>
           </el-row>
         </el-form-item>
@@ -112,7 +117,11 @@
               <el-input v-model="regForm.name" autocomplete="off"></el-input>
             </el-col>
             <el-col :span="7" :offset="1">
-              <el-button>获取用户验证码</el-button>
+              <el-button @click="getPhoneCode" :disabled="delayTime !== 0"
+                >获取用户验证码{{
+                  delayTime == 0 ? "" : delayTime + "S"
+                }}</el-button
+              >
             </el-col>
           </el-row>
         </el-form-item>
@@ -129,7 +138,7 @@
 
 <script>
 // 导入登录接口
-import { login } from "@/api/login.js";
+import { login, sendsms } from "@/api/login.js";
 // 验证逻辑的导入
 import { checkMobile, checkAgree } from "./validator.js";
 // 数据 获取的接口
@@ -161,17 +170,51 @@ export default {
       },
       registerFormVisible: false,
       formLabelWidth: "60px",
-      regForm: {},
+      regForm: {
+        imgCode: "",
+        phone: ""
+      },
       imageUrl: "",
       // 验证码
       actions: process.env.VUE_APP_BASEURL + "/captcha?type=login",
       // 注册验证码
       regActions: process.env.VUE_APP_BASEURL + "/captcha?type=sendsms",
       // 头像上传地址
-      avatarAction:process.env.VUE_APP_BASEURL +"/uploads"
+      avatarAction: process.env.VUE_APP_BASEURL + "/uploads",
+      // 验证码获取倒计时
+      delayTime: 0
     };
   },
   methods: {
+    // 获取手机验证码
+    getPhoneCode() {
+      // 验证码判断
+      if (this.regForm.imgCode.length != 4) {
+        return this.$message.warning("验证码错误,请检查");
+      }
+      // 手机号判断
+      const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+      if (!reg.test(this.regForm.phone)) {
+        return this.$message.warning("手机号不对哦，请检查");
+      }
+      if (this.delayTime === 0) {
+        this.delayTime=60;
+        let interId = setInterval(() => {
+          this.delayTime--;
+          if (this.delayTime == 0) {
+            clearInterval(interId);
+          }
+        }, 100);
+        // 调用短信接口
+        sendsms({
+          code: this.regForm.imgCode,
+          phone: this.regForm.phone
+        }).then(res => {
+          // console.log(res)
+          this.$message.info("短信验证码是:" + res.data.data.captcha);
+        });
+      }
+    },
     // 重新获取登录验证码
     randomLoginCaptcha() {
       // 通过时间戳来重新获取验证码
@@ -210,7 +253,7 @@ export default {
       // 生成本地的预览
       this.imageUrl = URL.createObjectURL(file.raw);
       // 准备提交的数据
-      this.regForm.avatar = res.data.file_path
+      this.regForm.avatar = res.data.file_path;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";

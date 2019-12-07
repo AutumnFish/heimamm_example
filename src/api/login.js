@@ -11,3 +11,11 @@ export function login(data){
     })
 }
 
+// 暴露短信接口
+export function sendsms(data) {
+    return request({
+        url:"/sendsms",
+        method:"post",
+        data
+    })
+  }
