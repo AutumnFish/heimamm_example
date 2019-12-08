@@ -44,13 +44,13 @@
             {{ scope.row.create_time | formatTime }}
           </template>
         </el-table-column>
-        <el-table-column  label="状态">
+        <el-table-column label="状态">
           <template slot-scope="scope">
             <span v-if="scope.row.g === 1">启用</span>
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
-        <el-table-column  label="操作">
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
             <el-button type="text">{{
@@ -62,12 +62,14 @@
       </el-table>
       <!-- 分页器 -->
       <el-pagination
-        :current-page="1"
+        :current-page="page"
         :page-sizes="[5, 10, 15, 20]"
-        :page-size="5"
+        :page-size="limit"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </el-card>
@@ -80,7 +82,7 @@
 // 导入并使用
 import subjectDialog from "./components/subjectDialog.vue";
 // 导入学科接口
-import {subjectList} from "@/api/subject.js"
+import { subjectList } from "@/api/subject.js";
 export default {
   name: "subject",
   // 注册组件
@@ -109,22 +111,53 @@ export default {
         }
       ],
       // 是否显示新增框
-      addFormVisible: false
-      ,
+      addFormVisible: false,
       // 总条数
-      total:0
+      total: 0,
+      // 当前页
+      page: 1,
+      // 页容量
+      limit: 5
     };
   },
+  methods: {
+    // 获取数据
+    getList() {
+      // 初始数据获取不携带任何数据
+      subjectList({
+        page: this.page,
+        limit: this.limit
+      }).then(res => {
+        // 表格数据
+        this.subjectTable = res.data.data.items;
+        // 总条数
+        this.total = res.data.data.pagination.total;
+      });
+    },
+    // 页容量改变
+    handleSizeChange(limit) {
+      this.limit = limit;
+      this.page = 1;
+      // 重新获取数据
+      this.getList();
+    },
+    // 页码改变
+    handleCurrentChange(page) {
+      this.page = page;
+      // 重新获取数据
+      this.getList();
+    }
+  },
   // 获取列表数据
-  created(){
+  created() {
     // 初始数据获取不携带任何数据
-    subjectList().then(res=>{
+    subjectList().then(res => {
       // console.log(res)
       // 表格数据
-      this.subjectTable = res.data.data.items
+      this.subjectTable = res.data.data.items;
       // 总条数
-      this.total = res.data.data.pagination.total
-    })
+      this.total = res.data.data.pagination.total;
+    });
   }
 };
 </script>
