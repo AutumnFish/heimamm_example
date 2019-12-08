@@ -22,6 +22,7 @@ export default [
   {
     path: "/index",
     component: index,
+    redirect: '/index/subject',
     // 嵌套路由
     children: [
       {
