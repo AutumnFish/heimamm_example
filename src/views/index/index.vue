@@ -10,8 +10,8 @@
         <span class="title">黑马面面</span>
       </div>
       <div class="right">
-        <img src="@/assets/avatar.png" alt="" />
-        <span class="name">李代沫,您好</span>
+        <img :src="userInfo.avatar" alt="" />
+        <span class="name">{{userInfo.username}},您好</span>
         <el-button size="mini" type="primary">退出</el-button>
       </div>
     </el-header>
@@ -53,6 +53,11 @@ export default {
       routes
     };
   },
+  computed:{
+    userInfo(){
+      return this.$store.state.userInfo;
+    }
+  }
 
 };
 </script>
