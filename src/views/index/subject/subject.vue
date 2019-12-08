@@ -46,16 +46,14 @@
         </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
-            <span v-if="scope.row.g === 1">启用</span>
+            <span v-if="scope.row.status === 1">启用</span>
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button type="text">{{
-              scope.row.g === 0 ? "启用" : "禁用"
-            }}</el-button>
+            <el-button type="text" @click="changeState(scope.row)">{{scope.row.status === 0 ? "启用" : "禁用"}}</el-button>
             <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -82,7 +80,7 @@
 // 导入并使用
 import subjectDialog from "./components/subjectDialog.vue";
 // 导入学科接口
-import { subjectList } from "@/api/subject.js";
+import { subjectList,subjectStatus } from "@/api/subject.js";
 export default {
   name: "subject",
   // 注册组件
@@ -121,6 +119,20 @@ export default {
     };
   },
   methods: {
+    // 修改状态
+    changeState(item){
+      subjectStatus({
+        id:item.id,
+      }).then(res=>{
+        // console.log(res)
+        if(res.data.code===200){
+          // 提示用户
+          this.$message.success("状态修改成功")
+          // 重新获取数据
+          this.getList()
+        }
+      })
+    },
     // 获取数据
     getList() {
       // 初始数据获取不携带任何数据
