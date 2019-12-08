@@ -29,10 +29,10 @@ export function register(data) {
 }
 
 // 暴露退出接口
-export function logout(data) {
+export function logout() {
   return request({
-    url: "/user/logout",
-    method: "post",
-    data
+    url: "/logout",
+    method: "get",
+    
   });
 }

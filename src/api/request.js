@@ -14,7 +14,7 @@ const instance = axios.create({
 
 // 拦截器
 // Add a request interceptor
-axios.interceptors.request.use(
+instance.interceptors.request.use(
   function(config) {
     // 设置token
     if (store.state.userInfo) {
@@ -31,7 +31,7 @@ axios.interceptors.request.use(
 );
 
 // Add a response interceptor
-axios.interceptors.response.use(
+instance.interceptors.response.use(
   function(response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
