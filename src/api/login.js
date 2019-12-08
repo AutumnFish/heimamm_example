@@ -27,3 +27,12 @@ export function register(data) {
     data
   });
 }
+
+// 暴露退出接口
+export function logout(data) {
+  return request({
+    url: "/user/logout",
+    method: "post",
+    data
+  });
+}

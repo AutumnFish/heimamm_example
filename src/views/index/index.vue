@@ -11,8 +11,8 @@
       </div>
       <div class="right">
         <img :src="userInfo.avatar" alt="" />
-        <span class="name">{{userInfo.username}},您好</span>
-        <el-button size="mini" type="primary">退出</el-button>
+        <span class="name">{{ userInfo.username }},您好</span>
+        <el-button size="mini" type="primary" @click="logout">退出</el-button>
       </div>
     </el-header>
     <el-container>
@@ -44,6 +44,10 @@
 <script>
 // 导入路由信息
 import routes from "@/router/routes.js";
+// 导入退出接口
+import { logout } from "@/api/login.js";
+// 导入token模块
+import {removeToken} from "@/utils/token.js"
 export default {
   name: "index",
   data() {
@@ -53,12 +57,42 @@ export default {
       routes
     };
   },
-  computed:{
-    userInfo(){
+  computed: {
+    userInfo() {
       return this.$store.state.userInfo;
     }
+  },
+  methods: {
+    logout() {
+      // 弹框提示用户
+      this.$confirm("确定黑马面面吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // 调用退出接口
+          logout().then(res=>{
+            // console.log(res)
+            if(res.data.code===200){
+              // 删除token
+              removeToken()
+              // 删除用户信息
+              this.$store.commit("SETINFO",undefined)
+              // 跳转去登录页
+              this.$router.push("/login")
+            }
+          })
+          
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    }
   }
-
 };
 </script>
 
