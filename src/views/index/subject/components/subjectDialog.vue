@@ -11,7 +11,7 @@
       <el-form-item label="学科名称" prop="name" :label-width="formLabelWidth">
         <el-input v-model="addForm.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="学科简称" :label-width="formLabelWidth">
+      <el-form-item label="学科简称" prop="short_name" :label-width="formLabelWidth">
         <el-input v-model="addForm.short_name" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="学科简介" :label-width="formLabelWidth">

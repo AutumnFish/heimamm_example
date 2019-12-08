@@ -2,25 +2,25 @@
   <div class="subject-container">
     <!-- 头部 -->
     <el-card class="card-header">
-      <el-form :inline="true" :model="filterForm" class="demo-form-inline">
-        <el-form-item label="学科编号">
-          <el-input v-model="filterForm.user" class="short-input"></el-input>
+      <el-form :inline="true" ref="filterForm" :model="filterForm" class="demo-form-inline">
+        <el-form-item label="学科编号" prop="rid">
+          <el-input v-model="filterForm.rid" class="short-input"></el-input>
         </el-form-item>
-        <el-form-item label="学科名称">
-          <el-input v-model="filterForm.user"></el-input>
+        <el-form-item label="学科名称" prop="name">
+          <el-input v-model="filterForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="创建者">
-          <el-input v-model="filterForm.user" class="short-input"></el-input>
+        <el-form-item label="创建者" prop="username">
+          <el-input v-model="filterForm.username" class="short-input"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="filterForm.region" placeholder="请选择状态">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="filterForm.status" placeholder="请选择状态">
+            <el-option label="启用" :value="1"></el-option>
+            <el-option label="禁用" :value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
-          <el-button>清除</el-button>
+          <el-button type="primary" @click="filterData">查询</el-button>
+          <el-button @click="resetFilter">清除</el-button>
           <el-button
             type="primary"
             @click="addFormVisible = true"
@@ -89,7 +89,12 @@ export default {
   },
   data() {
     return {
-      filterForm: {},
+      filterForm: {
+        rid:"",
+        name:"",
+        username:"",
+        status:""
+      },
       subjectTable: [
         {
           b: "subject1",
@@ -119,6 +124,17 @@ export default {
     };
   },
   methods: {
+    filterData(){
+      // 去第一页
+      this.page = 1;
+      // 重新获取数据
+      this.getList();
+    },
+    resetFilter(){
+      this.$refs.filterForm.resetFields()
+      console.log(this.$refs.filterForm.resetFields)
+      console.log(this.filterForm)
+    },
     // 修改状态
     changeState(item){
       subjectStatus({
@@ -127,9 +143,9 @@ export default {
         // console.log(res)
         if(res.data.code===200){
           // 提示用户
-          this.$message.success("状态修改成功")
+          this.$message.success("状态修改成功");
           // 重新获取数据
-          this.getList()
+          this.getList();
         }
       })
     },
@@ -138,7 +154,8 @@ export default {
       // 初始数据获取不携带任何数据
       subjectList({
         page: this.page,
-        limit: this.limit
+        limit: this.limit,
+        ...this.filterForm
       }).then(res => {
         // 表格数据
         this.subjectTable = res.data.data.items;
@@ -163,13 +180,7 @@ export default {
   // 获取列表数据
   created() {
     // 初始数据获取不携带任何数据
-    subjectList().then(res => {
-      // console.log(res)
-      // 表格数据
-      this.subjectTable = res.data.data.items;
-      // 总条数
-      this.total = res.data.data.pagination.total;
-    });
+    this.getList();
   }
 };
 </script>
