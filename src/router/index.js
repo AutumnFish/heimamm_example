@@ -42,6 +42,8 @@ router.beforeEach((to, from, next) => {
           // 跳转去登录页
           next("/login");
         } else {
+          // 用户的头像地址缺少了一个基地址
+          res.data.data.avatar = process.env.VUE_APP_BASEURL+"/"+res.data.data.avatar
           // 保存用户信息
           store.commit("SETINFO", res.data.data);
           // token验证成功
