@@ -4,6 +4,8 @@ import App from "./App.vue";
 import router from "@/router/index.js";
 // 导入仓库
 import store from "@/store/store.js";
+// 导入全局过滤器
+import '@/filters/filters.js'
 
 // 整合Element-ui
 import ElementUI from "element-ui";
