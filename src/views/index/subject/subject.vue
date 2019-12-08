@@ -35,18 +35,18 @@
     <el-card class="card-main">
       <el-table :data="subjectTable">
         <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column prop="b" label="学科编号"></el-table-column>
-        <el-table-column prop="c" label="学科名称"></el-table-column>
-        <el-table-column prop="d" label="简称"></el-table-column>
-        <el-table-column prop="e" label="创建者"></el-table-column>
-        <el-table-column prop="f" label="创建日期"></el-table-column>
-        <el-table-column prop="g" label="状态">
+        <el-table-column prop="rid" label="学科编号"></el-table-column>
+        <el-table-column prop="name" label="学科名称"></el-table-column>
+        <el-table-column prop="short_name" label="简称"></el-table-column>
+        <el-table-column prop="username" label="创建者"></el-table-column>
+        <el-table-column prop="update_time" label="创建日期"></el-table-column>
+        <el-table-column  label="状态">
           <template slot-scope="scope">
             <span v-if="scope.row.g === 1">启用</span>
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
-        <el-table-column prop="h" label="操作">
+        <el-table-column  label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
             <el-button type="text">{{
@@ -62,7 +62,7 @@
         :page-sizes="[5, 10, 15, 20]"
         :page-size="5"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="20"
+        :total="total"
         background
       >
       </el-pagination>
@@ -75,6 +75,8 @@
 <script>
 // 导入并使用
 import subjectDialog from "./components/subjectDialog.vue";
+// 导入学科接口
+import {subjectList} from "@/api/subject.js"
 export default {
   name: "subject",
   // 注册组件
@@ -104,7 +106,21 @@ export default {
       ],
       // 是否显示新增框
       addFormVisible: false
+      ,
+      // 总条数
+      total:0
     };
+  },
+  // 获取列表数据
+  created(){
+    // 初始数据获取不携带任何数据
+    subjectList().then(res=>{
+      // console.log(res)
+      // 表格数据
+      this.subjectTable = res.data.data.items
+      // 总条数
+      this.total = res.data.data.pagination.total
+    })
   }
 };
 </script>
