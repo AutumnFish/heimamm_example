@@ -47,7 +47,7 @@
         <el-table-column prop="h" label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button type="text">{{
+            <el-button type="text" @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
             <el-button type="text">删除</el-button>
@@ -76,7 +76,7 @@
 // 导入并使用
 import userDialog from "./components/userDialog.vue";
 // 导入数据接口
-import { userList } from "@/api/user.js";
+import { userList,userStatus } from "@/api/user.js";
 export default {
   name: "user",
   // 注册组件
@@ -123,6 +123,17 @@ export default {
     };
   },
   methods: {
+    // 修改状态
+    changeStatus(item){
+      userStatus({
+        id:item.id
+      }).then(res=>{
+        if(res.code===200){
+          this.$message.success("状态修改成功")
+          this.getList();
+        }
+      })
+    },
     // 获取数据
     getList() {
       userList({
