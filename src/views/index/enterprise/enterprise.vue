@@ -21,67 +21,75 @@
         <el-form-item>
           <el-button type="primary">查询</el-button>
           <el-button>清除</el-button>
-          <el-button type="primary" @click="addFormVisible=true" icon="el-icon-plus">新增企业</el-button>
+          <el-button
+            type="primary"
+            @click="addFormVisible = true"
+            icon="el-icon-plus"
+            >新增企业</el-button
+          >
         </el-form-item>
       </el-form>
     </el-card>
 
     <!-- 底部 -->
     <el-card class="card-main">
-      <el-table :data="subjectTable">
+      <el-table :data="enterpriseTable">
         <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column prop="b" label="企业编号"></el-table-column>
-        <el-table-column prop="c" label="企业名称"></el-table-column>
-        <el-table-column prop="d" label="所属领域"></el-table-column>
-        <el-table-column prop="e" label="创建者"></el-table-column>
-        <el-table-column prop="f" label="创建日期"></el-table-column>
-        <el-table-column prop="g" label="状态">
+        <el-table-column prop="eid" label="企业编号"></el-table-column>
+        <el-table-column prop="name" label="企业名称"></el-table-column>
+        <el-table-column prop="username" label="创建者"></el-table-column>
+        <el-table-column  label="创建日期">
           <template slot-scope="scope">
-            <span v-if="scope.row.g === 1">启用</span>
+            {{ scope.row.create_time | formatTime }}
+          </template>
+        </el-table-column>
+        <el-table-column  label="状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.status === 1">启用</span>
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
-        <el-table-column prop="h" label="操作">
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button
-              type="text"
-              >{{scope.row.g===0?"启用":"禁用"}}</el-button
-            >
+            <el-button type="text">{{
+              scope.row.status === 0 ? "启用" : "禁用"
+            }}</el-button>
             <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-       <!-- 分页器 -->
+      <!-- 分页器 -->
       <el-pagination
-        :current-page="1"
+        :current-page="page"
         :page-sizes="[5, 10, 15, 20]"
-        :page-size="5"
+        :page-size="limit"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="20"
+        :total="total"
         background
       >
       </el-pagination>
     </el-card>
     <!-- 对话框 -->
-    <enterpriseDialog/>
+    <enterpriseDialog />
   </div>
 </template>
 
 <script>
 // 导入并使用
-import enterpriseDialog from './components/enterpriseDialog.vue'
+import enterpriseDialog from "./components/enterpriseDialog.vue";
 // 导入数据接口
+import { enterpriseList } from "@/api/enterprise.js";
 export default {
   name: "enterprise",
   // 注册组件
-  components:{
+  components: {
     enterpriseDialog
   },
   data() {
     return {
       filterForm: {},
-      subjectTable: [
+      enterpriseTable: [
         {
           b: "enterprise1",
           c: "黑马程序员",
@@ -100,10 +108,27 @@ export default {
         }
       ],
       // 是否显示新增框
-      addFormVisible:false
+      addFormVisible: false,
+      // 页码
+      page:1,
+      // 页容量
+      limit:5,
+      // 总条数
+      total:0
     };
   },
-  created(){}
+  created() {
+    enterpriseList({
+      limt:this.limit,
+      page:this.page
+    }).then(res=>{
+      console.log(res)
+      // 总条数
+      this.total = res.data.pagination.total;
+      // 表格数据
+      this.enterpriseTable = res.data.items;
+    })
+  }
 };
 </script>
 
