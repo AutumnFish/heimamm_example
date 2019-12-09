@@ -2,7 +2,12 @@
   <div class="enterprise-container">
     <!-- 头部 -->
     <el-card class="card-header">
-      <el-form :inline="true" ref="filterForm" :model="filterForm" class="demo-form-inline">
+      <el-form
+        :inline="true"
+        ref="filterForm"
+        :model="filterForm"
+        class="demo-form-inline"
+      >
         <el-form-item label="企业编号" prop="eid">
           <el-input v-model="filterForm.eid" class="short-input"></el-input>
         </el-form-item>
@@ -10,7 +15,10 @@
           <el-input v-model="filterForm.name"></el-input>
         </el-form-item>
         <el-form-item label="创建者" prop="username">
-          <el-input v-model="filterForm.username" class="short-input"></el-input>
+          <el-input
+            v-model="filterForm.username"
+            class="short-input"
+          ></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="filterForm.status" placeholder="请选择状态">
@@ -55,7 +63,9 @@
             <el-button type="text" @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" @click="removeItem(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -81,7 +91,11 @@
 // 导入并使用
 import enterpriseDialog from "./components/enterpriseDialog.vue";
 // 导入数据接口
-import { enterpriseList,enterpriseStatus } from "@/api/enterprise.js";
+import {
+  enterpriseList,
+  enterpriseStatus,
+  enterpriseRemove
+} from "@/api/enterprise.js";
 export default {
   name: "enterprise",
   // 注册组件
@@ -120,27 +134,47 @@ export default {
     };
   },
   methods: {
+    // 删除数据
+    removeItem(item) {
+      // 提示用户
+      this.$confirm("你确定要删除这个企业", "提示！", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          enterpriseRemove({
+            id: item.id
+          }).then(res => {
+            if(res.code===200){
+              // 重新获取数据
+              this.getList()
+            }
+          });
+        })
+        .catch(() => {});
+    },
     // 清除筛选
-    clearFilter(){
-      this.$refs.filterForm.resetFields()
+    clearFilter() {
+      this.$refs.filterForm.resetFields();
       // 重新获取数据
-      this.getList()
+      this.getList();
     },
     // 筛选数据
-    filterData(){
+    filterData() {
       // 重新获取数据
-      this.getList()
+      this.getList();
     },
     // 修改状态
-    changeStatus(item){
+    changeStatus(item) {
       enterpriseStatus({
-        id:item.id
-      }).then(res=>{
-        if(res.code===200){
-          this.$message.success('状态修改成功')
-          this.getList()
+        id: item.id
+      }).then(res => {
+        if (res.code === 200) {
+          this.$message.success("状态修改成功");
+          this.getList();
         }
-      })
+      });
     },
     // 获取列表数据
     getList() {
@@ -148,12 +182,12 @@ export default {
         limt: this.limit,
         page: this.page,
         ...this.filterForm
-      }).then(res=>{
-         // 总条数
-      this.total = res.data.pagination.total;
-      // 表格数据
-      this.enterpriseTable = res.data.items;
-      })
+      }).then(res => {
+        // 总条数
+        this.total = res.data.pagination.total;
+        // 表格数据
+        this.enterpriseTable = res.data.items;
+      });
     },
     // 页容量改变
     handleSizeChange(limit) {
