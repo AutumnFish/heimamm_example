@@ -52,7 +52,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button type="text">{{
+            <el-button type="text" @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
             <el-button type="text">删除</el-button>
@@ -81,7 +81,7 @@
 // 导入并使用
 import enterpriseDialog from "./components/enterpriseDialog.vue";
 // 导入数据接口
-import { enterpriseList } from "@/api/enterprise.js";
+import { enterpriseList,enterpriseStatus } from "@/api/enterprise.js";
 export default {
   name: "enterprise",
   // 注册组件
@@ -120,6 +120,17 @@ export default {
     };
   },
   methods: {
+    // 修改状态
+    changeStatus(item){
+      enterpriseStatus({
+        id:item.id
+      }).then(res=>{
+        if(res.code===200){
+          this.$message.success('状态修改成功')
+          this.getList()
+        }
+      })
+    },
     // 获取列表数据
     getList() {
       enterpriseList({
@@ -148,7 +159,7 @@ export default {
   },
   created() {
     enterpriseList({
-      limt: this.limit,
+      limit: this.limit,
       page: this.page
     }).then(res => {
       // 总条数
