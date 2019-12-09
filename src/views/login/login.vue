@@ -146,7 +146,7 @@
 // 导入登录接口
 import { login, sendsms, register } from "@/api/login.js";
 // 验证逻辑的导入
-import { checkMobile, checkAgree, checkEmail } from "./validator.js";
+import { checkMobile, checkAgree, checkEmail } from "@/utils/validator.js";
 // 数据 获取的接口
 import { setToken } from "@/utils/token.js";
 export default {
