@@ -2,23 +2,26 @@
   <div class="user-container">
     <!-- 头部 -->
     <el-card class="card-header">
-      <el-form :inline="true" :model="filterForm" class="demo-form-inline">
-        <el-form-item label="用户名称">
-          <el-input v-model="filterForm.user" class="short-input"></el-input>
+      <el-form :inline="true" ref="filterForm" :model="filterForm" class="demo-form-inline">
+        <el-form-item label="用户名称" prop="username">
+          <el-input
+            v-model="filterForm.username"
+            class="short-input"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱">
-          <el-input v-model="filterForm.user"></el-input>
+        <el-form-item label="用户邮箱" prop="email">
+          <el-input v-model="filterForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="角色">
-          <el-select v-model="filterForm.region" placeholder="请选择状态">
-            <el-option label="学生" value="2"></el-option>
-            <el-option label="老师" value="3"></el-option>
-            <el-option label="管理员" value="4"></el-option>
+        <el-form-item label="角色" prop="role_id">
+          <el-select v-model="filterForm.role_id" placeholder="请选择状态">
+            <el-option label="管理员" :value="2"></el-option>
+            <el-option label="老师" :value="3"></el-option>
+            <el-option label="学生" :value="4"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
-          <el-button>清除</el-button>
+          <el-button type="primary" @click="filterData">查询</el-button>
+          <el-button @click="removeFilter">清除</el-button>
           <el-button
             type="primary"
             @click="addFormVisible = true"
@@ -76,7 +79,7 @@
 // 导入并使用
 import userDialog from "./components/userDialog.vue";
 // 导入数据接口
-import { userList,userStatus } from "@/api/user.js";
+import { userList, userStatus } from "@/api/user.js";
 export default {
   name: "user",
   // 注册组件
@@ -84,6 +87,7 @@ export default {
     userDialog
   },
   data() {
+
     return {
       filterForm: {},
       userTable: [
@@ -123,22 +127,35 @@ export default {
     };
   },
   methods: {
+    // 重置数据
+    removeFilter(){
+      this.$refs.filterForm.resetFields()
+      // 重新获取数据
+      this.getList()
+    },
+    // 筛选数据
+    filterData() {
+      // 去第一页
+      this.page = 1;
+      this.getList();
+    },
     // 修改状态
-    changeStatus(item){
+    changeStatus(item) {
       userStatus({
-        id:item.id
-      }).then(res=>{
-        if(res.code===200){
-          this.$message.success("状态修改成功")
+        id: item.id
+      }).then(res => {
+        if (res.code === 200) {
+          this.$message.success("状态修改成功");
           this.getList();
         }
-      })
+      });
     },
     // 获取数据
     getList() {
       userList({
         page: this.page,
-        limit: this.limit
+        limit: this.limit,
+        ...this.filterForm
       }).then(res => {
         this.total = res.data.pagination.total;
         this.userTable = res.data.items;
