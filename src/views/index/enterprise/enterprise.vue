@@ -59,7 +59,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text">编辑</el-button>
+            <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
             <el-button type="text" @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
@@ -84,12 +84,15 @@
     </el-card>
     <!-- 对话框 -->
     <enterpriseDialog />
+    <!-- 编辑对话框 -->
+    <enterpriseEditDialog ref="enterpriseEditDialog"/>
   </div>
 </template>
 
 <script>
 // 导入并使用
 import enterpriseDialog from "./components/enterpriseDialog.vue";
+import enterpriseEditDialog from "./components/enterpriseEditDialog.vue";
 // 导入数据接口
 import {
   enterpriseList,
@@ -100,7 +103,8 @@ export default {
   name: "enterprise",
   // 注册组件
   components: {
-    enterpriseDialog
+    enterpriseDialog,
+    enterpriseEditDialog
   },
   data() {
     return {
@@ -130,14 +134,22 @@ export default {
       // 页容量
       limit: 5,
       // 总条数
-      total: 0
+      total: 0,
+      // 是否显示编辑框
+      editFormVisible:false
     };
   },
   methods: {
+    // 进入编辑状态
+    enterEdit(item){
+      this.$refs.enterpriseEditDialog.editForm = JSON.parse(JSON.stringify(item));
+      // 显示对话框
+      this.editFormVisible = true;
+    },
     // 删除数据
     removeItem(item) {
       // 提示用户
-      this.$confirm("你确定要删除这个企业", "提示！", {
+      this.$confirm("你确定要删除这个企业", "提示!", {
         confirmButtonText: "确认",
         cancelButtonText: "取消",
         type: "warning"
