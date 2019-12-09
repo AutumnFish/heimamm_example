@@ -71,7 +71,6 @@ export default {
         if (valid) {
           enterpriseEdit(this.editForm).then(res => {
             if (res.code === 200) {
-              console.log(res)
               // 重新表单
               this.$refs.editForm.resetFields();
               this.$parent.editFormVisible = false;
