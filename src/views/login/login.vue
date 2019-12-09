@@ -259,7 +259,7 @@ export default {
           phone: this.regForm.phone
         }).then(res => {
           // console.log(res)
-          this.$message.info("短信验证码是:" + res.data.data.captcha);
+          this.$message.info("短信验证码是:" + res.data.captcha);
         });
       }
     },
@@ -284,7 +284,7 @@ export default {
           login(this.logForm).then(res => {
             // console.log(res);
             // 保存token
-            setToken(res.data.data.token);
+            setToken(res.data.token);
             // 跳转到首页
             this.$router.push("/index");
           });

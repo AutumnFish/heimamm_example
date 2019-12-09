@@ -207,9 +207,9 @@ export default {
         ...this.filterForm
       }).then(res => {
         // 表格数据
-        this.subjectTable = res.data.data.items;
+        this.subjectTable = res.data.items;
         // 总条数
-        this.total = res.data.data.pagination.total;
+        this.total = res.data.pagination.total;
       });
     },
     // 页容量改变

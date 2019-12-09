@@ -71,6 +71,7 @@
 <script>
 // 导入并使用
 import enterpriseDialog from './components/enterpriseDialog.vue'
+// 导入数据接口
 export default {
   name: "enterprise",
   // 注册组件
@@ -101,7 +102,8 @@ export default {
       // 是否显示新增框
       addFormVisible:false
     };
-  }
+  },
+  created(){}
 };
 </script>
 

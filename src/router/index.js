@@ -44,9 +44,9 @@ router.beforeEach((to, from, next) => {
           next("/login");
         } else {
           // 用户的头像地址缺少了一个基地址
-          res.data.data.avatar = process.env.VUE_APP_BASEURL+"/"+res.data.data.avatar
+          res.data.avatar = process.env.VUE_APP_BASEURL+"/"+res.data.avatar
           // 保存用户信息
-          store.commit("SETINFO", res.data.data);
+          store.commit("SETINFO", res.data);
           // token验证成功
           next();
         }
