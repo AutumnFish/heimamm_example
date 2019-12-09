@@ -2,7 +2,12 @@
   <div class="user-container">
     <!-- 头部 -->
     <el-card class="card-header">
-      <el-form :inline="true" ref="filterForm" :model="filterForm" class="demo-form-inline">
+      <el-form
+        :inline="true"
+        ref="filterForm"
+        :model="filterForm"
+        class="demo-form-inline"
+      >
         <el-form-item label="用户名称" prop="username">
           <el-input
             v-model="filterForm.username"
@@ -53,7 +58,9 @@
             <el-button type="text" @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" @click="removeUser(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -79,7 +86,7 @@
 // 导入并使用
 import userDialog from "./components/userDialog.vue";
 // 导入数据接口
-import { userList, userStatus } from "@/api/user.js";
+import { userList, userStatus,userRemove } from "@/api/user.js";
 export default {
   name: "user",
   // 注册组件
@@ -87,35 +94,9 @@ export default {
     userDialog
   },
   data() {
-
     return {
       filterForm: {},
-      userTable: [
-        {
-          b: "jack",
-          c: "18888888888",
-          d: "8888@qq.com",
-          e: "管理员",
-          f: "全能的管理员",
-          g: 0
-        },
-        {
-          b: "rose",
-          c: "18888881234",
-          d: "1234@qq.com",
-          e: "老师",
-          f: "部分权限的老师",
-          g: 1
-        },
-        {
-          b: "ice",
-          c: "16666666666",
-          d: "6666@qq.com",
-          e: "学生",
-          f: "只能学习",
-          g: 0
-        }
-      ],
+      userTable: [],
       // 是否显示新增框
       addFormVisible: false,
       // 页码
@@ -127,11 +108,30 @@ export default {
     };
   },
   methods: {
+    // 删除用户
+    removeUser(item){
+      this.$confirm('是否确认删除该用户', '提示!', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 调用删除接口
+        userRemove({
+          id:item.id
+        }).then(res=>{
+          if(res.code===200){
+            this.$message.success("删除成功");
+            // 重新获取数据
+            this.getList()
+          }
+        })
+      }).catch(() => {});
+    },
     // 重置数据
-    removeFilter(){
-      this.$refs.filterForm.resetFields()
+    removeFilter() {
+      this.$refs.filterForm.resetFields();
       // 重新获取数据
-      this.getList()
+      this.getList();
     },
     // 筛选数据
     filterData() {
