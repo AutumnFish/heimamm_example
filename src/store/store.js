@@ -6,7 +6,7 @@ Vue.use(Vuex);
 // 创建仓库
 const store = new Vuex.Store({
   state: {
-    userInfo: undefined
+    userInfo: ''
   },
   mutations: {
     SETINFO(state, info) {

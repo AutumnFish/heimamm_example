@@ -32,9 +32,10 @@ router.beforeEach((to, from, next) => {
     }
     // 如果没有用户信息
     if (!store.state.userInfo) {
+      console.log("用户信息获取")
       // 用户信息获取 并且 token正确性判断
       userInfo().then(res => {
-        if (res.data.code === 0) {
+        if (res.data.code === 206) {
           // token验证失效
           Message.error("登录状态有误，请重新登录");
           // 删除错误的token
