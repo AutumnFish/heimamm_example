@@ -2,25 +2,25 @@
   <div class="enterprise-container">
     <!-- 头部 -->
     <el-card class="card-header">
-      <el-form :inline="true" :model="filterForm" class="demo-form-inline">
-        <el-form-item label="企业编号">
-          <el-input v-model="filterForm.user" class="short-input"></el-input>
+      <el-form :inline="true" ref="filterForm" :model="filterForm" class="demo-form-inline">
+        <el-form-item label="企业编号" prop="eid">
+          <el-input v-model="filterForm.eid" class="short-input"></el-input>
         </el-form-item>
-        <el-form-item label="企业名称">
-          <el-input v-model="filterForm.user"></el-input>
+        <el-form-item label="企业名称" prop="name">
+          <el-input v-model="filterForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="创建者">
-          <el-input v-model="filterForm.user" class="short-input"></el-input>
+        <el-form-item label="创建者" prop="username">
+          <el-input v-model="filterForm.username" class="short-input"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="filterForm.region" placeholder="请选择状态">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="filterForm.status" placeholder="请选择状态">
+            <el-option label="启用" value="1"></el-option>
+            <el-option label="禁用" value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
-          <el-button>清除</el-button>
+          <el-button type="primary" @click="filterData">查询</el-button>
+          <el-button @click="clearFilter">清除</el-button>
           <el-button
             type="primary"
             @click="addFormVisible = true"
@@ -120,6 +120,17 @@ export default {
     };
   },
   methods: {
+    // 清除筛选
+    clearFilter(){
+      this.$refs.filterForm.resetFields()
+      // 重新获取数据
+      this.getList()
+    },
+    // 筛选数据
+    filterData(){
+      // 重新获取数据
+      this.getList()
+    },
     // 修改状态
     changeStatus(item){
       enterpriseStatus({
@@ -136,6 +147,7 @@ export default {
       enterpriseList({
         limt: this.limit,
         page: this.page,
+        ...this.filterForm
       }).then(res=>{
          // 总条数
       this.total = res.data.pagination.total;
