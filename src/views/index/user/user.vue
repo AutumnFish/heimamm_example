@@ -38,7 +38,7 @@
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="role" label="角色"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column  label="状态">
+        <el-table-column label="状态">
           <template slot-scope="scope">
             <span v-if="scope.row.status === 1">启用</span>
             <span v-else class="red">禁用</span>
@@ -56,12 +56,14 @@
       </el-table>
       <!-- 分页器 -->
       <el-pagination
-        :current-page="1"
+        :current-page="page"
         :page-sizes="[5, 10, 15, 20]"
-        :page-size="5"
+        :page-size="limit"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="20"
+        :total="total"
         background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </el-card>
@@ -74,7 +76,7 @@
 // 导入并使用
 import userDialog from "./components/userDialog.vue";
 // 导入数据接口
-import {userList} from '@/api/user.js'
+import { userList } from "@/api/user.js";
 export default {
   name: "user",
   // 注册组件
@@ -113,22 +115,47 @@ export default {
       // 是否显示新增框
       addFormVisible: false,
       // 页码
-      page:1,
+      page: 1,
       // 页容量
-      limit:5,
+      limit: 5,
       // 总条数
-      total:0
+      total: 0
     };
   },
-  created(){
+  methods: {
+    // 获取数据
+    getList() {
+      userList({
+        page: this.page,
+        limit: this.limit
+      }).then(res => {
+        this.total = res.data.pagination.total;
+        this.userTable = res.data.items;
+      });
+    },
+    // 页容量改变
+    handleSizeChange(limit) {
+      this.limit = limit;
+      this.page = 1;
+      // 重新获取数据
+      this.getList();
+    },
+    // 页码改变
+    handleCurrentChange(page) {
+      this.page = page;
+      // 重新获取数据
+      this.getList();
+    }
+  },
+  created() {
     // 获取用户信息
     userList({
-      page:this.page,
-      limit:this.limit
-    }).then(res=>{
+      page: this.page,
+      limit: this.limit
+    }).then(res => {
       this.total = res.data.pagination.total;
       this.userTable = res.data.items;
-    })
+    });
   }
 };
 </script>
