@@ -31,16 +31,16 @@
 
     <!-- 底部 -->
     <el-card class="card-main">
-      <el-table :data="subjectTable">
+      <el-table :data="userTable">
         <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column prop="b" label="用户名"></el-table-column>
-        <el-table-column prop="c" label="电话"></el-table-column>
-        <el-table-column prop="d" label="邮箱"></el-table-column>
-        <el-table-column prop="e" label="角色"></el-table-column>
-        <el-table-column prop="f" label="备注"></el-table-column>
-        <el-table-column prop="g" label="状态">
+        <el-table-column prop="username" label="用户名"></el-table-column>
+        <el-table-column prop="phone" label="电话"></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="role" label="角色"></el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table-column  label="状态">
           <template slot-scope="scope">
-            <span v-if="scope.row.g === 1">启用</span>
+            <span v-if="scope.row.status === 1">启用</span>
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
@@ -48,7 +48,7 @@
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
             <el-button type="text">{{
-              scope.row.g === 0 ? "启用" : "禁用"
+              scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
             <el-button type="text">删除</el-button>
           </template>
@@ -73,6 +73,8 @@
 <script>
 // 导入并使用
 import userDialog from "./components/userDialog.vue";
+// 导入数据接口
+import {userList} from '@/api/user.js'
 export default {
   name: "user",
   // 注册组件
@@ -82,7 +84,7 @@ export default {
   data() {
     return {
       filterForm: {},
-      subjectTable: [
+      userTable: [
         {
           b: "jack",
           c: "18888888888",
@@ -109,8 +111,24 @@ export default {
         }
       ],
       // 是否显示新增框
-      addFormVisible: false
+      addFormVisible: false,
+      // 页码
+      page:1,
+      // 页容量
+      limit:5,
+      // 总条数
+      total:0
     };
+  },
+  created(){
+    // 获取用户信息
+    userList({
+      page:this.page,
+      limit:this.limit
+    }).then(res=>{
+      this.total = res.data.pagination.total;
+      this.userTable = res.data.items;
+    })
   }
 };
 </script>

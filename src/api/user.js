@@ -1,15 +1,59 @@
 // 导入 axios 副本
-import request from './request'
+import request from "./request";
 // 导入token获取函数
-import {getToken} from '@/utils/token.js'
+import { getToken } from "@/utils/token.js";
 
 // 暴露 用户信息方法
-export function userInfo(){
-    return request({
-        url:"/user/info",
-        method:"get",
-        headers:{
-            token:getToken()
-        }
-    })
+export function userInfo() {
+  return request({
+    url: "/user/info",
+    method: "get",
+    headers: {
+      token: getToken()
+    }
+  });
+}
+
+// 暴露接口 用户列表
+export function userList(params) {
+  return request({
+    url: "/user/list",
+    method: "get",
+    params
+  });
+}
+// 暴露接口 添加用户
+export function userAdd(data) {
+  return request({
+    url: "/user/add",
+    method: "post",
+    data
+  });
+}
+
+// 暴露接口 用户状态
+export function userStatus(data) {
+  return request({
+    url: "/user/status",
+    method: "post",
+    data
+  });
+}
+
+// 暴露接口 用户编辑
+export function userEdit(data) {
+  return request({
+    url: "/user/edit",
+    method: "post",
+    data
+  });
+}
+
+// 暴露接口 用户删除
+export function userRemove(data) {
+  return request({
+    url: "/user/remove",
+    method: "post",
+    data
+  });
 }
