@@ -2,7 +2,12 @@
   <div class="subject-container">
     <!-- 头部 -->
     <el-card class="card-header">
-      <el-form :inline="true" ref="filterForm" :model="filterForm" class="demo-form-inline">
+      <el-form
+        :inline="true"
+        ref="filterForm"
+        :model="filterForm"
+        class="demo-form-inline"
+      >
         <el-form-item label="学科编号" prop="rid">
           <el-input v-model="filterForm.rid" class="short-input"></el-input>
         </el-form-item>
@@ -10,7 +15,10 @@
           <el-input v-model="filterForm.name"></el-input>
         </el-form-item>
         <el-form-item label="创建者" prop="username">
-          <el-input v-model="filterForm.username" class="short-input"></el-input>
+          <el-input
+            v-model="filterForm.username"
+            class="short-input"
+          ></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="filterForm.status" placeholder="请选择状态">
@@ -53,8 +61,12 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button type="text" @click="changeState(scope.row)">{{scope.row.status === 0 ? "启用" : "禁用"}}</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" @click="changeState(scope.row)">{{
+              scope.row.status === 0 ? "启用" : "禁用"
+            }}</el-button>
+            <el-button type="text" @click="removeSubject(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -80,7 +92,7 @@
 // 导入并使用
 import subjectDialog from "./components/subjectDialog.vue";
 // 导入学科接口
-import { subjectList,subjectStatus } from "@/api/subject.js";
+import { subjectList, subjectStatus, subjectRemove } from "@/api/subject.js";
 export default {
   name: "subject",
   // 注册组件
@@ -90,10 +102,10 @@ export default {
   data() {
     return {
       filterForm: {
-        rid:"",
-        name:"",
-        username:"",
-        status:""
+        rid: "",
+        name: "",
+        username: "",
+        status: ""
       },
       subjectTable: [
         {
@@ -124,30 +136,53 @@ export default {
     };
   },
   methods: {
-    filterData(){
+    // 删除数据
+    removeSubject(item) {
+      this.$confirm("此操作将删除这个学科, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          subjectRemove({
+            id: item.id
+          }).then(res => {
+            if (res.data.code !== 200) {
+              return this.$message.error(res.data.message);
+            }
+            // 重新获取数据
+            this.getList();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    filterData() {
       // 去第一页
       this.page = 1;
       // 重新获取数据
       this.getList();
     },
-    resetFilter(){
-      this.$refs.filterForm.resetFields()
-      console.log(this.$refs.filterForm.resetFields)
-      console.log(this.filterForm)
+    resetFilter() {
+      this.$refs.filterForm.resetFields();
     },
     // 修改状态
-    changeState(item){
+    changeState(item) {
       subjectStatus({
-        id:item.id,
-      }).then(res=>{
+        id: item.id
+      }).then(res => {
         // console.log(res)
-        if(res.data.code===200){
+        if (res.data.code === 200) {
           // 提示用户
           this.$message.success("状态修改成功");
           // 重新获取数据
           this.getList();
         }
-      })
+      });
     },
     // 获取数据
     getList() {
