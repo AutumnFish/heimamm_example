@@ -60,7 +60,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text">编辑</el-button>
+            <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
             <el-button type="text" @click="changeState(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
@@ -83,21 +83,24 @@
       >
       </el-pagination>
     </el-card>
-    <!-- 对话框 -->
+    <!-- 新增 对话框 -->
     <subjectDialog />
+    <!-- 编辑 对话框 -->
+    <subjectEditDialog  ref="subjectEditDialog" />
   </div>
 </template>
 
 <script>
 // 导入并使用
 import subjectDialog from "./components/subjectDialog.vue";
+import subjectEditDialog from "./components/subjectEditDialog.vue";
 // 导入学科接口
 import { subjectList, subjectStatus, subjectRemove } from "@/api/subject.js";
 export default {
   name: "subject",
   // 注册组件
   components: {
-    subjectDialog
+    subjectDialog,subjectEditDialog
   },
   data() {
     return {
@@ -132,10 +135,21 @@ export default {
       // 当前页
       page: 1,
       // 页容量
-      limit: 5
+      limit: 5,
+      // 是否显示编辑框
+      editFormVisible: false,
+      // 编辑表单
+      editForm:{}
     };
   },
   methods: {
+    // 进入编辑状态
+    enterEdit(item){
+      // 数据传递
+      this.$refs.subjectEditDialog.editForm = JSON.parse(JSON.stringify(item));
+      // 显示编辑框
+      this.editFormVisible = true;
+    },
     // 删除数据
     removeSubject(item) {
       this.$confirm("此操作将删除这个学科, 是否继续?", "提示", {
