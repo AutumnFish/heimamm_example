@@ -54,7 +54,9 @@
         </el-table-column>
         <el-table-column prop="h" label="操作">
           <template slot-scope="scope">
-            <el-button type="text">编辑</el-button>
+            <el-button type="text" @click="enterEdit(scope.row)"
+              >编辑</el-button
+            >
             <el-button type="text" @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
@@ -79,19 +81,23 @@
     </el-card>
     <!-- 对话框 -->
     <userDialog />
+    <!-- 编辑对话框 -->
+    <userEditDialog ref="userEditDialog" />
   </div>
 </template>
 
 <script>
 // 导入并使用
 import userDialog from "./components/userDialog.vue";
+import userEditDialog from "./components/userEditDialog.vue";
 // 导入数据接口
-import { userList, userStatus,userRemove } from "@/api/user.js";
+import { userList, userStatus, userRemove } from "@/api/user.js";
 export default {
   name: "user",
   // 注册组件
   components: {
-    userDialog
+    userDialog,
+    userEditDialog
   },
   data() {
     return {
@@ -104,28 +110,38 @@ export default {
       // 页容量
       limit: 5,
       // 总条数
-      total: 0
+      total: 0,
+      // 编辑模态框
+      editFormVisible: false
     };
   },
   methods: {
+    // 进入编辑状态
+    enterEdit(item) {
+      this.$refs.userEditDialog.editForm = JSON.parse(JSON.stringify(item))
+      // 显示出来
+      this.editFormVisible = true;
+    },
     // 删除用户
-    removeUser(item){
-      this.$confirm('是否确认删除该用户', '提示!', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 调用删除接口
-        userRemove({
-          id:item.id
-        }).then(res=>{
-          if(res.code===200){
-            this.$message.success("删除成功");
-            // 重新获取数据
-            this.getList()
-          }
+    removeUser(item) {
+      this.$confirm("是否确认删除该用户", "提示!", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // 调用删除接口
+          userRemove({
+            id: item.id
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message.success("删除成功");
+              // 重新获取数据
+              this.getList();
+            }
+          });
         })
-      }).catch(() => {});
+        .catch(() => {});
     },
     // 重置数据
     removeFilter() {
