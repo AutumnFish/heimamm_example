@@ -38,12 +38,12 @@
         <el-table-column prop="eid" label="企业编号"></el-table-column>
         <el-table-column prop="name" label="企业名称"></el-table-column>
         <el-table-column prop="username" label="创建者"></el-table-column>
-        <el-table-column  label="创建日期">
+        <el-table-column label="创建日期">
           <template slot-scope="scope">
             {{ scope.row.create_time | formatTime }}
           </template>
         </el-table-column>
-        <el-table-column  label="状态">
+        <el-table-column label="状态">
           <template slot-scope="scope">
             <span v-if="scope.row.status === 1">启用</span>
             <span v-else class="red">禁用</span>
@@ -67,6 +67,8 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </el-card>
@@ -110,24 +112,50 @@ export default {
       // 是否显示新增框
       addFormVisible: false,
       // 页码
-      page:1,
+      page: 1,
       // 页容量
-      limit:5,
+      limit: 5,
       // 总条数
-      total:0
+      total: 0
     };
+  },
+  methods: {
+    // 获取列表数据
+    getList() {
+      enterpriseList({
+        limt: this.limit,
+        page: this.page,
+      }).then(res=>{
+         // 总条数
+      this.total = res.data.pagination.total;
+      // 表格数据
+      this.enterpriseTable = res.data.items;
+      })
+    },
+    // 页容量改变
+    handleSizeChange(limit) {
+      this.limit = limit;
+      this.page = 1;
+      // 重新获取数据
+      this.getList();
+    },
+    // 页码改变
+    handleCurrentChange(page) {
+      this.page = page;
+      // 重新获取数据
+      this.getList();
+    }
   },
   created() {
     enterpriseList({
-      limt:this.limit,
-      page:this.page
-    }).then(res=>{
-      console.log(res)
+      limt: this.limit,
+      page: this.page
+    }).then(res => {
       // 总条数
       this.total = res.data.pagination.total;
       // 表格数据
       this.enterpriseTable = res.data.items;
-    })
+    });
   }
 };
 </script>
