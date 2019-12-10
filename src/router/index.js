@@ -66,8 +66,14 @@ router.beforeEach((to, from, next) => {
         }
       });
     } else {
-      // 直接放过去
-      next();
+      // 如果有用户信息，就判断是否允许访问
+      if (to.meta.roles.includes(store.state.userInfo.role)) {
+        // 直接放过去
+        next();
+      } else {
+        // 不允许访问
+        Message.warning("你没有访问的权限！")
+      }
     }
   } else {
     // 放过去
