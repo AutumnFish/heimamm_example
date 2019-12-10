@@ -199,7 +199,7 @@ export default {
   methods: {
     // 清除筛选
     clearFilter(){
-      // 清空数据之后
+      // 清空筛选的数据
       this.$refs.filterForm.resetFields()
       // 重新获取数据
       this.filterData()
