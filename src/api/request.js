@@ -1,12 +1,10 @@
 import axios from "axios";
-// 导入仓库
-import store from "@/store/store.js";
 // 携带token
-import {getToken,removeToken} from '@/utils/token.js'
+import { getToken, removeToken } from "@/utils/token.js";
 // 导入路由
-import router from '@/router/index.js'
+import router from "@/router/index.js";
 // 导入Element-ui的弹框
-import {Message} from 'element-ui'
+import { Message } from "element-ui";
 
 // 创建副本
 const instance = axios.create({
@@ -21,9 +19,10 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function(config) {
     // 设置token
-    if (store.state.userInfo) {
-        // 如果有用户信息 就携带token 
-        config.headers.token = getToken()
+    if (getToken()) {
+      console.log('有token')
+      // 如果有token 就携带token
+      config.headers.token = getToken();
     }
     // Do something before request is sent
     return config;
@@ -38,13 +37,13 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   function(response) {
     // 如果token无效 去登录页
-    if(response.data.code===206){
+    if (response.data.code === 206) {
       // 提示用户
       Message.warning(response.data.message);
       // 移除token
       removeToken();
       // 去登录页
-      router.push("/login")
+      router.push("/login");
     }
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data

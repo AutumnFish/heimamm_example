@@ -212,7 +212,7 @@ export default {
     // 关闭注册框
     closedRegDialog() {
       this.$refs.regForm.resetFields();
-      this.regForm.imgCode =''
+      this.regForm.imgCode = "";
     },
     // 用户注册
     submitRegForm() {
@@ -282,11 +282,13 @@ export default {
         if (valid) {
           // 登录接口
           login(this.logForm).then(res => {
-            // console.log(res);
-            // 保存token
-            setToken(res.data.token);
-            // 跳转到首页
-            this.$router.push("/index");
+            // 判断状态
+            if (res.code === 200) {
+              // 保存token
+              setToken(res.data.token);
+              // 跳转到首页
+              this.$router.push("/index");
+            }
           });
         } else {
           this.$message.warning("请检查输入的内容");

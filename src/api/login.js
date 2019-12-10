@@ -9,6 +9,13 @@ export function login(data) {
     data
   });
 }
+// 暴露 用户信息方法
+export function userInfo() {
+  return request({
+    url: "/info",
+    method: "get"
+  });
+}
 
 // 暴露短信接口
 export function sendsms(data) {

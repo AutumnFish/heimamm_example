@@ -74,7 +74,7 @@ export default {
           // 调用退出接口
           logout().then(res=>{
             // console.log(res)
-            if(res.data.code===200){
+            if(res.code===200){
               // 删除token
               removeToken()
               // 删除用户信息
