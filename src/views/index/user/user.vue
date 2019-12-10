@@ -52,7 +52,7 @@
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
-        <el-table-column prop="h" label="操作">
+        <el-table-column prop="h" label="操作" v-if="['超级管理员'].includes($store.state.userInfo.role)">
           <template slot-scope="scope">
             <el-button type="text" @click="enterEdit(scope.row)"
               >编辑</el-button
