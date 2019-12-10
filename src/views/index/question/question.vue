@@ -8,8 +8,8 @@
         :model="filterForm"
         class="demo-form-inline"
       >
-        <el-form-item label="学科">
-          <el-select v-model="filterForm.region" placeholder="请选择学科">
+        <el-form-item label="学科" prop="subject">
+          <el-select v-model="filterForm.subject" placeholder="请选择学科">
             <el-option
               v-for="item in subjectList"
               :key="item.id"
@@ -18,13 +18,14 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="阶段">
-          <el-select v-model="filterForm.region" placeholder="请选择阶段">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="阶段" prop="step">
+          <el-select v-model="filterForm.step" placeholder="请选择阶段">
+            <el-option label="初级" value="1"></el-option>
+            <el-option label="中级" value="2"></el-option>
+            <el-option label="高级" value="3"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="企业">
+        <el-form-item label="企业" prop="region">
           <el-select v-model="filterForm.region" placeholder="请选择企业">
             <el-option
               v-for="item in enterpriseList"
@@ -34,44 +35,45 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="题型">
-          <el-select v-model="filterForm.region" placeholder="请选择题型">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="题型" prop="type">
+          <el-select v-model="filterForm.type" placeholder="请选择题型">
+            <el-option label="单选" value="1"></el-option>
+            <el-option label="多选" value="2"></el-option>
+            <el-option label="简答" value="3"></el-option>
           </el-select>
         </el-form-item>
         <br />
-        <el-form-item label="难度">
-          <el-select v-model="filterForm.region" placeholder="请选择难度">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="难度" prop="difficulty">
+          <el-select v-model="filterForm.difficulty" placeholder="请选择难度">
+            <el-option label="简单" value="1"></el-option>
+            <el-option label="一般" value="2"></el-option>
+            <el-option label="困难" value="3"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="作者">
-          <el-input v-model="filterForm.user" class="short-input"></el-input>
+        <el-form-item label="作者" prop="username">
+          <el-input v-model="filterForm.username" class="short-input"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="filterForm.region" placeholder="请选择状态">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="filterForm.status" placeholder="请选择状态">
+            <el-option label="启用" value="1"></el-option>
+            <el-option label="禁用" value="0"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="日期">
-          <el-date-picker
-            v-model="filterForm.value"
+        <el-form-item label="日期" prop="create_date">
+          <el-date-picker v-model="filterForm.create_date"
             type="date"
             placeholder="选择日期"
           >
           </el-date-picker>
         </el-form-item>
         <br />
-        <el-form-item label="标题">
-          <el-input v-model="filterForm.user" class="title-input"></el-input>
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="filterForm.title" class="title-input"></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
-          <el-button>清除</el-button>
+          <el-button type="primary" @click="filterData">搜索</el-button>
+          <el-button @click="clearFilter">清除</el-button>
           <el-button
             type="primary"
             @click="addFormVisible = true"
@@ -195,6 +197,19 @@ export default {
     };
   },
   methods: {
+    // 清除筛选
+    clearFilter(){
+      // 清空数据之后
+      this.$refs.filterForm.resetFields()
+      // 重新获取数据
+      this.filterData()
+    },
+    // 数据筛选
+    filterData(){
+      // 去第一页
+      this.page = 1;
+      this.getList()
+    },
     // 修改状态
     changeStatus(item) {
       questionStatus({
@@ -212,12 +227,13 @@ export default {
       // 初始数据获取不携带任何数据
       questionList({
         page: this.page,
-        limit: this.limit
+        limit: this.limit,
+        ...this.filterForm
       }).then(res => {
         // 表格数据
         this.questionTable = res.data.items;
         // 总条数
-        this.total = res.data.data.pagination.total;
+        this.total = res.data.pagination.total;
       });
     },
     // 页容量改变
@@ -244,11 +260,11 @@ export default {
       this.questionTable = res.data.items;
     });
     // 企业数据
-    enterpriseList({status:1}).then(res => {
+    enterpriseList().then(res => {
       this.enterpriseList = res.data.items;
     });
     // 学科数据
-    subjectList({status:1}).then(res => {
+    subjectList().then(res => {
       this.subjectList = res.data.items;
     });
   }
