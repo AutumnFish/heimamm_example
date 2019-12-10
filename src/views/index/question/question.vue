@@ -244,11 +244,11 @@ export default {
       this.questionTable = res.data.items;
     });
     // 企业数据
-    enterpriseList().then(res => {
+    enterpriseList({status:1}).then(res => {
       this.enterpriseList = res.data.items;
     });
     // 学科数据
-    subjectList().then(res => {
+    subjectList({status:1}).then(res => {
       this.subjectList = res.data.items;
     });
   }

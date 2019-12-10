@@ -60,7 +60,7 @@ export default {
         if (valid) {
           subjectEdit(this.editForm).then(res => {
             // console.log(res)
-            if (res.data.code === 200) {
+            if (res.code === 200) {
               // 重新表单
               this.$refs.editForm.resetFields();
               this.$parent.editFormVisible = false;

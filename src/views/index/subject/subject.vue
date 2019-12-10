@@ -191,7 +191,7 @@ export default {
         id: item.id
       }).then(res => {
         // console.log(res)
-        if (res.data.code === 200) {
+        if (res.code === 200) {
           // 提示用户
           this.$message.success("状态修改成功");
           // 重新获取数据
