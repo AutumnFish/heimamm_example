@@ -24,14 +24,12 @@
           router
           :collapse="isCollapse"
         >
-          <el-menu-item
-            v-for="(item, index) in routes[1].children"
-            :key="index"
-            :index="item.meta.fullPath"
-          >
-            <i :class="item.meta.icon"></i>
-            <span slot="title">{{ item.meta.title }}</span>
-          </el-menu-item>
+          <template v-for="(item, index) in routes[1].children">
+            <el-menu-item v-if="item.meta.roles.includes($store.state.userInfo.role)" :key="index" :index="item.meta.fullPath">
+              <i :class="item.meta.icon"></i>
+              <span slot="title">{{ item.meta.title }}</span>
+            </el-menu-item>
+          </template>
         </el-menu>
       </el-aside>
       <el-main class="main">
@@ -47,7 +45,7 @@ import routes from "@/router/routes.js";
 // 导入退出接口
 import { logout } from "@/api/login.js";
 // 导入token模块
-import {removeToken} from "@/utils/token.js"
+import { removeToken } from "@/utils/token.js";
 export default {
   name: "index",
   data() {
@@ -72,18 +70,17 @@ export default {
       })
         .then(() => {
           // 调用退出接口
-          logout().then(res=>{
+          logout().then(res => {
             // console.log(res)
-            if(res.code===200){
+            if (res.code === 200) {
               // 删除token
-              removeToken()
+              removeToken();
               // 删除用户信息
-              this.$store.commit("SETINFO",undefined)
+              this.$store.commit("SETINFO", undefined);
               // 跳转去登录页
-              this.$router.push("/login")
+              this.$router.push("/login");
             }
-          })
-          
+          });
         })
         .catch(() => {
           this.$message({
