@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="新增用户"
+    title="编辑用户"
     class="user-dialog"
     :visible.sync="$parent.editFormVisible"
   >

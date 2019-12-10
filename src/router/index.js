@@ -58,6 +58,23 @@ router.beforeEach((to, from, next) => {
             // 用户的头像地址缺少了一个基地址
             res.data.avatar =
               process.env.VUE_APP_BASEURL + "/" + res.data.avatar;
+            // 处理用户的状态
+            switch (res.data.role) {
+              case '超级管理员':
+                res.data.role_id=1
+                break;
+              case '管理员':
+                res.data.role_id=2
+                break;
+              case '老师':
+                res.data.role_id=3
+                break;
+              case '学生':
+                res.data.role_id=4
+                break;
+              default:
+                break;
+            } 
             // 保存用户信息
             store.commit("SETINFO", res.data);
             // token验证成功

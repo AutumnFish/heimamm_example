@@ -64,9 +64,10 @@
             <el-button type="text" @click="changeState(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
-            <el-button type="text" v-if="['超级管理员'].includes($store.state.userInfo.role)" @click="removeSubject(scope.row)"
-              >删除</el-button
-            >
+            <!-- <el-button type="text" v-if="['超级管理员'].includes($store.state.userInfo.role)" @click="removeSubject(scope.row)"> -->
+            <el-button type="text" v-power="['超级管理员']" @click="removeSubject(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

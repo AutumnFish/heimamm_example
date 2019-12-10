@@ -31,6 +31,7 @@
             type="primary"
             @click="addFormVisible = true"
             icon="el-icon-plus"
+            v-power="['超级管理员']"
             >新增用户</el-button
           >
         </el-form-item>
@@ -52,15 +53,15 @@
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
-        <el-table-column prop="h" label="操作" v-if="['超级管理员'].includes($store.state.userInfo.role)">
+        <el-table-column prop="h" label="操作" >
           <template slot-scope="scope">
-            <el-button type="text" @click="enterEdit(scope.row)"
+            <el-button type="text" v-power="['超级管理员']" @click="enterEdit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="text" @click="changeStatus(scope.row)">{{
+            <el-button type="text" v-if="scope.row.role_id>$store.state.userInfo.role_id" @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
-            <el-button type="text" @click="removeUser(scope.row)"
+            <el-button type="text" v-power="['超级管理员']" @click="removeUser(scope.row)"
               >删除</el-button
             >
           </template>
@@ -118,7 +119,7 @@ export default {
   methods: {
     // 进入编辑状态
     enterEdit(item) {
-      this.$refs.userEditDialog.editForm = JSON.parse(JSON.stringify(item))
+      this.$refs.userEditDialog.editForm = JSON.parse(JSON.stringify(item));
       // 显示出来
       this.editFormVisible = true;
     },

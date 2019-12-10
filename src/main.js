@@ -6,6 +6,8 @@ import router from "@/router/index.js";
 import store from "@/store/store.js";
 // 导入全局过滤器
 import '@/filters/filters.js'
+// 导入自定义指令
+import '@/directives/directive.js'
 
 // 整合Element-ui
 import ElementUI from "element-ui";
