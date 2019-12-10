@@ -71,20 +71,32 @@
 
     <!-- 底部 -->
     <el-card class="card-main">
-      <el-table :data="subjectTable">
+      <el-table :data="questionTable">
         <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column prop="b" label="题目"></el-table-column>
-        <el-table-column prop="c" label="学科·阶段"></el-table-column>
-        <el-table-column prop="d" label="题型"></el-table-column>
-        <el-table-column prop="e" label="企业"></el-table-column>
-        <el-table-column prop="f" label="创建者"></el-table-column>
-        <el-table-column prop="g" label="状态">
+        <el-table-column prop="title" label="题目">
+          <template slot-scope="scope" >
+            <span v-html="scope.row.title"></span>
+          </template>
+        </el-table-column>
+        <el-table-column  label="学科·阶段">
           <template slot-scope="scope">
-            <span v-if="scope.row.g === 1">启用</span>
+            {{ scope.row.subject_name+"·"+{1:'初级',2:'中级',3:'高级'}[scope.row.step]}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="type" label="题型">
+          <template slot-scope="scope">
+            {{ {1:'单选',2:'多选',3:'简答'}[scope.row.type] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="enterprise_name" label="企业"></el-table-column>
+        <el-table-column prop="username" label="创建者"></el-table-column>
+        <el-table-column prop="" label="状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.status === 1">启用</span>
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
-        <el-table-column prop="h" label="访问量"></el-table-column>
+        <el-table-column prop="reads" label="访问量"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
@@ -97,11 +109,11 @@
       </el-table>
       <!-- 分页器 -->
       <el-pagination
-        :current-page="1"
+        :current-page="page"
         :page-sizes="[5, 10, 15, 20]"
-        :page-size="5"
+        :page-size="limit"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="20"
+        :total="total"
         background
       >
       </el-pagination>
@@ -114,6 +126,8 @@
 <script>
 // 导入并使用
 import questionDialog from "./components/questionDialog.vue";
+// 导入题库接口
+import {questionList}from "@/api/question.js"
 export default {
   name: "question",
   // 注册组件
@@ -123,7 +137,7 @@ export default {
   data() {
     return {
       filterForm: {},
-      subjectTable: [
+      questionTable: [
         {
           b: "浏览器缓存",
           c: "前端·初级",
@@ -144,8 +158,24 @@ export default {
         }
       ],
       // 是否显示新增框
-      addFormVisible: false
+      addFormVisible: false,
+      // 页码
+      page:1,
+      // 页容量
+      limit:5,
+      // 总条数
+      total:0
     };
+  },
+  created(){
+    questionList({
+      page:this.page,
+      limit:this.limit
+    }).then(res=>{
+      // 保存数据
+      this.total = res.data.pagination.total
+      this.questionTable = res.data.items
+    })
   }
 };
 </script>
