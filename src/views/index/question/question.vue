@@ -2,9 +2,20 @@
   <div class="question-container">
     <!-- 头部 -->
     <el-card class="card-header">
-      <el-form :inline="true" ref="filterForm"  :model="filterForm" class="demo-form-inline">
+      <el-form
+        :inline="true"
+        ref="filterForm"
+        :model="filterForm"
+        class="demo-form-inline"
+      >
         <el-form-item label="学科">
           <el-select v-model="filterForm.region" placeholder="请选择学科">
+            <el-option
+              v-for="item in subjectList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="阶段">
@@ -15,7 +26,12 @@
         </el-form-item>
         <el-form-item label="企业">
           <el-select v-model="filterForm.region" placeholder="请选择企业">
-            <el-option v-for="item in enterpriseList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in enterpriseList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="题型">
@@ -132,7 +148,9 @@ import questionDialog from "./components/questionDialog.vue";
 // 导入题库接口
 import { questionList, questionStatus } from "@/api/question.js";
 // 导入企业接口
-import { enterpriseList} from "@/api/enterprise.js";
+import { enterpriseList } from "@/api/enterprise.js";
+// 导入学科接口
+import { subjectList } from "@/api/subject.js";
 export default {
   name: "question",
   // 注册组件
@@ -171,7 +189,9 @@ export default {
       // 总条数
       total: 0,
       // 企业数据
-      enterpriseList:[],
+      enterpriseList: [],
+      // 学科数据
+      subjectList: []
     };
   },
   methods: {
@@ -181,8 +201,8 @@ export default {
         id: item.id
       }).then(res => {
         // console.log(res)
-        if(res.code===200){
-          this.$message.success("状态修改成功")
+        if (res.code === 200) {
+          this.$message.success("状态修改成功");
           this.getList();
         }
       });
@@ -224,9 +244,13 @@ export default {
       this.questionTable = res.data.items;
     });
     // 企业数据
-    enterpriseList().then(res=>{
+    enterpriseList().then(res => {
       this.enterpriseList = res.data.items;
-    })
+    });
+    // 学科数据
+    subjectList().then(res => {
+      this.subjectList = res.data.items;
+    });
   }
 };
 </script>
