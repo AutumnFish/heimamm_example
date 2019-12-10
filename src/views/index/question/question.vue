@@ -104,8 +104,8 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button type="text">{{
-              scope.row.g === 0 ? "启用" : "禁用"
+            <el-button type="text" @click="changeStatus(scope.row)">{{
+              scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
             <el-button type="text">删除</el-button>
           </template>
@@ -119,7 +119,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         background
-          @size-change="handleSizeChange"
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       >
       </el-pagination>
@@ -133,7 +133,7 @@
 // 导入并使用
 import questionDialog from "./components/questionDialog.vue";
 // 导入题库接口
-import { questionList } from "@/api/question.js";
+import { questionList, questionStatus } from "@/api/question.js";
 export default {
   name: "question",
   // 注册组件
@@ -174,6 +174,18 @@ export default {
     };
   },
   methods: {
+    // 修改状态
+    changeStatus(item) {
+      questionStatus({
+        id: item.id
+      }).then(res => {
+        // console.log(res)
+        if(res.code===200){
+          this.$message.success("状态修改成功")
+          this.getList();
+        }
+      });
+    },
     // 获取数据
     getList() {
       // 初始数据获取不携带任何数据
@@ -182,7 +194,7 @@ export default {
         limit: this.limit
       }).then(res => {
         // 表格数据
-        this.questionTable = res.data.data.items;
+        this.questionTable = res.data.items;
         // 总条数
         this.total = res.data.data.pagination.total;
       });
