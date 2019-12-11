@@ -1,17 +1,17 @@
 // 导入 登录页
-import login from "@/views/login/login.vue";
+const login = ()=>import("@/views/login/login.vue")
 // 导入 首页
-import index from "@/views/index/index.vue";
+const index = ()=>import("@/views/index/index.vue")
 // 导入  嵌套路由 学科页面
-import subject from "@/views/index/subject/subject.vue";
+const subject = ()=>import("@/views/index/subject/subject.vue")
 // 导入  嵌套路由 企业页面
-import enterprise from "@/views/index/enterprise/enterprise.vue";
+const enterprise = ()=>import("@/views/index/enterprise/enterprise.vue")
 // 导入  嵌套路由 用户页面
-import user from "@/views/index/user/user.vue";
+const user = ()=>import("@/views/index/user/user.vue")
 // 导入  嵌套路由 数据页面
-import chart from "@/views/index/chart/chart.vue";
+const chart = ()=>import("@/views/index/chart/chart.vue")
 // 导入  嵌套路由 题库页面
-import question from "@/views/index/question/question.vue";
+const question = ()=>import("@/views/index/question/question.vue")
 
 // 暴露路由规则
 export default [
