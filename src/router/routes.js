@@ -16,6 +16,10 @@ import question from "@/views/index/question/question.vue";
 // 暴露路由规则
 export default [
   {
+    path: "/",
+    redirect:"/login"
+  },
+  {
     path: "/login",
     component: login,
     meta: {

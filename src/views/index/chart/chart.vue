@@ -4,34 +4,34 @@
     <el-card class="card-header">
       <ul class="circle-box">
         <li class="circle-item">
-          <div class="circle primary">0</div>
+          <div class="circle primary">{{ titleData.increment_users }}</div>
           <span>今日新增用户</span>
         </li>
         <li class="circle-item">
-          <div class="circle primary">1</div>
-          <span>今日新增用户</span>
-        </li>
-        <li class="circle-item">
-          <div class="circle warning">2</div>
+          <div class="circle primary">{{ titleData.total_users }}</div>
           <span>总用户量</span>
         </li>
         <li class="circle-item">
-          <div class="circle warning">3</div>
+          <div class="circle warning">{{ titleData.increment_questions }}</div>
           <span>新增试题</span>
         </li>
         <li class="circle-item">
-          <div class="circle success">4</div>
+          <div class="circle warning">{{ titleData.total_questions }}</div>
           <span>总试题量</span>
         </li>
         <li class="circle-item">
-          <div class="circle success">5</div>
-          <span>今日新增用户</span>
+          <div class="circle success">{{ titleData.total_done_questions }}</div>
+          <span>总刷题量</span>
+        </li>
+        <li class="circle-item">
+          <div class="circle success">{{ titleData.personal_questions }}</div>
+          <span>人均刷题量</span>
         </li>
       </ul>
     </el-card>
     <!-- 底部 -->
     <el-card class="card-main">
-      <h2 class='title'>整体数据</h2>
+      <h2 class="title">整体数据</h2>
       <div ref="chartsBox" class="charts-box"></div>
     </el-card>
   </div>
@@ -40,60 +40,80 @@
 <script>
 // 导入 echarts
 import echarts from "echarts";
+// 导入数据
+import { chatTitle, enterpriseData } from "@/api/chart.js";
 export default {
   name: "chart",
-  mounted() {
-    // 基于准备好的dom，初始化echarts实例
-    const myChart = echarts.init(this.$refs.chartsBox);
-
-    // 指定图表的配置项和数据
-    const option = {
-      tooltip: {
-        trigger: "item",
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
-      },
-      legend: {
-        orient: "vertical",
-        x: "right",
-        data: ["黑马", "阿里", "京东"]
-      },
-      series: [
-        {
-          name: "整体数据",
-          type: "pie",
-          radius: ["50%", "70%"],
-          avoidLabelOverlap: false,
-          color: ["#f76137", "#f9b358", "#409eff"],
-          label: {
-            normal: {
-              show: false,
-              position: "center"
-            },
-            emphasis: {
-              show: true,
-              textStyle: {
-                fontSize: "30",
-                fontWeight: "bold"
-              }
-            }
-          },
-          labelLine: {
-            normal: {
-              show: false
-            }
-          },
-          data: [
-            { value: 335, name: "黑马" },
-            { value: 310, name: "阿里" },
-            { value: 234, name: "京东" }
-          ]
-        }
-      ]
+  data() {
+    return {
+      titleData: {}
+      // 饼状图数据
     };
+  },
+  created() {
+    chatTitle().then(res => {
+      // console.log(res);
+      // 赋值
+      this.titleData = res.data;
+    });
+    enterpriseData().then(res => {
+      this.$nextTick(() => {
+        // 基于准备好的dom，初始化echarts实例
+        const myChart = echarts.init(this.$refs.chartsBox);
+        // 准备 legend数据
+        const legendData = [];
+        res.data.forEach(v=>{
+          legendData.push(v.name)
+        })
+        console.log(legendData)
 
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
-  }
+        // 指定图表的配置项和数据
+        const option = {
+          tooltip: {
+            trigger: "item",
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+          },
+          legend: {
+            orient: "vertical",
+            x: "right",
+            data: legendData
+          },
+          series: [
+            {
+              name: "整体数据",
+              type: "pie",
+              radius: ["50%", "70%"],
+              avoidLabelOverlap: false,
+              color: ["#f76137", "#f9b358", "#409eff",'#68a132'],
+              label: {
+                normal: {
+                  show: false,
+                  position: "center"
+                },
+                emphasis: {
+                  show: true,
+                  textStyle: {
+                    fontSize: "30",
+                    fontWeight: "bold"
+                  }
+                }
+              },
+              labelLine: {
+                normal: {
+                  show: false
+                }
+              },
+              data: res.data
+            }
+          ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+      });
+    });
+  },
+  mounted() {}
 };
 </script>
 
@@ -145,11 +165,11 @@ export default {
   .card-main {
     margin-top: 19px;
     position: relative;
-    .title{
+    .title {
       position: absolute;
       left: 55px;
       top: 34px;
-      color:#666666;
+      color: #666666;
       font-weight: normal;
     }
     .charts-box {
