@@ -118,7 +118,7 @@
         <el-table-column prop="reads" label="访问量"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text">编辑</el-button>
+            <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
             <el-button type="text" @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
@@ -141,12 +141,16 @@
     </el-card>
     <!-- 对话框 -->
     <questionDialog />
+    <!-- 编辑对话框 -->
+    <questionEditDialog ref='questionEditDialog' />
   </div>
 </template>
 
 <script>
 // 导入并使用
 import questionDialog from "./components/questionDialog.vue";
+// 编辑框
+import questionEditDialog from "./components/questionEditDialog.vue";
 // 导入题库接口
 import { questionList, questionStatus } from "@/api/question.js";
 // 导入企业接口
@@ -157,7 +161,8 @@ export default {
   name: "question",
   // 注册组件
   components: {
-    questionDialog
+    questionDialog,
+    questionEditDialog
   },
   data() {
     return {
@@ -193,10 +198,24 @@ export default {
       // 企业数据
       enterpriseList: [],
       // 学科数据
-      subjectList: []
+      subjectList: [],
+      // 是否显示修改框
+      editFormVisible:false,
+     
     };
   },
   methods: {
+    // 进入编辑状态
+    enterEdit(item){
+      const editForm = JSON.parse(JSON.stringify(item));
+      // 城市处理一下
+      editForm.city = editForm.city.split(',')
+      // 多选选项处理一下
+      editForm.multiple_select_answer = editForm.multiple_select_answer.split(',')
+      // 显示出来
+      this.$refs.questionEditDialog.editForm = editForm
+      this.editFormVisible = true;
+    },
     // 清除筛选
     clearFilter(){
       // 清空筛选的数据
