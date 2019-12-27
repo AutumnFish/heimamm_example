@@ -294,6 +294,8 @@ export default {
               this.$router.push("/index");
             }else{
               this.$message.warning(res.message)
+              // 刷新验证码
+              this.randomLoginCaptcha()
             }
           });
         } else {
