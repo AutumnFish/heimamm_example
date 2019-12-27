@@ -226,6 +226,8 @@ export default {
               this.imageUrl = "";
               // 关闭弹框
               this.registerFormVisible = false;
+              // 提示用户
+              this.$message.success("注册成功")
             }
           });
         } else {
@@ -284,10 +286,14 @@ export default {
           login(this.logForm).then(res => {
             // 判断状态
             if (res.code === 200) {
+              // 提示用户
+              this.$message.success("登录成功")
               // 保存token
               setToken(res.data.token);
               // 跳转到首页
               this.$router.push("/index");
+            }else{
+              this.$message.warning(res.message)
             }
           });
         } else {
