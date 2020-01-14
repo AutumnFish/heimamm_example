@@ -14,6 +14,8 @@ const chart = () => import("@/views/index/chart/chart.vue");
 const question = () => import("@/views/index/question/question.vue");
 // 导入嵌套路由 测试页面
 const exam = () => import("@/views/index/exam/exam.vue");
+// 导入嵌套路由 审核
+const check = () => import("@/views/index/check/check.vue");
 
 // 暴露路由规则
 export default [
@@ -92,6 +94,16 @@ export default [
           title: "参加测试",
           fullPath: "/index/exam",
           icon: "el-icon-edit",
+          roles: ["超级管理员", "管理员", "老师", "学生"]
+        }
+      },
+      {
+        path: "check",
+        component: check,
+        meta: {
+          title: "试题审核",
+          fullPath: "/index/check",
+          icon: "el-icon-s-check",
           roles: ["超级管理员", "管理员", "老师", "学生"]
         }
       }
