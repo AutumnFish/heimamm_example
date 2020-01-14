@@ -49,7 +49,6 @@ router.beforeEach((to, from, next) => {
           // 跳转去登录页
           next("/login");
         } else {
-          console.log(res);
           // 用户状态判断
           if (res.data.status === 0) {
             Message.warning("你是被禁用状态,请联系管理员");
