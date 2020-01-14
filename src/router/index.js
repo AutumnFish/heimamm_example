@@ -23,9 +23,12 @@ VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err);
 };
 
+// 创建路由对象
 const router = new VueRouter({
   routes
 });
+
+
 
 // 地址白名单
 const whitePaths = ["/login"];
@@ -96,5 +99,10 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+// 增加导航后置后卫
+router.afterEach((to)=>{
+  document.title = to.meta.title||'黑马面面'
+})
 
 export default router;
