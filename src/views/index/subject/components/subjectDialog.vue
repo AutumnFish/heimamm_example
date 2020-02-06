@@ -34,8 +34,6 @@
 </template>
 
 <script>
-// 导入 新增方法
-import { subjectAdd } from "@/api/subject.js";
 export default {
   name: "subject-add",
   data() {
@@ -56,23 +54,7 @@ export default {
   },
   methods: {
     submitAddForm() {
-      this.$refs.addForm.validate(valid => {
-        if (valid) {
-          subjectAdd(this.addForm).then(res=>{
-            // console.log(res)
-            if(res.code===200){
-              // 重新表单
-              this.$refs.addForm.resetFields()
-              this.$parent.addFormVisible = false;
-              // 重新获取数据
-              this.$parent.getList();
-            }
-          })
-        } else {
-          this.$message.warning("学科信息输入有误，请检查");
-          return false;
-        }
-      });
+      this.$message("你点击了新增按钮")
     }
   }
 };
