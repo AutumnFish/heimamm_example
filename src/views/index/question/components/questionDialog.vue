@@ -9,12 +9,9 @@
     <el-form :model="form" label-position="left" ref="addForm" :rules="rules">
       <el-form-item label="学科" prop="subject" :label-width="formLabelWidth">
         <el-select v-model="form.subject" placeholder="请选择学科">
-          <el-option
-            v-for="item in $parent.subjectList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
+          <el-option label="学科1" value="1"></el-option>
+          <el-option label="学科2" value="2"></el-option>
+          <el-option label="学科3" value="3"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="阶段" prop="step" :label-width="formLabelWidth">
@@ -30,20 +27,17 @@
         :label-width="formLabelWidth"
       >
         <el-select v-model="form.enterprise" placeholder="请选择企业">
-          <el-option
-            v-for="item in $parent.enterpriseList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
+          <el-option label="企业1" value="1"></el-option>
+          <el-option label="企业2" value="2"></el-option>
+          <el-option label="企业3" value="3"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="城市" prop="city" :label-width="formLabelWidth">
-        <el-cascader
-          v-model="form.city"
-          :options="options"
-          :props="{ value: 'label' }"
-        ></el-cascader>
+       <el-select v-model="form.city" placeholder="请选择城市">
+          <el-option label="城市1" value="1"></el-option>
+          <el-option label="城市2" value="2"></el-option>
+          <el-option label="城市3" value="3"></el-option>
+        </el-select>
       </el-form-item>
       <!-- 题型 -->
       <el-form-item label="题型" prop="type" :label-width="formLabelWidth">
@@ -87,9 +81,7 @@
             ></el-input>
             <el-upload
               class="avatar-uploader"
-              :action="uploadAction"
               :show-file-list="false"
-              :on-success="handleASuccess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="imageAUrl" :src="imageAUrl" class="avatar" />
@@ -104,9 +96,7 @@
             ></el-input>
             <el-upload
               class="avatar-uploader"
-              :action="uploadAction"
               :show-file-list="false"
-              :on-success="handleBSuccess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="imageBUrl" :src="imageBUrl" class="avatar" />
@@ -121,9 +111,7 @@
             ></el-input>
             <el-upload
               class="avatar-uploader"
-              :action="uploadAction"
               :show-file-list="false"
-              :on-success="handleCSuccess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="imageCUrl" :src="imageCUrl" class="avatar" />
@@ -138,9 +126,7 @@
             ></el-input>
             <el-upload
               class="avatar-uploader"
-              :action="uploadAction"
               :show-file-list="false"
-              :on-success="handleDSuccess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="imageDUrl" :src="imageDUrl" class="avatar" />
@@ -167,9 +153,7 @@
             ></el-input>
             <el-upload
               class="avatar-uploader"
-              :action="uploadAction"
               :show-file-list="false"
-              :on-success="handleASuccess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="imageAUrl" :src="imageAUrl" class="avatar" />
@@ -185,9 +169,7 @@
             ></el-input>
             <el-upload
               class="avatar-uploader"
-              :action="uploadAction"
               :show-file-list="false"
-              :on-success="handleBSuccess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="imageBUrl" :src="imageBUrl" class="avatar" />
@@ -203,9 +185,7 @@
             ></el-input>
             <el-upload
               class="avatar-uploader"
-              :action="uploadAction"
               :show-file-list="false"
-              :on-success="handleCSuccess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="imageCUrl" :src="imageCUrl" class="avatar" />
@@ -221,9 +201,7 @@
             ></el-input>
             <el-upload
               class="avatar-uploader"
-              :action="uploadAction"
               :show-file-list="false"
-              :on-success="handleDSuccess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="imageDUrl" :src="imageDUrl" class="avatar" />
@@ -252,9 +230,7 @@
       >
         <el-upload
           class="avatar-uploader"
-          :action="uploadAction"
           :show-file-list="false"
-          :on-success="handleVideoSuccess"
           :before-upload="beforeVideoUpload"
         >
           <el-button type="primary">点击上传</el-button>
@@ -290,10 +266,6 @@
 <script>
 // 导入富文本
 import Wangeditor from "wangeditor";
-// 导入 省市区数据
-import { provinceAndCityData } from "element-china-area-data";
-// 导入数据接口
-import { questionAdd } from "@/api/question.js";
 export default {
   name: "question-add",
   data() {
@@ -354,11 +326,8 @@ export default {
         answer_analyze: { required: true, message: "答案解析不能为空" },
         select_options: { required: true, message: "选项不能为空" }
       },
-      // 图片的上传地址
-      uploadAction: process.env.VUE_APP_BASEURL + "/question/upload",
       formLabelWidth: "80px",
       // 级联选择器数据
-      options: provinceAndCityData,
       titleEditor: undefined,
       answerEditor: undefined,
       // 图片预览地址
@@ -374,29 +343,7 @@ export default {
   methods: {
     // 提交数据
     submitForm() {
-      this.$refs.addForm.validate(valid => {
-        if (valid) {
-          questionAdd(this.form).then(res => {
-            if(res.code===200){
-            this.$refs.addForm.resetFields();
-            // 富文本的清空需要自己来
-            this.titleEditor.txt.html('')
-            this.answerEditor.txt.html('')
-            // 预览地址清空
-            this.imageAUrl = ''
-            this.imageBUrl = ''
-            this.imageCUrl = ''
-            this.imageDUrl = ''
-            this.videoUrl = ''
-            this.$parent.addFormVisible = false;
-            this.$parent.getList();
-            }
-          });
-        } else {
-          this.$message.warning("题库信息输入有误，请检查");
-          return false;
-        }
-      });
+      this.$message("你点击了数据提交")
     },
     opened() {
       if (!this.titleEditor) {
@@ -404,12 +351,7 @@ export default {
           this.$refs.titleHeader,
           this.$refs.titleMain
         );
-        // 绑定 change事件
-        this.titleEditor.customConfig.onchange = html => {
-          // html 即变化之后的内容
-          // console.log(html);
-          this.form.title = html;
-        };
+      
         this.titleEditor.create();
       }
       if (!this.answerEditor) {
@@ -417,35 +359,23 @@ export default {
           this.$refs.answerHeader,
           this.$refs.answerMain
         );
-        // 绑定 change事件
-        this.answerEditor.customConfig.onchange = html => {
-          // html 即变化之后的内容
-          // console.log(html);
-          this.form.answer_analyze = html;
-        };
         this.answerEditor.create();
       }
     },
     handleVideoSuccess(res, file) {
-      console.log(res);
       this.videoUrl = URL.createObjectURL(file.raw);
-      this.form.video = res.data.url;
     },
     handleASuccess(res, file) {
       this.imageAUrl = URL.createObjectURL(file.raw);
-      this.form.select_options[0].image = res.data.url;
     },
     handleBSuccess(res, file) {
       this.imageBUrl = URL.createObjectURL(file.raw);
-      this.form.select_options[1].image = res.data.url;
     },
     handleCSuccess(res, file) {
       this.imageCUrl = URL.createObjectURL(file.raw);
-      this.form.select_options[2].image = res.data.url;
     },
     handleDSuccess(res, file) {
       this.imageDUrl = URL.createObjectURL(file.raw);
-      this.form.select_options[3].image = res.data.url;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
@@ -460,7 +390,6 @@ export default {
       return isJPG && isLt2M;
     },
     beforeVideoUpload(file) {
-      console.log(file);
       const isJPG = file.type === "video/mp4";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
