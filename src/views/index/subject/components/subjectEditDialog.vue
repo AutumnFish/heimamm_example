@@ -38,8 +38,6 @@
 </template>
 
 <script>
-// 导入 新增方法
-import { subjectEdit } from "@/api/subject.js";
 export default {
   name: "subject-edit",
   data() {
@@ -56,23 +54,7 @@ export default {
 
   methods: {
     submiteditForm() {
-      this.$refs.editForm.validate(valid => {
-        if (valid) {
-          subjectEdit(this.editForm).then(res => {
-            // console.log(res)
-            if (res.code === 200) {
-              // 重新表单
-              this.$refs.editForm.resetFields();
-              this.$parent.editFormVisible = false;
-              // 重新获取数据
-              this.$parent.getList();
-            }
-          });
-        } else {
-          this.$message.warning("学科信息输入有误，请检查");
-          return false;
-        }
-      });
+      this.$message('你点击了编辑按钮')
     }
   }
 };
