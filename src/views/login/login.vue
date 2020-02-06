@@ -37,8 +37,7 @@
             <el-col :span="7">
               <img
                 class="captcha"
-                @click="randomLoginCaptcha"
-                :src="actions"
+                src="../../assets/login_captcha.png"
                 alt=""
               />
             </el-col>
@@ -53,9 +52,7 @@
           </el-checkbox>
         </el-form-item>
         <el-form-item class="btn-box">
-          <el-button type="primary" @click="submitForm('logForm')"
-            >登录</el-button
-          >
+          <el-button type="primary">登录</el-button>
           <el-button @click="registerFormVisible = true">注册</el-button>
         </el-form-item>
       </el-form>
@@ -69,13 +66,12 @@
       title="用户注册"
       class="register-dialog"
       :visible.sync="registerFormVisible"
-      @closed="closedRegDialog"
     >
       <el-form :model="regForm" :rules="rules" ref="regForm">
         <el-form-item label="头像" :label-width="formLabelWidth" prop="avatar">
           <el-upload
             class="avatar-uploader"
-            :action="avatarAction"
+           
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -114,8 +110,7 @@
             <el-col :span="7" :offset="1">
               <img
                 class="captcha"
-                :src="regActions"
-                @click="randomRegisterCaptcha"
+                src="../../assets/login_captcha.png"
                 alt=""
               />
             </el-col>
@@ -127,201 +122,86 @@
               <el-input v-model="regForm.rcode" autocomplete="off"></el-input>
             </el-col>
             <el-col :span="7" :offset="1">
-              <el-button @click="getPhoneCode" :disabled="delayTime !== 0">{{
-                delayTime == 0 ? "获取用户验证码" : `${delayTime}S后再次获取`
-              }}</el-button>
+              <el-button>
+                获取用户验证码
+              </el-button>
             </el-col>
           </el-row>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="registerFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitRegForm">确 定</el-button>
+        <el-button type="primary">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-// 导入登录接口
-import { login, sendsms, register } from "@/api/login.js";
-// 验证逻辑的导入
-import { checkMobile, checkAgree, checkEmail } from "@/utils/validator.js";
-// 数据 获取的接口
-import { setToken } from "@/utils/token.js";
 export default {
-  name: "login",
+  name: 'login',
   data() {
     return {
+      // 登录表单
       logForm: {
-        phone: "18888888888",
-        password: "88888888",
-        code: "1234",
-        checked: false
+        phone: '18211111111', // 电话
+        password: '12345678', // 密码
+        code: '1234', // 验证码
+        checked: false // 是否选中
       },
+      // 表单校验规则
       rules: {
-        phone: [
-          { required: true, message: "手机号不能为空" },
-          { validator: checkMobile }
-        ],
-        email: [
-          { required: true, message: "邮箱号不能为空" },
-          { validator: checkEmail }
-        ],
-        username: [{ required: true, message: "用户名不能为空" }],
+        phone: [{ required: true, message: '手机号不能为空' }],
+        email: [{ required: true, message: '邮箱号不能为空' }],
+        username: [{ required: true, message: '用户名不能为空' }],
         avatar: [
-          { required: true, message: "头像不能为空", trigger: "change" }
+          { required: true, message: '头像不能为空', trigger: 'change' }
         ],
         password: [
-          { required: true, message: "密码不能为空" },
-          { min: 6, max: 12, message: "密码长度为6~12个字符" }
+          { required: true, message: '密码不能为空' },
+          { min: 6, max: 12, message: '密码长度为6~12个字符' }
         ],
         code: [
-          { required: true, message: "验证码不能为空" },
-          { min: 4, max: 4, message: "验证码长度为4" }
+          { required: true, message: '验证码不能为空' },
+          { min: 4, max: 4, message: '验证码长度为4' }
         ],
         rcode: [
-          { required: true, message: "短信验证码不能为空" },
-          { min: 4, max: 4, message: "短信验证码长度为4" }
+          { required: true, message: '短信验证码不能为空' },
+          { min: 4, max: 4, message: '短信验证码长度为4' }
         ],
-        checked: [{ validator: checkAgree }]
+        checked: [{ required: true, message: '必须要勾选哦'}]
       },
       registerFormVisible: false,
-      formLabelWidth: "80px",
+      formLabelWidth: '80px',
       regForm: {
-        phone: "",
-        username: "",
-        rcode: "",
-        avatar: "",
-        password: "",
+        phone: '',
+        username: '',
+        rcode: '',
+        avatar: '',
+        password: '',
         // 图形验证码
-        imgCode: ""
+        imgCode: ''
       },
-      imageUrl: "",
-      // 验证码
-      actions: process.env.VUE_APP_BASEURL + "/captcha?type=login",
-      // 注册验证码
-      regActions: process.env.VUE_APP_BASEURL + "/captcha?type=sendsms",
-      // 头像上传地址
-      avatarAction: process.env.VUE_APP_BASEURL + "/uploads",
+      imageUrl: '',
       // 验证码获取倒计时
       delayTime: 0
     };
   },
   methods: {
-    // 关闭注册框
-    closedRegDialog() {
-      this.$refs.regForm.resetFields();
-      this.regForm.imgCode = "";
-    },
-    // 用户注册
-    submitRegForm() {
-      this.$refs.regForm.validate(valid => {
-        if (valid) {
-          // 登录接口
-          register(this.regForm).then(res => {
-            // console.log(res);
-            if (res.data.code === 200) {
-              // 头像也要清空哦
-              this.imageUrl = "";
-              // 关闭弹框
-              this.registerFormVisible = false;
-              // 提示用户
-              this.$message.success("注册成功")
-            }
-          });
-        } else {
-          this.$message.warning("请检查输入的内容");
-          return false;
-        }
-      });
-    },
-    // 获取手机验证码
-    getPhoneCode() {
-      // 验证码判断
-      if (this.regForm.imgCode.length != 4) {
-        return this.$message.warning("验证码错误,请检查");
-      }
-      // 手机号判断
-      const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
-      if (!reg.test(this.regForm.phone)) {
-        return this.$message.warning("手机号不对哦，请检查");
-      }
-      if (this.delayTime === 0) {
-        this.delayTime = 60;
-        let interId = setInterval(() => {
-          this.delayTime--;
-          if (this.delayTime == 0) {
-            clearInterval(interId);
-          }
-        }, 100);
-        // 调用短信接口
-        sendsms({
-          code: this.regForm.imgCode,
-          phone: this.regForm.phone
-        }).then(res => {
-          // console.log(res)
-          this.$message.info("短信验证码是:" + res.data.captcha);
-        });
-      }
-    },
-    // 重新获取登录验证码
-    randomLoginCaptcha() {
-      // 通过时间戳来重新获取验证码
-      this.actions = `${
-        process.env.VUE_APP_BASEURL
-      }/captcha?type=login&t=${Date.now()}`;
-    },
-    // 重新获取注册验证码
-    randomRegisterCaptcha() {
-      // 通过时间戳来重新获取验证码
-      this.regActions = `${
-        process.env.VUE_APP_BASEURL
-      }/captcha?type=sendsms&t=${Date.now()}`;
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          // 登录接口
-          login(this.logForm).then(res => {
-            // 判断状态
-            if (res.code === 200) {
-              // 提示用户
-              this.$message.success("登录成功")
-              // 保存token
-              setToken(res.data.token);
-              // 跳转到首页
-              this.$router.push("/index");
-            }else{
-              this.$message.warning(res.message)
-              // 刷新验证码
-              this.randomLoginCaptcha()
-            }
-          });
-        } else {
-          this.$message.warning("请检查输入的内容");
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
+    // 本地图片预览
     handleAvatarSuccess(res, file) {
       // 生成本地的预览
       this.imageUrl = URL.createObjectURL(file.raw);
-      // 准备提交的数据
-      this.regForm.avatar = res.data.file_path;
     },
+    // 图片上传之前的验证逻辑
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+      const isJPG = file.type === 'image/jpeg' || 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
-
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error('上传头像图片只能是 JPG 格式!或 PNG 格式');
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
     }
