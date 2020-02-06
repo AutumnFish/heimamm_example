@@ -9,11 +9,8 @@ import '@/filters/filters.js'
 // 导入自定义指令
 import '@/directives/directive.js'
 
-// 整合Element-ui
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
-// use Element-ui
-Vue.use(ElementUI);
+// 导入element-ui
+import '@/plugins/element.js'
 
 // 导入全局样式
 import "@/styles/base.less";
