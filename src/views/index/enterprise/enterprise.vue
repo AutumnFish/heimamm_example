@@ -89,8 +89,6 @@
 // 导入并使用
 import enterpriseDialog from './components/enterpriseDialog.vue';
 import enterpriseEditDialog from './components/enterpriseEditDialog.vue';
-// 导入数据接口
-import { enterpriseList } from '@/api/enterprise.js';
 export default {
   name: 'enterprise',
   // 注册组件
