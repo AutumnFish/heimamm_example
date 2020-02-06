@@ -4,7 +4,7 @@
     class="user-dialog"
     :visible.sync="$parent.editFormVisible"
   >
-    <el-form :model="editForm" :rules="rules" ref="editForm" status-icon >
+    <el-form :model="editForm" :rules="rules" ref="editForm" status-icon>
       <el-form-item
         label="用户名"
         prop="username"
@@ -55,48 +55,25 @@
 </template>
 
 <script>
-// 导入数据接口
-import {userEdit} from '@/api/user.js'
-// 导入验证函数
-import {checkMobile,checkEmail} from '@/utils/validator.js'
 export default {
-  name: "user-add",
+  name: 'user-add',
   data() {
     return {
-      editForm: {
-     
-      },
+      editForm: {},
       rules: {
         username: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
+          { required: true, message: '用户名不能为空', trigger: 'blur' }
         ],
-        email: [{ required: true, message: "邮箱不能为空", trigger: "blur" },
-        {validator:checkEmail}],
-        phone: [{ required: true, message: "手机号不能为空", trigger: "blur" },
-        {validator:checkMobile}],
-        role_id: [{ required: true, message: "角色不能为空", trigger: "blur" }]
+        email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }],
+        phone: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
+        role_id: [{ required: true, message: '角色不能为空', trigger: 'blur' }]
       },
-      formLabelWidth: "80px"
+      formLabelWidth: '80px'
     };
   },
   methods: {
     submiteditForm() {
-      this.$refs.editForm.validate(valid => {
-        if (valid) {
-          userEdit(this.editForm).then(res => {
-            if (res.code === 200) {
-              // 重新表单
-              this.$refs.editForm.resetFields();
-              this.$parent.editFormVisible = false;
-              // 重新获取数据
-              this.$parent.getList();
-            }
-          });
-        } else {
-          this.$message.warning("用户信息输入有误，请检查");
-          return false;
-        }
-      });
+      this.$message('你点击了确认按钮')
     }
   }
 };
