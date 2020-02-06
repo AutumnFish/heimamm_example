@@ -25,13 +25,12 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="filterData">查询</el-button>
-          <el-button @click="removeFilter">清除</el-button>
+          <el-button type="primary">查询</el-button>
+          <el-button >清除</el-button>
           <el-button
             type="primary"
             @click="addFormVisible = true"
             icon="el-icon-plus"
-            v-power="['超级管理员']"
             >新增用户</el-button
           >
         </el-form-item>
@@ -53,15 +52,24 @@
             <span v-else class="red">禁用</span>
           </template>
         </el-table-column>
-        <el-table-column prop="h" label="操作" >
+        <el-table-column  label="操作">
           <template slot-scope="scope">
-            <el-button type="text" v-power="['超级管理员']" @click="enterEdit(scope.row)"
+            <el-button
+              type="text"
+             
+              @click="enterEdit()"
               >编辑</el-button
             >
-            <el-button type="text" v-if="scope.row.role_id>$store.state.userInfo.role_id" @click="changeStatus(scope.row)">{{
-              scope.row.status === 0 ? "启用" : "禁用"
-            }}</el-button>
-            <el-button type="text" v-power="['超级管理员']" @click="removeUser(scope.row)"
+            <el-button
+              type="text"
+             
+              @click="changeStatus()"
+              >{{ scope.row.status === 0 ? '启用' : '禁用' }}</el-button
+            >
+            <el-button
+              type="text"
+            
+              @click="removeUser()"
               >删除</el-button
             >
           </template>
@@ -75,8 +83,6 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </el-card>
@@ -89,12 +95,11 @@
 
 <script>
 // 导入并使用
-import userDialog from "./components/userDialog.vue";
-import userEditDialog from "./components/userEditDialog.vue";
-// 导入数据接口
-import { userList, userStatus, userRemove } from "@/api/user.js";
+import userDialog from './components/userDialog.vue';
+import userEditDialog from './components/userEditDialog.vue';
+
 export default {
-  name: "user",
+  name: 'user',
   // 注册组件
   components: {
     userDialog,
@@ -103,7 +108,47 @@ export default {
   data() {
     return {
       filterForm: {},
-      userTable: [],
+      userTable: [
+        {
+          id: 3,
+          username: 'phper_leo',
+          email: 'phper_leo@163.com',
+          phone: '18520409113',
+          avatar: 'upload/20200114/53043f648b360ac32398c365d9c4d2db.jpg',
+          remark: '初始管理员',
+          status: 1,
+          role_id: 1,
+          create_time: '2020-01-14 14:39:34',
+          update_time: '2020-01-14 14:39:34',
+          role: '超级管理员'
+        },
+        {
+          id: 2,
+          username: '18522222222',
+          email: '18522222222@qq.com',
+          phone: '18522222222',
+          avatar: '',
+          remark: '初始管理员',
+          status: 1,
+          role_id: 2,
+          create_time: '2020-01-14 14:43:09',
+          update_time: '2020-01-14 14:43:09',
+          role: '管理员'
+        },
+        {
+          id: 1,
+          username: '18511111111',
+          email: '18511111111@qq.com',
+          phone: '18511111111',
+          avatar: 'upload/20200114/53043f648b360ac32398c365d9c4d2db.jpg',
+          remark: '初始超级管理员',
+          status: 1,
+          role_id: 1,
+          create_time: '2020-01-14 14:41:51',
+          update_time: '2020-01-14 14:41:51',
+          role: '超级管理员'
+        }
+      ],
       // 是否显示新增框
       addFormVisible: false,
       // 页码
@@ -118,90 +163,22 @@ export default {
   },
   methods: {
     // 进入编辑状态
-    enterEdit(item) {
-      this.$refs.userEditDialog.editForm = JSON.parse(JSON.stringify(item));
+    enterEdit() {
       // 显示出来
       this.editFormVisible = true;
     },
     // 删除用户
-    removeUser(item) {
-      this.$confirm("是否确认删除该用户", "提示!", {
-        confirmButtonText: "确认",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          // 调用删除接口
-          userRemove({
-            id: item.id
-          }).then(res => {
-            if (res.code === 200) {
-              this.$message.success("删除成功");
-              // 重新获取数据
-              this.getList();
-            }
-          });
-        })
-        .catch(() => {});
+    removeUser() {
+     this.$message("你点击了删除按钮")
     },
-    // 重置数据
-    removeFilter() {
-      this.$refs.filterForm.resetFields();
-      // 重新获取数据
-      this.getList();
-    },
-    // 筛选数据
-    filterData() {
-      // 去第一页
-      this.page = 1;
-      this.getList();
-    },
+
+
     // 修改状态
-    changeStatus(item) {
-      userStatus({
-        id: item.id
-      }).then(res => {
-        if (res.code === 200) {
-          this.$message.success("状态修改成功");
-          this.getList();
-        }
-      });
+    changeStatus() {
+      this.$message("你点击了状态按钮")
     },
-    // 获取数据
-    getList() {
-      userList({
-        page: this.page,
-        limit: this.limit,
-        ...this.filterForm
-      }).then(res => {
-        this.total = res.data.pagination.total;
-        this.userTable = res.data.items;
-      });
-    },
-    // 页容量改变
-    handleSizeChange(limit) {
-      this.limit = limit;
-      this.page = 1;
-      // 重新获取数据
-      this.getList();
-    },
-    // 页码改变
-    handleCurrentChange(page) {
-      this.page = page;
-      // 重新获取数据
-      this.getList();
-    }
   },
-  created() {
-    // 获取用户信息
-    userList({
-      page: this.page,
-      limit: this.limit
-    }).then(res => {
-      this.total = res.data.pagination.total;
-      this.userTable = res.data.items;
-    });
-  }
+
 };
 </script>
 
