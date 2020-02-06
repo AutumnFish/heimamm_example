@@ -10,12 +10,9 @@
       >
         <el-form-item label="学科" prop="subject">
           <el-select v-model="filterForm.subject" placeholder="请选择学科">
-            <el-option
-              v-for="item in subjectList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
+            <el-option label="学科1" value="1"></el-option>
+            <el-option label="学科2" value="2"></el-option>
+            <el-option label="学科3" value="3"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="阶段" prop="step">
@@ -27,12 +24,9 @@
         </el-form-item>
         <el-form-item label="企业" prop="region">
           <el-select v-model="filterForm.region" placeholder="请选择企业">
-            <el-option
-              v-for="item in enterpriseList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
+            <el-option label="企业1" value="1"></el-option>
+            <el-option label="企业2" value="2"></el-option>
+            <el-option label="企业3" value="3"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="题型" prop="type">
@@ -51,7 +45,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="作者" prop="username">
-          <el-input v-model="filterForm.username" class="short-input"></el-input>
+          <el-input
+            v-model="filterForm.username"
+            class="short-input"
+          ></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="filterForm.status" placeholder="请选择状态">
@@ -60,7 +57,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="日期" prop="create_date">
-          <el-date-picker v-model="filterForm.create_date"
+          <el-date-picker
+            v-model="filterForm.create_date"
             type="date"
             placeholder="选择日期"
           >
@@ -72,8 +70,8 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="filterData">搜索</el-button>
-          <el-button @click="clearFilter">清除</el-button>
+          <el-button type="primary">搜索</el-button>
+          <el-button>清除</el-button>
           <el-button
             type="primary"
             @click="addFormVisible = true"
@@ -97,14 +95,14 @@
           <template slot-scope="scope">
             {{
               scope.row.subject_name +
-                "·" +
-                { 1: "初级", 2: "中级", 3: "高级" }[scope.row.step]
+                '·' +
+                { 1: '初级', 2: '中级', 3: '高级' }[scope.row.step]
             }}
           </template>
         </el-table-column>
         <el-table-column prop="type" label="题型">
           <template slot-scope="scope">
-            {{ { 1: "单选", 2: "多选", 3: "简答" }[scope.row.type] }}
+            {{ { 1: '单选', 2: '多选', 3: '简答' }[scope.row.type] }}
           </template>
         </el-table-column>
         <el-table-column prop="enterprise_name" label="企业"></el-table-column>
@@ -118,9 +116,9 @@
         <el-table-column prop="reads" label="访问量"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
-            <el-button type="text" @click="changeStatus(scope.row)">{{
-              scope.row.status === 0 ? "启用" : "禁用"
+            <el-button type="text" @click="editFormVisible=true">编辑</el-button>
+            <el-button type="text">{{
+              scope.row.status === 0 ? '启用' : '禁用'
             }}</el-button>
             <el-button type="text">删除</el-button>
           </template>
@@ -134,31 +132,24 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </el-card>
     <!-- 对话框 -->
     <questionDialog />
     <!-- 编辑对话框 -->
-    <questionEditDialog ref='questionEditDialog' />
+    <questionEditDialog ref="questionEditDialog" />
   </div>
 </template>
 
 <script>
 // 导入并使用
-import questionDialog from "./components/questionDialog.vue";
+import questionDialog from './components/questionDialog.vue';
 // 编辑框
-import questionEditDialog from "./components/questionEditDialog.vue";
-// 导入题库接口
-import { questionList, questionStatus } from "@/api/question.js";
-// 导入企业接口
-import { enterpriseList } from "@/api/enterprise.js";
-// 导入学科接口
-import { subjectList } from "@/api/subject.js";
+import questionEditDialog from './components/questionEditDialog.vue';
+
 export default {
-  name: "question",
+  name: 'question',
   // 注册组件
   components: {
     questionDialog,
@@ -169,22 +160,60 @@ export default {
       filterForm: {},
       questionTable: [
         {
-          b: "浏览器缓存",
-          c: "前端·初级",
-          d: "单选",
-          e: "黑马",
-          f: "管理员",
-          g: 0,
-          h: 0
-        },
-        {
-          b: "会话技术",
-          c: "后端·初级",
-          d: "多选",
-          e: "阿里",
-          f: "jack",
-          g: 0,
-          h: 20
+          id: 91,
+          title: '<p>dom与jQuery对象的说法正确的是？</p>',
+          subject: 97,
+          step: 1,
+          enterprise: 50,
+          city: '440000,440300,440306',
+          type: 1,
+          difficulty: 1,
+          status: 1,
+          reads: 0,
+          user_id: 3,
+          single_select_answer: 'A',
+          multiple_select_answer: '',
+          short_answer: null,
+          video: '',
+          remark: 'jQuery对象是dom对象之间的关系',
+          answer_analyze:
+            '<p>jQuery对象是dom对象的集合可以使用</p><p>$(dom)将dom对象转换为jQuery对象。使用jquery[序号]获取到dom对象</p><p><br></p>',
+          create_time: '2020-01-14 14:57:45',
+          update_time: '2020-01-14 14:57:45',
+          is_del: 0,
+          username: 'phper_leo',
+          subject_name: '前段',
+          enterprise_name: '黑马',
+          select_options: [
+            {
+              id: 781,
+              question_id: 91,
+              label: 'A',
+              text: '$(dom)形式可以将dom对象转换为jQuery对象',
+              image: 'upload/20191129/fd5f03a07d95e3948860240564b180e4.jpeg'
+            },
+            {
+              id: 782,
+              question_id: 91,
+              label: 'B',
+              text: 'dom与jQuery对象没有关系',
+              image: 'upload/20191129/e93e7bb72accda7f3159cdabc4203991.jpeg'
+            },
+            {
+              id: 783,
+              question_id: 91,
+              label: 'C',
+              text: 'dom对象可以直接调用jQuery下的方法',
+              image: 'upload/20191129/b7caf98be9d0aa6764b0112ba0dfa19e.jpeg'
+            },
+            {
+              id: 784,
+              question_id: 91,
+              label: 'D',
+              text: 'jQuery对象可以直接调用dom对象下的方法',
+              image: 'upload/20191129/4067f19ab53a5e8388ad3459e23110f0.jpeg'
+            }
+          ]
         }
       ],
       // 是否显示新增框
@@ -200,93 +229,9 @@ export default {
       // 学科数据
       subjectList: [],
       // 是否显示修改框
-      editFormVisible:false,
-     
+      editFormVisible: false
     };
   },
-  methods: {
-    // 进入编辑状态
-    enterEdit(item){
-      const editForm = JSON.parse(JSON.stringify(item));
-      // 城市处理一下
-      editForm.city = editForm.city.split(',')
-      // 多选选项处理一下
-      editForm.multiple_select_answer = editForm.multiple_select_answer.split(',')
-      // 显示出来
-      this.$refs.questionEditDialog.editForm = editForm
-      this.editFormVisible = true;
-    },
-    // 清除筛选
-    clearFilter(){
-      // 清空筛选的数据
-      this.$refs.filterForm.resetFields()
-      // 重新获取数据
-      this.filterData()
-    },
-    // 数据筛选
-    filterData(){
-      // 去第一页
-      this.page = 1;
-      this.getList()
-    },
-    // 修改状态
-    changeStatus(item) {
-      questionStatus({
-        id: item.id
-      }).then(res => {
-        // console.log(res)
-        if (res.code === 200) {
-          this.$message.success("状态修改成功");
-          this.getList();
-        }
-      });
-    },
-    // 获取数据
-    getList() {
-      // 初始数据获取不携带任何数据
-      questionList({
-        page: this.page,
-        limit: this.limit,
-        ...this.filterForm
-      }).then(res => {
-        // 表格数据
-        this.questionTable = res.data.items;
-        // 总条数
-        this.total = res.data.pagination.total;
-      });
-    },
-    // 页容量改变
-    handleSizeChange(limit) {
-      this.limit = limit;
-      this.page = 1;
-      // 重新获取数据
-      this.getList();
-    },
-    // 页码改变
-    handleCurrentChange(page) {
-      this.page = page;
-      // 重新获取数据
-      this.getList();
-    }
-  },
-  created() {
-    questionList({
-      page: this.page,
-      limit: this.limit
-    }).then(res => {
-      // 保存数据
-      this.total = res.data.pagination.total;
-      this.questionTable = res.data.items;
-    });
-    // 企业数据
-    enterpriseList().then(res => {
-      this.enterpriseList = res.data.items;
-    });
-    // 学科数据
-    subjectList().then(res => {
-      this.subjectList = res.data.items;
-    });
-  }
 };
 </script>
 
