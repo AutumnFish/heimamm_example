@@ -10,9 +10,9 @@
         <span class="title">黑马面面</span>
       </div>
       <div class="right">
-        <img :src="userInfo.avatar" alt="" />
-        <span class="name">{{ userInfo.username }},您好</span>
-        <el-button size="mini" type="primary" @click="logout">退出</el-button>
+        <img src="../../assets/avatar.png" alt="" />
+        <span class="name">李叭哲,您好</span>
+        <el-button size="mini" type="primary" >退出</el-button>
       </div>
     </el-header>
     <el-container>
@@ -25,7 +25,7 @@
           :collapse="isCollapse"
         >
           <template v-for="(item, index) in routes[2].children">
-            <el-menu-item v-if="item.meta.roles.includes($store.state.userInfo.role)" :key="index" :index="item.meta.fullPath">
+            <el-menu-item  :key="index" :index="item.meta.fullPath">
               <i :class="item.meta.icon"></i>
               <span slot="title">{{ item.meta.title }}</span>
             </el-menu-item>
@@ -42,10 +42,7 @@
 <script>
 // 导入路由信息
 import routes from "@/router/routes.js";
-// 导入退出接口
-import { logout } from "@/api/login.js";
-// 导入token模块
-import { removeToken } from "@/utils/token.js";
+
 export default {
   name: "index",
   data() {
@@ -60,36 +57,7 @@ export default {
       return this.$store.state.userInfo;
     }
   },
-  methods: {
-    logout() {
-      // 弹框提示用户
-      this.$confirm("确定黑马面面吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          // 调用退出接口
-          logout().then(res => {
-            // console.log(res)
-            if (res.code === 200) {
-              // 删除token
-              removeToken();
-              // 删除用户信息
-              this.$store.commit("SETINFO", undefined);
-              // 跳转去登录页
-              this.$router.push("/login");
-            }
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消"
-          });
-        });
-    }
-  }
+
 };
 </script>
 
