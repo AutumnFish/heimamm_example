@@ -20,7 +20,6 @@ instance.interceptors.request.use(
   function(config) {
     // 设置token
     if (getToken()) {
-      console.log('有token')
       // 如果有token 就携带token
       config.headers.token = getToken();
     }
