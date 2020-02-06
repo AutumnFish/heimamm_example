@@ -27,8 +27,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" >查询</el-button>
-          <el-button >清除</el-button>
+          <el-button type="primary">查询</el-button>
+          <el-button>清除</el-button>
           <el-button
             type="primary"
             @click="addFormVisible = true"
@@ -61,11 +61,11 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="enterEdit">编辑</el-button>
-            <el-button type="text" >{{
-              scope.row.status === 0 ? "启用" : "禁用"
+            <el-button type="text">{{
+              scope.row.status === 0 ? '启用' : '禁用'
             }}</el-button>
-           
-            <el-button type="text" >
+
+            <el-button type="text">
               删除
             </el-button>
           </template>
@@ -85,32 +85,58 @@
     <!-- 新增 对话框 -->
     <subjectDialog />
     <!-- 编辑 对话框 -->
-    <subjectEditDialog  ref="subjectEditDialog" />
+    <subjectEditDialog ref="subjectEditDialog" />
   </div>
 </template>
 
 <script>
 // 导入并使用
-import subjectDialog from "./components/subjectDialog.vue";
-import subjectEditDialog from "./components/subjectEditDialog.vue";
-// 导入学科接口
-import { subjectList } from "@/api/subject.js";
+import subjectDialog from './components/subjectDialog.vue';
+import subjectEditDialog from './components/subjectEditDialog.vue';
 export default {
-  name: "subject",
+  name: 'subject',
   // 注册组件
   components: {
-    subjectDialog,subjectEditDialog
+    subjectDialog,
+    subjectEditDialog
   },
   data() {
     return {
       filterForm: {
-        rid: "",
-        name: "",
-        username: "",
-        status: ""
+        rid: '',
+        name: '',
+        username: '',
+        status: ''
       },
       subjectTable: [
-       
+        {
+          id: 98,
+          rid: 'JAVA001',
+          name: 'JavaWeb',
+          short_name: 'JavaWeb',
+          intro: 'JavaWeb',
+          user_id: 3,
+          remark: 'JavaWeb',
+          status: 1,
+          create_time: '2020-01-14 14:51:12',
+          update_time: '2020-01-14 14:51:12',
+          is_del: 0,
+          username: 'phper_leo'
+        },
+        {
+          id: 97,
+          rid: 'QD001',
+          name: '前段与移动开发',
+          short_name: '前段',
+          intro: '前段与移动开发',
+          user_id: 3,
+          remark: '',
+          status: 1,
+          create_time: '2020-01-14 14:49:26',
+          update_time: '2020-01-14 14:49:38',
+          is_del: 0,
+          username: 'phper_leo'
+        }
       ],
       // 是否显示新增框
       addFormVisible: false,
@@ -122,39 +148,18 @@ export default {
       limit: 5,
       // 是否显示编辑框
       editFormVisible: false,
-      // 编辑表单
-      editForm:{}
     };
   },
   methods: {
     // 进入编辑状态
-    enterEdit(){
+    enterEdit() {
       // 显示编辑框
       this.editFormVisible = true;
     },
-  
-    // 获取数据
-    getList() {
-      // 初始数据获取不携带任何数据
-      subjectList({
-        page: this.page,
-        limit: this.limit,
-        ...this.filterForm
-      }).then(res => {
-        // 表格数据
-        this.subjectTable = res.data.items;
-        // 总条数
-        this.total = res.data.pagination.total;
-        window.console.log(JSON.stringify(this.subjectTable))
-      });
-    },
-    
+
+ 
   },
-  // 获取列表数据
-  created() {
-    // 初始数据获取不携带任何数据
-    this.getList();
-  }
+ 
 };
 </script>
 
