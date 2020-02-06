@@ -27,8 +27,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="filterData">查询</el-button>
-          <el-button @click="clearFilter">清除</el-button>
+          <el-button type="primary">查询</el-button>
+          <el-button>清除</el-button>
           <el-button
             type="primary"
             @click="addFormVisible = true"
@@ -59,13 +59,11 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
-            <el-button type="text" @click="changeStatus(scope.row)">{{
-              scope.row.status === 0 ? "启用" : "禁用"
+            <el-button type="text" @click="enterEdit">编辑</el-button>
+            <el-button type="text">{{
+              scope.row.status === 0 ? '启用' : '禁用'
             }}</el-button>
-            <el-button type="text" @click="removeItem(scope.row)"
-              >删除</el-button
-            >
+            <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -77,30 +75,24 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </el-card>
     <!-- 对话框 -->
     <enterpriseDialog />
     <!-- 编辑对话框 -->
-    <enterpriseEditDialog ref="enterpriseEditDialog"/>
+    <enterpriseEditDialog ref="enterpriseEditDialog" />
   </div>
 </template>
 
 <script>
 // 导入并使用
-import enterpriseDialog from "./components/enterpriseDialog.vue";
-import enterpriseEditDialog from "./components/enterpriseEditDialog.vue";
+import enterpriseDialog from './components/enterpriseDialog.vue';
+import enterpriseEditDialog from './components/enterpriseEditDialog.vue';
 // 导入数据接口
-import {
-  enterpriseList,
-  enterpriseStatus,
-  enterpriseRemove
-} from "@/api/enterprise.js";
+import { enterpriseList } from '@/api/enterprise.js';
 export default {
-  name: "enterprise",
+  name: 'enterprise',
   // 注册组件
   components: {
     enterpriseDialog,
@@ -108,23 +100,50 @@ export default {
   },
   data() {
     return {
+      // 筛选的表单
       filterForm: {},
       enterpriseTable: [
         {
-          b: "enterprise1",
-          c: "黑马程序员",
-          d: "互联网",
-          e: "管理员",
-          f: "2019-12-4",
-          g: 0
+          id: 51,
+          eid: '3',
+          name: '阿里巴巴',
+          short_name: '阿里',
+          intro: '阿里',
+          user_id: 3,
+          remark: '阿里',
+          status: 1,
+          create_time: '2020-01-14 14:52:55',
+          update_time: '2020-01-14 14:52:55',
+          is_del: 0,
+          username: 'phper_leo'
         },
         {
-          b: "enterprise2",
-          c: "阿里巴巴",
-          d: "金融",
-          e: "管理员",
-          f: "2019-12-5",
-          g: 1
+          id: 50,
+          eid: '2',
+          name: '黑马程序员',
+          short_name: '黑马',
+          intro: '黑马',
+          user_id: 3,
+          remark: '黑马',
+          status: 1,
+          create_time: '2020-01-14 14:52:38',
+          update_time: '2020-01-14 14:52:38',
+          is_del: 0,
+          username: 'phper_leo'
+        },
+        {
+          id: 49,
+          eid: '1',
+          name: '传智播客',
+          short_name: '传智',
+          intro: '传智播客',
+          user_id: 3,
+          remark: '传智播客',
+          status: 1,
+          create_time: '2020-01-14 14:52:14',
+          update_time: '2020-01-14 14:52:14',
+          is_del: 0,
+          username: 'phper_leo'
         }
       ],
       // 是否显示新增框
@@ -136,96 +155,16 @@ export default {
       // 总条数
       total: 0,
       // 是否显示编辑框
-      editFormVisible:false
+      editFormVisible: false
     };
   },
   methods: {
     // 进入编辑状态
-    enterEdit(item){
-      this.$refs.enterpriseEditDialog.editForm = JSON.parse(JSON.stringify(item));
+    enterEdit() {
       // 显示对话框
       this.editFormVisible = true;
-    },
-    // 删除数据
-    removeItem(item) {
-      // 提示用户
-      this.$confirm("你确定要删除这个企业", "提示!", {
-        confirmButtonText: "确认",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          enterpriseRemove({
-            id: item.id
-          }).then(res => {
-            if(res.code===200){
-              // 重新获取数据
-              this.getList()
-            }
-          });
-        })
-        .catch(() => {});
-    },
-    // 清除筛选
-    clearFilter() {
-      this.$refs.filterForm.resetFields();
-      // 重新获取数据
-      this.getList();
-    },
-    // 筛选数据
-    filterData() {
-      // 重新获取数据
-      this.getList();
-    },
-    // 修改状态
-    changeStatus(item) {
-      enterpriseStatus({
-        id: item.id
-      }).then(res => {
-        if (res.code === 200) {
-          this.$message.success("状态修改成功");
-          this.getList();
-        }
-      });
-    },
-    // 获取列表数据
-    getList() {
-      enterpriseList({
-        limt: this.limit,
-        page: this.page,
-        ...this.filterForm
-      }).then(res => {
-        // 总条数
-        this.total = res.data.pagination.total;
-        // 表格数据
-        this.enterpriseTable = res.data.items;
-      });
-    },
-    // 页容量改变
-    handleSizeChange(limit) {
-      this.limit = limit;
-      this.page = 1;
-      // 重新获取数据
-      this.getList();
-    },
-    // 页码改变
-    handleCurrentChange(page) {
-      this.page = page;
-      // 重新获取数据
-      this.getList();
     }
   },
-  created() {
-    enterpriseList({
-      limit: this.limit,
-      page: this.page
-    }).then(res => {
-      // 总条数
-      this.total = res.data.pagination.total;
-      // 表格数据
-      this.enterpriseTable = res.data.items;
-    });
-  }
 };
 </script>
 
