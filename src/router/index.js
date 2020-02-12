@@ -14,14 +14,22 @@ import routes from "@/router/routes.js";
 //   return originalPush.call(this, location).catch(err => err);
 // };
 
+import NProgress from 'nprogress'
+// 导入样式
+import 'nprogress/nprogress.css'
 // 创建路由对象
 const router = new VueRouter({
   routes
 });
 
+router.beforeEach((to,from,next)=>{
+  NProgress.start();
+  next()
+})
 // 增加导航后置后卫
 router.afterEach((to)=>{
   document.title = to.meta.title||'黑马面面'
+  NProgress.done()
 })
 
 export default router;
