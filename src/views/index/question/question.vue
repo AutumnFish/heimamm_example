@@ -114,9 +114,10 @@
           </template>
         </el-table-column>
         <el-table-column prop="reads" label="访问量"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" @click="editFormVisible=true">编辑</el-button>
+            <el-button type="text" @click="checkFormVisible=true">审核</el-button>
             <el-button type="text">{{
               scope.row.status === 0 ? '启用' : '禁用'
             }}</el-button>
@@ -139,6 +140,8 @@
     <questionDialog />
     <!-- 编辑对话框 -->
     <questionEditDialog ref="questionEditDialog" />
+    <!-- 审核对话框 -->
+    <questionCheckDialog></questionCheckDialog>
   </div>
 </template>
 
@@ -147,13 +150,16 @@
 import questionDialog from './components/questionDialog.vue';
 // 编辑框
 import questionEditDialog from './components/questionEditDialog.vue';
+// 审核框
+import questionCheckDialog from './components/questionCheck.vue';
 
 export default {
   name: 'question',
   // 注册组件
   components: {
     questionDialog,
-    questionEditDialog
+    questionEditDialog,
+    questionCheckDialog
   },
   data() {
     return {
@@ -229,7 +235,9 @@ export default {
       // 学科数据
       subjectList: [],
       // 是否显示修改框
-      editFormVisible: false
+      editFormVisible: false,
+      // 是否显示审核框
+      checkFormVisible:false
     };
   },
 };

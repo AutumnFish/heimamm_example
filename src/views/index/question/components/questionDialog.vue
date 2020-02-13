@@ -281,7 +281,7 @@ export default {
         multiple_select_answer: [],
         video: "",
         remark: "",
-        city: ["天津市", "市辖区"],
+        city: "1",
         short_answer: "狗不理当然是最美味的啦",
         answer_analyze: "",
         select_options: [

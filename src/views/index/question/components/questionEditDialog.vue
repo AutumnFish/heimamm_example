@@ -1,11 +1,5 @@
 <template>
-  <el-dialog
-    title="编辑试题"
-    class="question-dialog"
-    :visible.sync="$parent.editFormVisible"
-    fullscreen
-    @opened="opened"
-  >
+  <el-dialog title="编辑试题" class="question-dialog" :visible.sync="$parent.editFormVisible" fullscreen @opened="opened">
     <el-form :model="form" label-position="left" ref="addForm" :rules="rules">
       <el-form-item label="学科" prop="subject" :label-width="formLabelWidth">
         <el-select v-model="form.subject" placeholder="请选择学科">
@@ -21,11 +15,7 @@
           <el-option label="高级" value="3"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item
-        label="企业"
-        prop="enterprise"
-        :label-width="formLabelWidth"
-      >
+      <el-form-item label="企业" prop="enterprise" :label-width="formLabelWidth">
         <el-select v-model="form.enterprise" placeholder="请选择企业">
           <el-option label="企业1" value="1"></el-option>
           <el-option label="企业2" value="2"></el-option>
@@ -47,11 +37,7 @@
           <el-radio label="3">简答</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item
-        label="难度"
-        prop="difficulty"
-        :label-width="formLabelWidth"
-      >
+      <el-form-item label="难度" prop="difficulty" :label-width="formLabelWidth">
         <el-radio-group v-model="form.difficulty">
           <el-radio :label="1">简单</el-radio>
           <el-radio :label="2">一般</el-radio>
@@ -65,70 +51,36 @@
       <div ref="titleHeader" class="title-header"></div>
       <div ref="titleMain" class="title-main"></div>
       <!-- 单选 -->
-      <el-form-item
-        label="单选"
-        class="single-item"
-        :label-width="formLabelWidth"
-        v-if="form.type === '1'"
-        prop="single_select_answer"
-      >
+      <el-form-item label="单选" class="single-item" :label-width="formLabelWidth" v-if="form.type === '1'" prop="single_select_answer">
         <el-radio-group v-model="form.single_select_answer">
           <div class="radio-box">
             <el-radio label="A">A</el-radio>
-            <el-input
-              v-model="form.select_options[0].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-input v-model="form.select_options[0].text" placeholder=""></el-input>
+            <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeAvatarUpload">
               <img v-if="imageAUrl" :src="imageAUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </div>
           <div class="radio-box">
             <el-radio label="B">B</el-radio>
-            <el-input
-              v-model="form.select_options[1].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-input v-model="form.select_options[1].text" placeholder=""></el-input>
+            <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeAvatarUpload">
               <img v-if="imageBUrl" :src="imageBUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </div>
           <div class="radio-box">
             <el-radio label="C">C</el-radio>
-            <el-input
-              v-model="form.select_options[2].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-input v-model="form.select_options[2].text" placeholder=""></el-input>
+            <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeAvatarUpload">
               <img v-if="imageCUrl" :src="imageCUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </div>
           <div class="radio-box">
             <el-radio label="D">D</el-radio>
-            <el-input
-              v-model="form.select_options[3].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-input v-model="form.select_options[3].text" placeholder=""></el-input>
+            <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeAvatarUpload">
               <img v-if="imageDUrl" :src="imageDUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -136,26 +88,13 @@
         </el-radio-group>
       </el-form-item>
       <!-- 多选 -->
-      <el-form-item
-        label="多选"
-        class="multiple-item"
-        :label-width="formLabelWidth"
-        v-else-if="form.type === '2'"
-        prop="multiple_select_answer"
-      >
+      <el-form-item label="多选" class="multiple-item" :label-width="formLabelWidth" v-else-if="form.type === '2'" prop="multiple_select_answer">
         <el-checkbox-group v-model="form.multiple_select_answer">
           <!-- 选项A -->
           <div class="radio-box">
             <el-checkbox label="A">A</el-checkbox>
-            <el-input
-              v-model="form.select_options[0].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-input v-model="form.select_options[0].text" placeholder=""></el-input>
+            <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeAvatarUpload">
               <img v-if="imageAUrl" :src="imageAUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -163,15 +102,8 @@
           <!-- 选项B -->
           <div class="radio-box">
             <el-checkbox label="B">B</el-checkbox>
-            <el-input
-              v-model="form.select_options[1].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-input v-model="form.select_options[1].text" placeholder=""></el-input>
+            <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeAvatarUpload">
               <img v-if="imageBUrl" :src="imageBUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -179,15 +111,8 @@
           <!-- 选项C -->
           <div class="radio-box">
             <el-checkbox label="C">C</el-checkbox>
-            <el-input
-              v-model="form.select_options[2].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-input v-model="form.select_options[2].text" placeholder=""></el-input>
+            <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeAvatarUpload">
               <img v-if="imageCUrl" :src="imageCUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -195,15 +120,8 @@
           <!-- 选项D -->
           <div class="radio-box">
             <el-checkbox label="D">D</el-checkbox>
-            <el-input
-              v-model="form.select_options[3].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-input v-model="form.select_options[3].text" placeholder=""></el-input>
+            <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeAvatarUpload">
               <img v-if="imageDUrl" :src="imageDUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -212,27 +130,13 @@
       </el-form-item>
       <!-- 简答 -->
       <el-form-item v-else label="简答" class="answer-item" prop="short_answer">
-        <el-input
-          v-model="form.short_answer"
-          type="textarea"
-          rows="3"
-          placeholder=""
-        ></el-input>
+        <el-input v-model="form.short_answer" type="textarea" rows="3" placeholder=""></el-input>
       </el-form-item>
       <!-- 时间线 -->
       <el-divider></el-divider>
       <!-- 解析视频 -->
-      <el-form-item
-        label="解析视频"
-        prop="video"
-        class="video-item"
-        :label-width="formLabelWidth"
-      >
-        <el-upload
-          class="avatar-uploader"
-          :show-file-list="false"
-          :before-upload="beforeVideoUpload"
-        >
+      <el-form-item label="解析视频" prop="video" class="video-item" :label-width="formLabelWidth">
+        <el-upload class="avatar-uploader" :show-file-list="false" :before-upload="beforeVideoUpload">
           <el-button type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">
             只能上传video/mp4文件，且不超过2048kb
@@ -248,12 +152,7 @@
       <div ref="answerMain" class="answer-main"></div>
       <!-- 简答 -->
       <el-form-item label="试题备注" prop="remark" class="answer-item">
-        <el-input
-          v-model="form.remark"
-          type="textarea"
-          rows="3"
-          placeholder=""
-        ></el-input>
+        <el-input v-model="form.remark" type="textarea" rows="3" placeholder=""></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -281,7 +180,7 @@ export default {
         multiple_select_answer: [],
         video: '',
         remark: '',
-        city: ['天津市', '市辖区'],
+        city: '1',
         short_answer: '狗不理当然是最美味的啦',
         answer_analyze: '',
         select_options: [
@@ -347,18 +246,12 @@ export default {
     },
     opened() {
       if (!this.titleEditor) {
-        this.titleEditor = new Wangeditor(
-          this.$refs.titleHeader,
-          this.$refs.titleMain
-        );
+        this.titleEditor = new Wangeditor(this.$refs.titleHeader, this.$refs.titleMain);
 
         this.titleEditor.create();
       }
       if (!this.answerEditor) {
-        this.answerEditor = new Wangeditor(
-          this.$refs.answerHeader,
-          this.$refs.answerMain
-        );
+        this.answerEditor = new Wangeditor(this.$refs.answerHeader, this.$refs.answerMain);
         this.answerEditor.create();
       }
     },

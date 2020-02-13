@@ -48,10 +48,10 @@
         </div>
         <el-divider></el-divider>
         <div class="submit-box">
-          <el-button type="primary">审核通过</el-button>          
-          <el-button type="danger">审核不通过</el-button>          
-          <el-button type="warning">审核日志</el-button>          
-          <el-button type="success">下一题</el-button>          
+          <el-button type="primary">审核通过</el-button>
+          <el-button type="danger">审核不通过</el-button>
+          <el-button type="warning">审核日志</el-button>
+          <el-button type="success">下一题</el-button>
         </div>
       </div>
     </el-card>
@@ -60,10 +60,10 @@
 
 <script>
 export default {
-  name: "exam",
+  name: 'exam',
   data() {
     return {
-      radio: ""
+      radio: ''
     };
   }
 };
@@ -85,15 +85,16 @@ export default {
       font-size: 20px;
     }
   }
-  .analysis-box,.remark-box{
+  .analysis-box,
+  .remark-box {
     margin-bottom: 20px;
   }
-  .submit-box{
+  .submit-box {
     text-align: center;
     margin-top: 50px;
   }
-}
-.exam-row {
-  margin-bottom: 20px;
+  .exam-row {
+    margin-bottom: 20px;
+  }
 }
 </style>
