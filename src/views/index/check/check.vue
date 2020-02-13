@@ -3,7 +3,7 @@
     <el-card>
       <div>
         <div class="title-box">
-          <span>【试题信息】</span>
+          <span>【试题审核】</span>
           <el-divider></el-divider>
           <el-row class="exam-row">
             <el-col :span="6"> <span class="primary-text">【编号】:</span>JX000002 </el-col>
@@ -34,7 +34,7 @@
         <el-divider></el-divider>
         <div class="answer-box">
           <span>【参考答案】: </span> B
-          <el-button type="danger">视频答案解析</el-button>
+          <el-button type="warning">视频答案解析</el-button>
         </div>
         <el-divider></el-divider>
         <div class="analysis-box">
@@ -48,8 +48,10 @@
         </div>
         <el-divider></el-divider>
         <div class="submit-box">
-          <el-button type="primary">提交</el-button>          
-          <el-button >取消</el-button>          
+          <el-button type="primary">审核通过</el-button>          
+          <el-button type="danger">审核不通过</el-button>          
+          <el-button type="warning">审核日志</el-button>          
+          <el-button type="success">下一题</el-button>          
         </div>
       </div>
     </el-card>
