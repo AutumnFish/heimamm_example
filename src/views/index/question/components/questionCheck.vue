@@ -55,7 +55,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      radio: ''
+    };
+  }
+};
 </script>
 
 <style lang="less">

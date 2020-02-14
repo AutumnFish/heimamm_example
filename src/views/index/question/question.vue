@@ -88,7 +88,7 @@
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column prop="title" label="题目">
           <template slot-scope="scope">
-            <span v-html="scope.row.title"></span>
+            <span v-html="scope.row.title "></span>
           </template>
         </el-table-column>
         <el-table-column label="学科·阶段">
