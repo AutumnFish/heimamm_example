@@ -1,69 +1,29 @@
 # heimamm_example
 
-## 2019-12-28 
+## 相关资源地址
 
-### 后端调整
-
-1. 学科模块
-   1. 移除学科编号字段
-   2. 阶段与学科树形（一级）
-2. 企业模块
-   1. 移除企业编号字段
-   2. 增加城市字段，城市名即可
-3. 题库模块
-   1. 移除城市字段
-   2. 搜索时间增加范围
-4. 登录模块
-   1. 用户登录支持邮箱，手机号，用户名
-   2. 错误提示不要精确到字段
-   3. 已被删除的用户无法登录
-5. 刷题模块
-   1. 随机刷题接口
-      1. 请求方法:get
-      2. 请求参数:已刷id
-      3. 返回值:
-         1. 状态码
-         2. 试题
-
-### 前端
-
-1. 刷题模块逻辑
-   1. 随机刷题
-      1. 获取随机不重复试题
-      2. 点击提交
-         1. 正确:提示进入下一题
-         2. 错误:提示答案，及解析
-   2. 考试:
-      1. 选择题目数
-      2. 点击提交
-         1. 正确:提示进入下一题
-         2. 错误:提示答案，及解析
-      3. 答题完毕
-         1. 统计份数
-         2. 结束:
-         3. 继续答题:
+[讲义](https://www.yuque.com/prqozm/roh46t)
 
 
 
-## Project setup
-```
-yarn install
-```
+## 项目运行注意
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+1. 下载示例代码，装包并运行
+2. 后台接口记得配置起来,[传送门](https://www.yuque.com/prqozm/roh46t/dmadc4)
+3. 接口设置了跨域限制,打开浏览器的时候注意自己的`url`地址
+   1. 只允许：`http://localhost:8080`端口
+   2. 自己配置允许跨域的`chrome` [传送门](https://www.cnblogs.com/linsx/p/9777954.html)
+4. 测试用账号：
+   1. 管理员：
+      1. 用户名：18211111111
+      2. 密码：12345678
+   2. 超级管理员：
+      1. 用户名：18511111111
+      2. 密码：12345678
 
-### Compiles and minifies for production
-```
-yarn build
-```
+## 分支说明
 
-### Lints and fixes files
-```
-yarn lint
-```
+**layout分支：**只保留了页面布局和一些交互的逻辑
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+**master主分支:**包含接口调用逻辑的示例代码，但是本地需要部署接口才可以访问
+
