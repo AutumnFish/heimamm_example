@@ -149,6 +149,8 @@ import { login, sendsms, register } from "@/api/login.js";
 import { checkMobile, checkAgree, checkEmail } from "@/utils/validator.js";
 // 数据 获取的接口
 import { setToken } from "@/utils/token.js";
+// 导入头像上传地址
+import { uploadURL } from '@/utils/config.js'
 export default {
   name: "login",
   data() {
@@ -203,7 +205,7 @@ export default {
       // 注册验证码
       regActions: process.env.VUE_APP_BASEURL + "/captcha?type=sendsms",
       // 头像上传地址
-      avatarAction: process.env.VUE_APP_BASEURL + "/uploads",
+      avatarAction:uploadURL ,
       // 验证码获取倒计时
       delayTime: 0
     };
