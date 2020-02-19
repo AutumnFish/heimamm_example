@@ -162,8 +162,11 @@ export default {
           subjectRemove({
             id: item.id
           }).then(res => {
-            if (res.data.code !== 200) {
-              return this.$message.error(res.data.message);
+            window.console.log(res);
+            if (res.code !== 200) {
+              return this.$message.error(res.message);
+            }else{
+              this.$message.success('删除成功')
             }
             // 重新获取数据
             this.getList();
@@ -238,7 +241,7 @@ export default {
 <style lang="less">
 .subject-container {
   .card-header {
-    height: 103px;
+    min-height: 103px;
     // 短的输入框
     .short-input {
       width: 100px;

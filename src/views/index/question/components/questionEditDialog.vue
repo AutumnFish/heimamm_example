@@ -311,7 +311,7 @@ export default {
           required: true,
           message: "多选题答案不能为空"
         },
-        video: { required: true, message: "视频不能为空" },
+        // video: { required: true, message: "视频不能为空" },
         remark: { required: true, message: "备注不能为空" },
         city: { required: true, message: "城市不能为空" },
         short_answer: { required: true, message: "简答题答案不能为空" },
@@ -392,7 +392,10 @@ export default {
       this.titleEditor.txt.html(this.editForm.title);
       this.answerEditor.txt.html(this.editForm.answer_analyze);
       // 设置视频地址
-      this.imageAUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[0].image
+      // 如果存在图片就设置预览
+      if(this.editForm.select_options[0].image!=''){
+        this.imageAUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[0].image
+      }
       this.imageBUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[1].image
       this.imageCUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[2].image
       this.imageDUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[3].image

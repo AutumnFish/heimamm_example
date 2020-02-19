@@ -25,12 +25,12 @@
             <el-option label="高级" value="3"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="企业" prop="region">
-          <el-select v-model="filterForm.region" placeholder="请选择企业">
+        <el-form-item label="企业" prop="enterprise">
+          <el-select v-model="filterForm.enterprise" placeholder="请选择企业">
             <el-option
               v-for="item in enterpriseList"
               :key="item.id"
-              :label="item.name"
+              :label="item.short_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -166,7 +166,17 @@ export default {
   },
   data() {
     return {
-      filterForm: {},
+      filterForm: {
+        username:"",
+        create_date:"",
+        title:"",
+        subject:"",
+        enterprise:"",
+        type:"",
+        difficulty:"",
+        status:"",
+        step:""
+      },
       questionTable: [
         {
           b: "浏览器缓存",

@@ -59,13 +59,16 @@ export default {
       this.$refs.addForm.validate(valid => {
         if (valid) {
           subjectAdd(this.addForm).then(res=>{
-            // console.log(res)
             if(res.code===200){
+              // 提示用户
+              this.$message.success('学科新增成功')
               // 重新表单
               this.$refs.addForm.resetFields()
               this.$parent.addFormVisible = false;
               // 重新获取数据
               this.$parent.getList();
+            }else{
+              this.$message.warning('学科编号不能重复，请检查')
             }
           })
         } else {

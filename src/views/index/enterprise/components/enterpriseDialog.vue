@@ -71,12 +71,13 @@ export default {
         if (valid) {
           enterpriseAdd(this.addForm).then(res => {
             if (res.code === 200) {
-              console.log(res)
               // 重新表单
               this.$refs.addForm.resetFields();
               this.$parent.addFormVisible = false;
               // 重新获取数据
               this.$parent.getList();
+            }else{
+              this.$message.warning('企业编号不能重复，请检查')
             }
           });
         } else {

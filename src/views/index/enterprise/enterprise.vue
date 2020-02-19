@@ -108,7 +108,12 @@ export default {
   },
   data() {
     return {
-      filterForm: {},
+      filterForm: {
+        eid:"",
+        username:"",
+        name:"",
+        status:""
+      },
       enterpriseTable: [
         {
           b: "enterprise1",
@@ -169,6 +174,8 @@ export default {
     // 清除筛选
     clearFilter() {
       this.$refs.filterForm.resetFields();
+      // 去第一页
+      this.page = 1;
       // 重新获取数据
       this.getList();
     },
@@ -191,7 +198,7 @@ export default {
     // 获取列表数据
     getList() {
       enterpriseList({
-        limt: this.limit,
+        limit: this.limit,
         page: this.page,
         ...this.filterForm
       }).then(res => {
@@ -232,7 +239,7 @@ export default {
 <style lang="less">
 .enterprise-container {
   .card-header {
-    height: 103px;
+    min-height: 103px;
     // 短的输入框
     .short-input {
       width: 100px;

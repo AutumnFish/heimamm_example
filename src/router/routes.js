@@ -33,7 +33,7 @@ export default [
   {
     path: "/index",
     component: index,
-    redirect: "/index/subject",
+    redirect: "/index/chart",
     // 嵌套路由
     children: [
       {
@@ -104,7 +104,7 @@ export default [
           title: "试题审核",
           fullPath: "/index/check",
           icon: "el-icon-s-check",
-          roles: ["超级管理员", "管理员", "老师", "学生"]
+          roles: ["超级管理员", "管理员", "老师"]
         }
       }
     ]

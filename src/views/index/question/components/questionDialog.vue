@@ -89,6 +89,7 @@
               class="avatar-uploader"
               :action="uploadAction"
               :show-file-list="false"
+              :on-remove="handleRemove"
               :on-success="handleASuccess"
               :before-upload="beforeAvatarUpload"
             >
@@ -300,38 +301,38 @@ export default {
     return {
       form: {
         title: "",
-        type: "1",
-        subject: 11,
-        step: "1",
-        enterprise: 15,
-        difficulty: 2,
+        type: "",
+        subject: "",
+        step: "",
+        enterprise: "",
+        difficulty: "",
         single_select_answer: "",
         multiple_select_answer: [],
         video: "",
         remark: "",
-        city: ["天津市", "市辖区"],
+        city: ["", ""],
         short_answer: "狗不理当然是最美味的啦",
         answer_analyze: "",
         select_options: [
           {
             label: "A",
-            text: "狗不理",
-            image: "upload/20191129/fd5f03a07d95e3948860240564b180e4.jpeg"
+            text: "",
+            image: ""
           },
           {
             label: "B",
-            text: "猫不理",
-            image: "upload/20191129/e93e7bb72accda7f3159cdabc4203991.jpeg"
+            text: "",
+            image: ""
           },
           {
             label: "C",
-            text: "麻花",
-            image: "upload/20191129/b7caf98be9d0aa6764b0112ba0dfa19e.jpeg"
+            text: "",
+            image: ""
           },
           {
             label: "D",
-            text: "炸酱面",
-            image: "upload/20191129/4067f19ab53a5e8388ad3459e23110f0.jpeg"
+            text: "",
+            image: ""
           }
         ]
       },
@@ -347,7 +348,7 @@ export default {
           required: true,
           message: "多选题答案不能为空"
         },
-        video: { required: true, message: "视频不能为空" },
+        // video: { required: true, message: "视频不能为空" },
         remark: { required: true, message: "备注不能为空" },
         city: { required: true, message: "城市不能为空" },
         short_answer: { required: true, message: "简答题答案不能为空" },
@@ -397,6 +398,9 @@ export default {
           return false;
         }
       });
+    },
+    handleRemove(){
+      window.console.log('handleRemove')
     },
     opened() {
       if (!this.titleEditor) {

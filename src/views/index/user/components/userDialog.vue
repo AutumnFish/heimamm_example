@@ -1,19 +1,6 @@
 <template>
   <el-dialog title="新增用户" class="user-dialog" :visible.sync="$parent.addFormVisible">
     <el-form :model="addForm" :rules="rules" ref="addForm" status-icon>
-      <el-form-item label="头像" prop="avatar" :label-width="formLabelWidth">
-        <el-upload
-          class="avatar-uploader"
-          :action="uploadURL"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-          name="image"
-        >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-form-item>
       <el-form-item label="用户名" prop="username" :label-width="formLabelWidth">
         <el-input v-model="addForm.username" autocomplete="off"></el-input>
       </el-form-item>
@@ -22,9 +9,6 @@
       </el-form-item>
       <el-form-item label="电话" prop="phone" :label-width="formLabelWidth">
         <el-input v-model="addForm.phone" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
-        <el-input v-model="addForm.password" show-password autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="所属角色" prop="role_id" :label-width="formLabelWidth">
         <el-select v-model="addForm.role_id" placeholder="请选择角色">
@@ -55,8 +39,6 @@
 import { userAdd } from '@/api/user.js';
 // 导入验证函数
 import { checkMobile, checkEmail } from '@/utils/validator.js';
-// 头像上传地址
-import { uploadURL } from '@/utils/config.js';
 export default {
   name: 'user-add',
   data() {
@@ -67,15 +49,9 @@ export default {
         email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }, { validator: checkEmail }],
         phone: [{ required: true, message: '手机号不能为空', trigger: 'blur' }, { validator: checkMobile }],
         role_id: [{ required: true, message: '角色不能为空', trigger: 'blur' }],
-        password:[
-          { mix:6,max:12,message:"密码的长度为6到12",trigger:'blur' }
-        ]
+        password: [{ mix: 6, max: 12, message: '密码的长度为6到12', trigger: 'blur' }]
       },
-      formLabelWidth: '80px',
-      // 上传地址
-      uploadURL,
-      // 本地头像预览地址
-      imageUrl: ''
+      formLabelWidth: '80px'
     };
   },
   methods: {
@@ -84,11 +60,14 @@ export default {
         if (valid) {
           userAdd(this.addForm).then(res => {
             if (res.code === 200) {
+              this.$message.success('用户新增成功')
               // 重新表单
               this.$refs.addForm.resetFields();
               this.$parent.addFormVisible = false;
               // 重新获取数据
               this.$parent.getList();
+            }else if(res.code===201){
+              this.$message.warning(res.message)
             }
           });
         } else {
@@ -96,24 +75,6 @@ export default {
           return false;
         }
       });
-    },
-    // 头像上传成功的逻辑
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      this.addForm.avatar = res.data.file_path;
-    },
-    // 头像上传之前的校验逻辑
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg' || 'image/png' || 'image/gif';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 图片 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
     }
   }
 };

@@ -102,7 +102,11 @@ export default {
   },
   data() {
     return {
-      filterForm: {},
+      filterForm: {
+        email:"",
+        username:"",
+        role_id:""
+      },
       userTable: [],
       // 是否显示新增框
       addFormVisible: false,
