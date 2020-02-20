@@ -6,7 +6,12 @@
     fullscreen
     @opened="opened"
   >
-    <el-form :model="editForm" label-position="left" ref="editForm" :rules="rules">
+    <el-form
+      :model="editForm"
+      label-position="left"
+      ref="editForm"
+      :rules="rules"
+    >
       <el-form-item label="学科" prop="subject" :label-width="formLabelWidth">
         <el-select v-model="editForm.subject" placeholder="请选择学科">
           <el-option
@@ -69,7 +74,7 @@
       <!-- 试题标题 -->
       <el-form-item label="试题标题" prop="title"></el-form-item>
       <div ref="titleHeader" class="title-header"></div>
-      <div ref="titleMain" class="title-main"  ></div>
+      <div ref="titleMain" class="title-main"></div>
       <!-- 单选 -->
       <el-form-item
         label="单选"
@@ -269,7 +274,7 @@
       <!-- 答案解析 -->
       <el-form-item label="答案解析" prop="answer_analyze"> </el-form-item>
       <div ref="answerHeader" class="answer-header"></div>
-      <div ref="answerMain" class="answer-main" ></div>
+      <div ref="answerMain" class="answer-main"></div>
       <!-- 简答 -->
       <el-form-item label="试题备注" prop="remark" class="answer-item">
         <el-input
@@ -289,49 +294,49 @@
 
 <script>
 // 导入富文本
-import Wangeditor from "wangeditor";
+import Wangeditor from 'wangeditor';
 // 导入 省市区数据
-import { provinceAndCityData } from "element-china-area-data";
+import { provinceAndCityData } from 'element-china-area-data';
 // 导入数据接口
-import { questionEdit } from "@/api/question.js";
+import { questionEdit } from '@/api/question.js';
 export default {
-  name: "question-edit",
+  name: 'question-edit',
   data() {
     return {
-      editForm:{},
+      editForm: {},
       rules: {
-        title: { required: true, message: "标题不能为空" },
-        type: { required: true, message: "类型不能为空" },
-        subject: { required: true, message: "学科不能为空" },
-        step: { required: true, message: "阶段不能为空" },
-        enterprise: { required: true, message: "企业不能为空" },
-        difficulty: { required: true, message: "难度不能为空" },
-        single_select_answer: { required: true, message: "单选题答案不能为空" },
+        title: { required: true, message: '标题不能为空' },
+        type: { required: true, message: '类型不能为空' },
+        subject: { required: true, message: '学科不能为空' },
+        step: { required: true, message: '阶段不能为空' },
+        enterprise: { required: true, message: '企业不能为空' },
+        difficulty: { required: true, message: '难度不能为空' },
+        single_select_answer: { required: true, message: '单选题答案不能为空' },
         multiple_select_answer: {
           required: true,
-          message: "多选题答案不能为空"
+          message: '多选题答案不能为空'
         },
         // video: { required: true, message: "视频不能为空" },
-        remark: { required: true, message: "备注不能为空" },
-        city: { required: true, message: "城市不能为空" },
-        short_answer: { required: true, message: "简答题答案不能为空" },
-        answer_analyze: { required: true, message: "答案解析不能为空" },
-        select_options: { required: true, message: "选项不能为空" }
+        remark: { required: true, message: '备注不能为空' },
+        city: { required: true, message: '城市不能为空' },
+        short_answer: { required: true, message: '简答题答案不能为空' },
+        answer_analyze: { required: true, message: '答案解析不能为空' },
+        select_options: { required: true, message: '选项不能为空' }
       },
       // 图片的上传地址
-      uploadAction: process.env.VUE_APP_BASEURL + "/question/upload",
-      formLabelWidth: "80px",
+      uploadAction: process.env.VUE_APP_BASEURL + '/question/upload',
+      formLabelWidth: '80px',
       // 级联选择器数据
       options: provinceAndCityData,
       titleEditor: undefined,
       answerEditor: undefined,
       // 图片预览地址
-      imageAUrl: "",
-      imageBUrl: "",
-      imageCUrl: "",
-      imageDUrl: "",
+      imageAUrl: '',
+      imageBUrl: '',
+      imageCUrl: '',
+      imageDUrl: '',
       // 视频预览地址
-      videoUrl: ""
+      videoUrl: ''
     };
   },
 
@@ -341,23 +346,26 @@ export default {
       this.$refs.editForm.validate(valid => {
         if (valid) {
           questionEdit(this.editForm).then(res => {
-            if(res.code===200){
-            this.$refs.editForm.resetFields();
-            // 富文本的清空需要自己来
-            this.titleEditor.txt.html('')
-            this.answerEditor.txt.html('')
-            // 预览地址清空
-            this.imageAUrl = ''
-            this.imageBUrl = ''
-            this.imageCUrl = ''
-            this.imageDUrl = ''
-            this.videoUrl = ''
-            this.$parent.editFormVisible = false;
-            this.$parent.getList();
+            if (res.code === 200) {
+              this.$refs.editForm.resetFields();
+              // 富文本的清空需要自己来
+              this.titleEditor.txt.html('');
+              this.answerEditor.txt.html('');
+              // 预览地址清空
+              this.imageAUrl = '';
+              this.imageBUrl = '';
+              this.imageCUrl = '';
+              this.imageDUrl = '';
+              this.videoUrl = '';
+              this.$parent.editFormVisible = false;
+              this.$message.success('数据修改成功');
+              this.$parent.getList();
+            } else {
+              this.$message.warning(res.message);
             }
           });
         } else {
-          this.$message.warning("题库信息输入有误，请检查");
+          this.$message.warning('题库信息输入有误，请检查');
           return false;
         }
       });
@@ -393,13 +401,25 @@ export default {
       this.answerEditor.txt.html(this.editForm.answer_analyze);
       // 设置视频地址
       // 如果存在图片就设置预览
-      if(this.editForm.select_options[0].image!=''){
-        this.imageAUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[0].image
+      if (this.editForm.select_options[0].image != '') {
+        this.imageAUrl =
+          process.env.VUE_APP_BASEURL +
+          '/' +
+          this.editForm.select_options[0].image;
       }
-      this.imageBUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[1].image
-      this.imageCUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[2].image
-      this.imageDUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.select_options[3].image
-      this.videoUrl = process.env.VUE_APP_BASEURL+"/"+this.editForm.video
+      this.imageBUrl =
+        process.env.VUE_APP_BASEURL +
+        '/' +
+        this.editForm.select_options[1].image;
+      this.imageCUrl =
+        process.env.VUE_APP_BASEURL +
+        '/' +
+        this.editForm.select_options[2].image;
+      this.imageDUrl =
+        process.env.VUE_APP_BASEURL +
+        '/' +
+        this.editForm.select_options[3].image;
+      this.videoUrl = process.env.VUE_APP_BASEURL + '/' + this.editForm.video;
     },
     handleVideoSuccess(res, file) {
       console.log(res);
@@ -423,27 +443,27 @@ export default {
       this.editForm.select_options[3].image = res.data.url;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG或PNG 格式!");
+        this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
     },
     beforeVideoUpload(file) {
       console.log(file);
-      const isJPG = file.type === "video/mp4";
+      const isJPG = file.type === 'video/mp4';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error("上传解析视频只能是 MP4 格式!");
+        this.$message.error('上传解析视频只能是 MP4 格式!');
       }
       if (!isLt2M) {
-        this.$message.error("上传解析视频大小不能超过 2MB!");
+        this.$message.error('上传解析视频大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
     }

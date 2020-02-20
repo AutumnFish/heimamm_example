@@ -64,6 +64,7 @@ export default {
               // 重新表单
               this.$refs.addForm.resetFields();
               this.$parent.addFormVisible = false;
+              this.$message.success('用户新增成功');
               // 重新获取数据
               this.$parent.getList();
             }else if(res.code===201){

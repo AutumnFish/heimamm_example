@@ -88,8 +88,11 @@ export default {
               // 重新表单
               this.$refs.editForm.resetFields();
               this.$parent.editFormVisible = false;
+              this.$message.success('数据修改成功');
               // 重新获取数据
               this.$parent.getList();
+            }else{
+              this.$message.warning(res.message)
             }
           });
         } else {

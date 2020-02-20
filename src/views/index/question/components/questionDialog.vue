@@ -390,7 +390,11 @@ export default {
             this.imageDUrl = ''
             this.videoUrl = ''
             this.$parent.addFormVisible = false;
+            // 提示用户
+              this.$message.success('数据新增成功');
             this.$parent.getList();
+            }else{
+              this.$message.warning(res.message)
             }
           });
         } else {

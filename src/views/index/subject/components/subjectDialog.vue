@@ -65,10 +65,11 @@ export default {
               // 重新表单
               this.$refs.addForm.resetFields()
               this.$parent.addFormVisible = false;
+              this.$message.success('数据新增成功');
               // 重新获取数据
               this.$parent.getList();
-            }else{
-              this.$message.warning('学科编号不能重复，请检查')
+            }else if(res.code===201){
+              this.$message.warning(res.message)
             }
           })
         } else {
