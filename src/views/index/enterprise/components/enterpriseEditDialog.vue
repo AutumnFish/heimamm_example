@@ -16,6 +16,9 @@
       >
         <el-input v-model="editForm.short_name" autocomplete="off"></el-input>
       </el-form-item>
+       <el-form-item label="所处城市" prop="city" :label-width="formLabelWidth">
+        <cityCascader v-model="editForm.city"></cityCascader>
+      </el-form-item>
       <el-form-item label="企业简介" prop="intro" :label-width="formLabelWidth">
         <el-input
           type="textarea"
@@ -46,7 +49,9 @@ export default {
   name: "enterprise-add",
   data() {
     return {
-      editForm: {},
+      editForm: {
+        city:[]
+      },
       formLabelWidth: "80px",
       rules: {
         name: [
@@ -57,7 +62,10 @@ export default {
         ],
         intro: [
           { required: true, message: "企业简介不能为空", trigger: "blur" }
-        ]
+        ],
+         city:[
+            { required: true, message: '所处城市不能为空', trigger: 'blur' }
+          ]
       }
     };
   },

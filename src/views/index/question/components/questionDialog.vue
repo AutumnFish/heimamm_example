@@ -38,13 +38,6 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="城市" prop="city" :label-width="formLabelWidth">
-        <el-cascader
-          v-model="form.city"
-          :options="options"
-          :props="{ value: 'label' }"
-        ></el-cascader>
-      </el-form-item>
       <!-- 题型 -->
       <el-form-item label="题型" prop="type" :label-width="formLabelWidth">
         <el-radio-group v-model="form.type">
@@ -291,8 +284,7 @@
 <script>
 // 导入富文本
 import Wangeditor from "wangeditor";
-// 导入 省市区数据
-import { provinceAndCityData } from "element-china-area-data";
+
 // 导入数据接口
 import { questionAdd } from "@/api/question.js";
 export default {
@@ -358,8 +350,6 @@ export default {
       // 图片的上传地址
       uploadAction: process.env.VUE_APP_BASEURL + "/question/upload",
       formLabelWidth: "80px",
-      // 级联选择器数据
-      options: provinceAndCityData,
       titleEditor: undefined,
       answerEditor: undefined,
       // 图片预览地址

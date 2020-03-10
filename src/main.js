@@ -15,6 +15,9 @@ import '@/plugins/element.js'
 // 导入全局样式
 import "@/styles/base.less";
 
+// 注册全局组件
+import './components/index.js'
+
 Vue.config.productionTip = false;
 
 new Vue({
