@@ -45,32 +45,8 @@
       <el-table :data="subjectTable" @expand-change="expandChange" ref="table">
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <el-tag
-              :key="tag"
-              v-for="(tag, index) in scope.row.steps"
-              closable
-              :disable-transitions="false"
-              @close="handleClose(scope.row, index)"
-            >
-              {{ tag }}
-            </el-tag>
-            <el-input
-              class="input-new-tag"
-              v-if="inputVisible"
-              v-model="inputValue"
-              ref="saveTagInput"
-              size="small"
-              @keyup.enter.native="handleInputConfirm(scope.row)"
-              @blur="inputVisible = false"
-            ></el-input>
-            <el-button
-              v-else
-              class="button-new-tag"
-              size="small"
-              @click="inputVisible = true"
-            >
-              + New Tag
-            </el-button>
+            <!-- s123 -->
+            <stepTags v-model="scope.row.steps"></stepTags>
           </template>
         </el-table-column>
         <el-table-column type="index" label="序号"></el-table-column>
@@ -131,12 +107,15 @@
   import subjectEditDialog from './components/subjectEditDialog.vue'
   // 导入学科接口
   import { subjectList, subjectStatus, subjectRemove } from '@/api/subject.js'
+  // 导入 tabs
+  import stepTags from './components/stepTags.vue'
   export default {
     name: 'subject',
     // 注册组件
     components: {
       subjectDialog,
-      subjectEditDialog
+      subjectEditDialog,
+      stepTags
     },
     data() {
       return {
@@ -176,11 +155,7 @@
         // 是否显示编辑框
         editFormVisible: false,
         // 编辑表单
-        editForm: {},
-        // 是否显示编辑输入框
-        inputVisible: false,
-        // 阶段编辑框双向绑定的数据
-        inputValue: ''
+        editForm: {}
       }
     },
     methods: {
@@ -190,24 +165,13 @@
         console.log(this.$refs.table)
         // 如果还有其他的也展开了，把其他的都收起来
         if (expandedRows.length > 1) {
-          expandedRows.splice(expandedRows.indexOf(row),1)
+          expandedRows.splice(expandedRows.indexOf(row), 1)
           expandedRows.forEach(v => {
             this.$refs.table.toggleRowExpansion(v, false)
           })
         }
       },
-      // 新增内容
-      handleInputConfirm(item) {
-        console.log(item)
-        item.steps.push(this.inputValue)
-        // 清空输入的内容
-        this.inputValue = ''
-        this.inputVisible = false
-      },
-      // 点击删除
-      handleClose(item, index) {
-        item.steps.splice(index, 1)
-      },
+
       // 进入编辑状态
       enterEdit(item) {
         // 数据传递
@@ -275,7 +239,7 @@
           ...this.filterForm
         }).then(res => {
           res.data.items.forEach(v => {
-            v.steps = [1, 2, 3]
+            v.steps = [parseInt(Math.random()*100), parseInt(Math.random()*100), parseInt(Math.random()*100)]
           })
           // 表格数据
           this.subjectTable = res.data.items
@@ -324,21 +288,6 @@
       span.red {
         color: red;
       }
-    }
-    .el-tag + .el-tag {
-      margin-left: 10px;
-    }
-    .button-new-tag {
-      margin-left: 10px;
-      height: 32px;
-      line-height: 30px;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-    .input-new-tag {
-      width: 90px;
-      margin-left: 10px;
-      vertical-align: bottom;
     }
   }
 </style>
