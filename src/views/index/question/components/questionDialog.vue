@@ -234,15 +234,8 @@
           select_options: { required: true, message: '选项不能为空' }
         },
         // 图片的上传地址
-        uploadAction: process.env.VUE_APP_BASEURL + '/question/upload',
         formLabelWidth: '80px',
-        titleEditor: undefined,
         answerEditor: undefined,
-        // 图片预览地址
-        imageAUrl: '',
-        imageBUrl: '',
-        imageCUrl: '',
-        imageDUrl: '',
         // 视频预览地址
         videoUrl: ''
       }
@@ -279,9 +272,7 @@
           }
         })
       },
-      handleRemove() {
-        window.console.log('handleRemove')
-      },
+     
       opened() {
         if (!this.titleEditor) {
           this.titleEditor = new Wangeditor(
@@ -314,34 +305,6 @@
         console.log(res)
         this.videoUrl = URL.createObjectURL(file.raw)
         this.form.video = res.data.url
-      },
-      handleASuccess(res, file) {
-        this.imageAUrl = URL.createObjectURL(file.raw)
-        this.form.select_options[0].image = res.data.url
-      },
-      handleBSuccess(res, file) {
-        this.imageBUrl = URL.createObjectURL(file.raw)
-        this.form.select_options[1].image = res.data.url
-      },
-      handleCSuccess(res, file) {
-        this.imageCUrl = URL.createObjectURL(file.raw)
-        this.form.select_options[2].image = res.data.url
-      },
-      handleDSuccess(res, file) {
-        this.imageDUrl = URL.createObjectURL(file.raw)
-        this.form.select_options[3].image = res.data.url
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
-        const isLt2M = file.size / 1024 / 1024 < 2
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG或PNG 格式!')
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!')
-        }
-        return isJPG && isLt2M
       },
       beforeVideoUpload(file) {
         console.log(file)
