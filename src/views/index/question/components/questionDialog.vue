@@ -4,7 +4,6 @@
     class="question-dialog"
     :visible.sync="$parent.addFormVisible"
     fullscreen
-    @opened="opened"
   >
     <el-form :model="form" label-position="left" ref="addForm" :rules="rules">
       <el-form-item label="学科" prop="subject" :label-width="formLabelWidth">
@@ -137,8 +136,12 @@
       <el-divider></el-divider>
       <!-- 答案解析 -->
       <el-form-item label="答案解析" prop="answer_analyze"></el-form-item>
-      <div ref="answerHeader" class="answer-header"></div>
-      <div ref="answerMain" class="answer-main"></div>
+      <quill-editor
+        v-model="form.answer_analyze"
+        ref="myQuillEditor"
+        @blur="onEditorFocus"
+      ></quill-editor>
+
       <!-- 简答 -->
       <el-form-item label="试题备注" prop="remark" class="answer-item">
         <el-input
@@ -157,23 +160,28 @@
 </template>
 
 <script>
-  // 导入富文本
-  import Wangeditor from 'wangeditor'
-
   // 导入数据接口
   import { questionAdd } from '@/api/question.js'
   // 导入 单选组件
   import singleOption from './singleOption.vue'
   // 导入 多选组件
   import multiOption from './multiOption.vue'
+  // 导入富文本编辑器的样式
+  import 'quill/dist/quill.core.css'
+  import 'quill/dist/quill.snow.css'
+  import 'quill/dist/quill.bubble.css'
+  import { quillEditor } from 'vue-quill-editor'
   export default {
     name: 'question-add',
     components: {
       singleOption,
-      multiOption
+      multiOption,
+      quillEditor
     },
     data() {
       return {
+        // 文件上传地址
+        uploadAction: process.env.VUE_APP_BASEURL + '/question/upload',
         form: {
           title: '',
           type: '',
@@ -242,6 +250,12 @@
     },
 
     methods: {
+      // 富文本编辑器失去焦点
+      onEditorFocus(){
+        if(this.form.answer_analyze!=''){
+          this.$refs.addForm.validateField('answer_analyze')
+        }
+      },
       // 提交数据
       submitForm() {
         this.$refs.addForm.validate(valid => {
@@ -271,35 +285,6 @@
             return false
           }
         })
-      },
-     
-      opened() {
-        if (!this.titleEditor) {
-          this.titleEditor = new Wangeditor(
-            this.$refs.titleHeader,
-            this.$refs.titleMain
-          )
-          // 绑定 change事件
-          this.titleEditor.customConfig.onchange = html => {
-            // html 即变化之后的内容
-            // console.log(html);
-            this.form.title = html
-          }
-          this.titleEditor.create()
-        }
-        if (!this.answerEditor) {
-          this.answerEditor = new Wangeditor(
-            this.$refs.answerHeader,
-            this.$refs.answerMain
-          )
-          // 绑定 change事件
-          this.answerEditor.customConfig.onchange = html => {
-            // html 即变化之后的内容
-            // console.log(html);
-            this.form.answer_analyze = html
-          }
-          this.answerEditor.create()
-        }
       },
       handleVideoSuccess(res, file) {
         console.log(res)
