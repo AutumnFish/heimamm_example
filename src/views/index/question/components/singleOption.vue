@@ -1,6 +1,6 @@
 <template>
   <div class="radio-box">
-    <el-radio :label="label">{{label}}</el-radio>
+    <el-radio :label="label">{{ label }}</el-radio>
     <el-input v-model="selfValue" placeholder=""></el-input>
     <el-upload
       class="avatar-uploader"
@@ -27,23 +27,32 @@
         // 图片的上传地址
         uploadAction: process.env.VUE_APP_BASEURL + '/question/upload',
         // 图片预览地址
-        previewURL: '',
+        previewURL: this.image!=""?process.env.VUE_APP_BASEURL+'/'+this.image:this.image,
         // 内部的value
-        selfValue:'',
+        selfValue: this.value,
         // 内部的图片地址
-        selfImage:''
+        selfImage: this.iamge
       }
     },
     // 侦听器检测数据的改变
-    watch:{
-        // 通知父组件 value改变了
-        selfValue(){
-            this.$emit('input',this.selfValue)
-        },
-        // 通知父组件 图片地址改变了
-        selfImage(){
-            this.$emit('update:image',this.selfImage)
-        }
+    watch: {
+      value() {
+        console.log('value-change')
+        this.selfValue = this.value
+      },
+      image() {
+        console.log('image-change')
+        this.selfImage = this.image
+        this.previewURL=this.image!=""?process.env.VUE_APP_BASEURL+'/'+this.image:this.image
+      },
+      // 通知父组件 value改变了
+      selfValue() {
+        this.$emit('input', this.selfValue)
+      },
+      // 通知父组件 图片地址改变了
+      selfImage() {
+        this.$emit('update:image', this.selfImage)
+      }
     },
     methods: {
       // 上传成功

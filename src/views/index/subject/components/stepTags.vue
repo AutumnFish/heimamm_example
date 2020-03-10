@@ -1,22 +1,20 @@
 <template>
   <div class="step-tag-container">
     <draggable
-      v-model="myArray"
+      v-model="selfSteps"
       group="people"
       @start="drag = true"
       @end="drag = false"
     >
-      <transition-group>
-        <el-tag
-          :key="tag"
-          v-for="(tag, index) in selfSteps"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(index)"
-        >
-          {{ tag }}
-        </el-tag>
-      </transition-group>
+      <el-tag
+        :key="tag"
+        v-for="(tag, index) in selfSteps"
+        closable
+        :disable-transitions="false"
+        @close="handleClose(index)"
+      >
+        {{ tag }}
+      </el-tag>
     </draggable>
     <el-input
       class="input-new-tag"
@@ -42,7 +40,7 @@
   import draggable from 'vuedraggable'
   // 导入拖动组件
   export default {
-    components:{
+    components: {
       draggable
     },
     props: {
@@ -72,6 +70,7 @@
       selfSteps: {
         deep: true,
         handler() {
+          console.log('selfSteps-change')
           this.$emit('input', this.selfSteps)
         }
       }
@@ -94,6 +93,8 @@
 
 <style lang="less">
   .step-tag-container {
+    display: flex;
+    align-items: center;
     .el-tag + .el-tag {
       margin-left: 10px;
     }

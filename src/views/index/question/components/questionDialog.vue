@@ -139,7 +139,7 @@
       <quill-editor
         v-model="form.answer_analyze"
         ref="myQuillEditor"
-        @blur="onEditorFocus"
+        @blur="onEditorBlur"
       ></quill-editor>
 
       <!-- 简答 -->
@@ -251,7 +251,7 @@
 
     methods: {
       // 富文本编辑器失去焦点
-      onEditorFocus(){
+      onEditorBlur(){
         if(this.form.answer_analyze!=''){
           this.$refs.addForm.validateField('answer_analyze')
         }
@@ -264,8 +264,6 @@
               if (res.code === 200) {
                 this.$refs.addForm.resetFields()
                 // 富文本的清空需要自己来
-                this.titleEditor.txt.html('')
-                this.answerEditor.txt.html('')
                 // 预览地址清空
                 this.imageAUrl = ''
                 this.imageBUrl = ''
