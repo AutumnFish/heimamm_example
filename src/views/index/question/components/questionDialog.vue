@@ -91,78 +91,14 @@
         prop="multiple_select_answer"
       >
         <el-checkbox-group v-model="form.multiple_select_answer">
-          <!-- 选项A -->
-          <div class="radio-box">
-            <el-checkbox label="A">A</el-checkbox>
-            <el-input
-              v-model="form.select_options[0].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadAction"
-              :show-file-list="false"
-              :on-success="handleASuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageAUrl" :src="imageAUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
-          <!-- 选项B -->
-          <div class="radio-box">
-            <el-checkbox label="B">B</el-checkbox>
-            <el-input
-              v-model="form.select_options[1].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadAction"
-              :show-file-list="false"
-              :on-success="handleBSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageBUrl" :src="imageBUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
-          <!-- 选项C -->
-          <div class="radio-box">
-            <el-checkbox label="C">C</el-checkbox>
-            <el-input
-              v-model="form.select_options[2].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadAction"
-              :show-file-list="false"
-              :on-success="handleCSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageCUrl" :src="imageCUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
-          <!-- 选项D -->
-          <div class="radio-box">
-            <el-checkbox label="D">D</el-checkbox>
-            <el-input
-              v-model="form.select_options[3].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadAction"
-              :show-file-list="false"
-              :on-success="handleDSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageDUrl" :src="imageDUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
+          <!-- 多选选项 -->
+          <multiOption
+            v-for="item in form.select_options"
+            :key="item.label"
+            v-model="item.text"
+            :image.sync="item.image"
+            :label="item.label"
+          ></multiOption>
         </el-checkbox-group>
       </el-form-item>
       <!-- 简答 -->
@@ -228,10 +164,13 @@
   import { questionAdd } from '@/api/question.js'
   // 导入 单选组件
   import singleOption from './singleOption.vue'
+  // 导入 多选组件
+  import multiOption from './multiOption.vue'
   export default {
     name: 'question-add',
     components: {
-      singleOption
+      singleOption,
+      multiOption
     },
     data() {
       return {
