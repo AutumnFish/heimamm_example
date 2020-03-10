@@ -47,6 +47,7 @@
           <template slot-scope="scope">
             <!-- s123 -->
             <stepTags v-model="scope.row.steps"></stepTags>
+            <!-- <stepTags :value="scope.row.steps" @change="e=>scope.row.steps=e"></stepTags> -->
           </template>
         </el-table-column>
         <el-table-column type="index" label="序号"></el-table-column>
