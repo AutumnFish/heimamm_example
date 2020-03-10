@@ -60,9 +60,10 @@
       <!-- 时间线 -->
       <el-divider></el-divider>
       <!-- 试题标题 -->
-      <el-form-item label="试题标题" prop="title"> </el-form-item>
-      <div ref="titleHeader" class="title-header"></div>
-      <div ref="titleMain" class="title-main"></div>
+      <el-form-item label="试题标题" prop="title">
+        <el-input v-model="form.title"></el-input>
+      </el-form-item>
+
       <!-- 单选 -->
       <el-form-item
         label="单选"
@@ -72,75 +73,13 @@
         prop="single_select_answer"
       >
         <el-radio-group v-model="form.single_select_answer">
-          <div class="radio-box">
-            <el-radio label="A">A</el-radio>
-            <el-input
-              v-model="form.select_options[0].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadAction"
-              :show-file-list="false"
-              :on-remove="handleRemove"
-              :on-success="handleASuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageAUrl" :src="imageAUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
-          <div class="radio-box">
-            <el-radio label="B">B</el-radio>
-            <el-input
-              v-model="form.select_options[1].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadAction"
-              :show-file-list="false"
-              :on-success="handleBSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageBUrl" :src="imageBUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
-          <div class="radio-box">
-            <el-radio label="C">C</el-radio>
-            <el-input
-              v-model="form.select_options[2].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadAction"
-              :show-file-list="false"
-              :on-success="handleCSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageCUrl" :src="imageCUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
-          <div class="radio-box">
-            <el-radio label="D">D</el-radio>
-            <el-input
-              v-model="form.select_options[3].text"
-              placeholder=""
-            ></el-input>
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadAction"
-              :show-file-list="false"
-              :on-success="handleDSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageDUrl" :src="imageDUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
+          <singleOption
+            v-for="(item, index) in form.select_options"
+            :key="index"
+            v-model="item.text"
+            :image.sync="item.image"
+            :label="item.label"
+          ></singleOption>
         </el-radio-group>
       </el-form-item>
       <!-- 多选 -->
@@ -261,7 +200,7 @@
       <!-- 时间线 -->
       <el-divider></el-divider>
       <!-- 答案解析 -->
-      <el-form-item label="答案解析" prop="answer_analyze"> </el-form-item>
+      <el-form-item label="答案解析" prop="answer_analyze"></el-form-item>
       <div ref="answerHeader" class="answer-header"></div>
       <div ref="answerMain" class="answer-main"></div>
       <!-- 简答 -->
@@ -282,267 +221,261 @@
 </template>
 
 <script>
-// 导入富文本
-import Wangeditor from "wangeditor";
+  // 导入富文本
+  import Wangeditor from 'wangeditor'
 
-// 导入数据接口
-import { questionAdd } from "@/api/question.js";
-export default {
-  name: "question-add",
-  data() {
-    return {
-      form: {
-        title: "",
-        type: "",
-        subject: "",
-        step: "",
-        enterprise: "",
-        difficulty: "",
-        single_select_answer: "",
-        multiple_select_answer: [],
-        video: "",
-        remark: "",
-        city: ["", ""],
-        short_answer: "狗不理当然是最美味的啦",
-        answer_analyze: "",
-        select_options: [
-          {
-            label: "A",
-            text: "",
-            image: ""
-          },
-          {
-            label: "B",
-            text: "",
-            image: ""
-          },
-          {
-            label: "C",
-            text: "",
-            image: ""
-          },
-          {
-            label: "D",
-            text: "",
-            image: ""
-          }
-        ]
-      },
-      rules: {
-        title: { required: true, message: "标题不能为空" },
-        type: { required: true, message: "类型不能为空" },
-        subject: { required: true, message: "学科不能为空" },
-        step: { required: true, message: "阶段不能为空" },
-        enterprise: { required: true, message: "企业不能为空" },
-        difficulty: { required: true, message: "难度不能为空" },
-        single_select_answer: { required: true, message: "单选题答案不能为空" },
-        multiple_select_answer: {
-          required: true,
-          message: "多选题答案不能为空"
-        },
-        // video: { required: true, message: "视频不能为空" },
-        remark: { required: true, message: "备注不能为空" },
-        city: { required: true, message: "城市不能为空" },
-        short_answer: { required: true, message: "简答题答案不能为空" },
-        answer_analyze: { required: true, message: "答案解析不能为空" },
-        select_options: { required: true, message: "选项不能为空" }
-      },
-      // 图片的上传地址
-      uploadAction: process.env.VUE_APP_BASEURL + "/question/upload",
-      formLabelWidth: "80px",
-      titleEditor: undefined,
-      answerEditor: undefined,
-      // 图片预览地址
-      imageAUrl: "",
-      imageBUrl: "",
-      imageCUrl: "",
-      imageDUrl: "",
-      // 视频预览地址
-      videoUrl: ""
-    };
-  },
-
-  methods: {
-    // 提交数据
-    submitForm() {
-      this.$refs.addForm.validate(valid => {
-        if (valid) {
-          questionAdd(this.form).then(res => {
-            if(res.code===200){
-            this.$refs.addForm.resetFields();
-            // 富文本的清空需要自己来
-            this.titleEditor.txt.html('')
-            this.answerEditor.txt.html('')
-            // 预览地址清空
-            this.imageAUrl = ''
-            this.imageBUrl = ''
-            this.imageCUrl = ''
-            this.imageDUrl = ''
-            this.videoUrl = ''
-            this.$parent.addFormVisible = false;
-            // 提示用户
-              this.$message.success('数据新增成功');
-            this.$parent.getList();
-            }else{
-              this.$message.warning(res.message)
+  // 导入数据接口
+  import { questionAdd } from '@/api/question.js'
+  // 导入 单选组件
+  import singleOption from './singleOption.vue'
+  export default {
+    name: 'question-add',
+    components: {
+      singleOption
+    },
+    data() {
+      return {
+        form: {
+          title: '',
+          type: '',
+          subject: '',
+          step: '',
+          enterprise: '',
+          difficulty: '',
+          single_select_answer: '',
+          multiple_select_answer: [],
+          video: '',
+          remark: '',
+          city: ['', ''],
+          short_answer: '狗不理当然是最美味的啦',
+          answer_analyze: '',
+          select_options: [
+            {
+              label: 'A',
+              text: '',
+              image: ''
+            },
+            {
+              label: 'B',
+              text: '',
+              image: ''
+            },
+            {
+              label: 'C',
+              text: '',
+              image: ''
+            },
+            {
+              label: 'D',
+              text: '',
+              image: ''
             }
-          });
-        } else {
-          this.$message.warning("题库信息输入有误，请检查");
-          return false;
+          ]
+        },
+        rules: {
+          title: { required: true, message: '标题不能为空' },
+          type: { required: true, message: '类型不能为空' },
+          subject: { required: true, message: '学科不能为空' },
+          step: { required: true, message: '阶段不能为空' },
+          enterprise: { required: true, message: '企业不能为空' },
+          difficulty: { required: true, message: '难度不能为空' },
+          single_select_answer: {
+            required: true,
+            message: '单选题答案不能为空'
+          },
+          multiple_select_answer: {
+            required: true,
+            message: '多选题答案不能为空'
+          },
+          // video: { required: true, message: "视频不能为空" },
+          remark: { required: true, message: '备注不能为空' },
+          city: { required: true, message: '城市不能为空' },
+          short_answer: { required: true, message: '简答题答案不能为空' },
+          answer_analyze: { required: true, message: '答案解析不能为空' },
+          select_options: { required: true, message: '选项不能为空' }
+        },
+        // 图片的上传地址
+        uploadAction: process.env.VUE_APP_BASEURL + '/question/upload',
+        formLabelWidth: '80px',
+        titleEditor: undefined,
+        answerEditor: undefined,
+        // 图片预览地址
+        imageAUrl: '',
+        imageBUrl: '',
+        imageCUrl: '',
+        imageDUrl: '',
+        // 视频预览地址
+        videoUrl: ''
+      }
+    },
+
+    methods: {
+      // 提交数据
+      submitForm() {
+        this.$refs.addForm.validate(valid => {
+          if (valid) {
+            questionAdd(this.form).then(res => {
+              if (res.code === 200) {
+                this.$refs.addForm.resetFields()
+                // 富文本的清空需要自己来
+                this.titleEditor.txt.html('')
+                this.answerEditor.txt.html('')
+                // 预览地址清空
+                this.imageAUrl = ''
+                this.imageBUrl = ''
+                this.imageCUrl = ''
+                this.imageDUrl = ''
+                this.videoUrl = ''
+                this.$parent.addFormVisible = false
+                // 提示用户
+                this.$message.success('数据新增成功')
+                this.$parent.getList()
+              } else {
+                this.$message.warning(res.message)
+              }
+            })
+          } else {
+            this.$message.warning('题库信息输入有误，请检查')
+            return false
+          }
+        })
+      },
+      handleRemove() {
+        window.console.log('handleRemove')
+      },
+      opened() {
+        if (!this.titleEditor) {
+          this.titleEditor = new Wangeditor(
+            this.$refs.titleHeader,
+            this.$refs.titleMain
+          )
+          // 绑定 change事件
+          this.titleEditor.customConfig.onchange = html => {
+            // html 即变化之后的内容
+            // console.log(html);
+            this.form.title = html
+          }
+          this.titleEditor.create()
         }
-      });
-    },
-    handleRemove(){
-      window.console.log('handleRemove')
-    },
-    opened() {
-      if (!this.titleEditor) {
-        this.titleEditor = new Wangeditor(
-          this.$refs.titleHeader,
-          this.$refs.titleMain
-        );
-        // 绑定 change事件
-        this.titleEditor.customConfig.onchange = html => {
-          // html 即变化之后的内容
-          // console.log(html);
-          this.form.title = html;
-        };
-        this.titleEditor.create();
-      }
-      if (!this.answerEditor) {
-        this.answerEditor = new Wangeditor(
-          this.$refs.answerHeader,
-          this.$refs.answerMain
-        );
-        // 绑定 change事件
-        this.answerEditor.customConfig.onchange = html => {
-          // html 即变化之后的内容
-          // console.log(html);
-          this.form.answer_analyze = html;
-        };
-        this.answerEditor.create();
-      }
-    },
-    handleVideoSuccess(res, file) {
-      console.log(res);
-      this.videoUrl = URL.createObjectURL(file.raw);
-      this.form.video = res.data.url;
-    },
-    handleASuccess(res, file) {
-      this.imageAUrl = URL.createObjectURL(file.raw);
-      this.form.select_options[0].image = res.data.url;
-    },
-    handleBSuccess(res, file) {
-      this.imageBUrl = URL.createObjectURL(file.raw);
-      this.form.select_options[1].image = res.data.url;
-    },
-    handleCSuccess(res, file) {
-      this.imageCUrl = URL.createObjectURL(file.raw);
-      this.form.select_options[2].image = res.data.url;
-    },
-    handleDSuccess(res, file) {
-      this.imageDUrl = URL.createObjectURL(file.raw);
-      this.form.select_options[3].image = res.data.url;
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!this.answerEditor) {
+          this.answerEditor = new Wangeditor(
+            this.$refs.answerHeader,
+            this.$refs.answerMain
+          )
+          // 绑定 change事件
+          this.answerEditor.customConfig.onchange = html => {
+            // html 即变化之后的内容
+            // console.log(html);
+            this.form.answer_analyze = html
+          }
+          this.answerEditor.create()
+        }
+      },
+      handleVideoSuccess(res, file) {
+        console.log(res)
+        this.videoUrl = URL.createObjectURL(file.raw)
+        this.form.video = res.data.url
+      },
+      handleASuccess(res, file) {
+        this.imageAUrl = URL.createObjectURL(file.raw)
+        this.form.select_options[0].image = res.data.url
+      },
+      handleBSuccess(res, file) {
+        this.imageBUrl = URL.createObjectURL(file.raw)
+        this.form.select_options[1].image = res.data.url
+      },
+      handleCSuccess(res, file) {
+        this.imageCUrl = URL.createObjectURL(file.raw)
+        this.form.select_options[2].image = res.data.url
+      },
+      handleDSuccess(res, file) {
+        this.imageDUrl = URL.createObjectURL(file.raw)
+        this.form.select_options[3].image = res.data.url
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+        const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG或PNG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
-    beforeVideoUpload(file) {
-      console.log(file);
-      const isJPG = file.type === "video/mp4";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG或PNG 格式!')
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!')
+        }
+        return isJPG && isLt2M
+      },
+      beforeVideoUpload(file) {
+        console.log(file)
+        const isJPG = file.type === 'video/mp4'
+        const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG) {
-        this.$message.error("上传解析视频只能是 MP4 格式!");
+        if (!isJPG) {
+          this.$message.error('上传解析视频只能是 MP4 格式!')
+        }
+        if (!isLt2M) {
+          this.$message.error('上传解析视频大小不能超过 2MB!')
+        }
+        return isJPG && isLt2M
       }
-      if (!isLt2M) {
-        this.$message.error("上传解析视频大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
     }
   }
-};
 </script>
 
 <style lang="less">
-.question-dialog {
-  .el-select,
-  .el-input {
-    width: 364px;
-  }
-  .el-form {
-    display: block;
-    width: 50%;
-    margin: 0 auto;
-  }
-  .title-header,
-  .answer-header {
-    border: 1px solid #cecece;
-  }
-  .title-main,
-  .answer-main {
-    border: 1px solid #cecece;
-    height: 100px;
-  }
-  .radio-box {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+  .question-dialog {
+    .el-select,
     .el-input {
-      width: 476px;
-      margin-right: 21px;
+      width: 364px;
     }
-    .el-button--primary {
-      margin-right: 11px;
+    .el-form {
+      display: block;
+      width: 50%;
+      margin: 0 auto;
     }
-    .el-checkbox {
-      margin-right: 29px;
+    .title-header,
+    .answer-header {
+      border: 1px solid #cecece;
     }
-  }
-  .single-item,
-  .multiple-item,
-  .answer-item {
-    margin-top: 59px;
-  }
-  .dialog-footer {
-    text-align: center;
-  }
+    .title-main,
+    .answer-main {
+      border: 1px solid #cecece;
+      height: 100px;
+    }
 
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+    .single-item,
+    .multiple-item,
+    .answer-item {
+      margin-top: 59px;
+    }
+    .dialog-footer {
+      text-align: center;
+    }
+
+    .avatar-uploader .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+      border-color: #409eff;
+    }
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 178px;
+      height: 178px;
+      line-height: 178px;
+      text-align: center;
+    }
+    .avatar {
+      width: 178px;
+      height: 178px;
+      display: block;
+    }
+    .video {
+      width: 360px;
+    }
   }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
-  .video {
-    width: 360px;
-  }
-}
 </style>

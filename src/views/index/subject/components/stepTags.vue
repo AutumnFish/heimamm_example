@@ -1,38 +1,50 @@
 <template>
   <div class="step-tag-container">
-      <el-tag
-        :key="tag"
-        v-for="(tag, index) in selfSteps"
-        closable
-        :disable-transitions="false"
-        @close="handleClose(index)"
-      >
-        {{ tag }}
-      </el-tag>
-      <el-input
-        class="input-new-tag"
-        v-if="inputVisible"
-        v-model="inputValue"
-        ref="saveTagInput"
-        size="small"
-        @keyup.enter.native="handleInputConfirm"
-        @blur="inputVisible = false"
-      ></el-input>
-      <el-button
-        v-else
-        class="button-new-tag"
-        size="small"
-        @click="inputVisible = true"
-      >
-        + New Tag
-      </el-button>
+    <draggable
+      v-model="myArray"
+      group="people"
+      @start="drag = true"
+      @end="drag = false"
+    >
+      <transition-group>
+        <el-tag
+          :key="tag"
+          v-for="(tag, index) in selfSteps"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(index)"
+        >
+          {{ tag }}
+        </el-tag>
+      </transition-group>
+    </draggable>
+    <el-input
+      class="input-new-tag"
+      v-if="inputVisible"
+      v-model="inputValue"
+      ref="saveTagInput"
+      size="small"
+      @keyup.enter.native="handleInputConfirm"
+      @blur="inputVisible = false"
+    ></el-input>
+    <el-button
+      v-else
+      class="button-new-tag"
+      size="small"
+      @click="inputVisible = true"
+    >
+      + New Tag
+    </el-button>
   </div>
 </template>
 
 <script>
+  import draggable from 'vuedraggable'
   // 导入拖动组件
   export default {
-   
+    components:{
+      draggable
+    },
     props: {
       // 定义传入的数据
       value: {
@@ -60,8 +72,7 @@
       selfSteps: {
         deep: true,
         handler() {
-          console.log('selfStepsChange')
-          this.$emit('change', this.selfSteps)
+          this.$emit('input', this.selfSteps)
         }
       }
     },
