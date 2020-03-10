@@ -8,9 +8,6 @@
         :model="filterForm"
         class="demo-form-inline"
       >
-        <el-form-item label="企业编号" prop="eid">
-          <el-input v-model="filterForm.eid" class="short-input"></el-input>
-        </el-form-item>
         <el-form-item label="企业名称" prop="name">
           <el-input v-model="filterForm.name"></el-input>
         </el-form-item>
@@ -43,7 +40,6 @@
     <el-card class="card-main">
       <el-table :data="enterpriseTable">
         <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column prop="eid" label="企业编号"></el-table-column>
         <el-table-column prop="name" label="企业名称"></el-table-column>
         <el-table-column prop="username" label="创建者"></el-table-column>
         <el-table-column label="创建日期">

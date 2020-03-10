@@ -109,7 +109,7 @@
         <el-form-item label="图形码" :label-width="formLabelWidth">
           <el-row>
             <el-col :span="16">
-              <el-input v-model="regForm.imgCode" autocomplete="off"></el-input>
+              <el-input v-model="regForm.imgCode" autocomplete="off" @keyup.enter.native='submitRegForm'></el-input>
             </el-col>
             <el-col :span="7" :offset="1">
               <img

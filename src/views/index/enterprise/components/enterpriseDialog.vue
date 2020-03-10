@@ -5,9 +5,6 @@
     :visible.sync="$parent.addFormVisible"
   >
     <el-form :model="addForm" :rules="rules" ref="addForm">
-      <el-form-item label="企业编号" prop="eid" :label-width="formLabelWidth">
-        <el-input v-model="addForm.eid" autocomplete="off"></el-input>
-      </el-form-item>
       <el-form-item label="企业名称" prop="name" :label-width="formLabelWidth">
         <el-input v-model="addForm.name" autocomplete="off"></el-input>
       </el-form-item>
@@ -52,7 +49,6 @@ export default {
       addForm: {},
       formLabelWidth: "80px",
       rules: {
-        eid: [{ required: true, message: "企业编号不能为空", trigger: "blur" }],
         name: [
           { required: true, message: "企业名称不能为空", trigger: "blur" }
         ],
