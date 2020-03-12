@@ -10,10 +10,10 @@
       </div>
       <!-- 表单 -->
       <el-form :model="logForm" :rules="rules" ref="logForm" class="login-form">
-        <el-form-item prop="phone">
+        <el-form-item prop="name">
           <el-input
-            placeholder="请输入手机号"
-            v-model="logForm.phone"
+            placeholder="请输入手机/邮箱/用户名"
+            v-model="logForm.name"
             prefix-icon="el-icon-user"
           ></el-input>
         </el-form-item>
@@ -146,7 +146,7 @@
 // 导入登录接口
 import { login, sendsms, register } from "@/api/login.js";
 // 验证逻辑的导入
-import { checkMobile, checkAgree, checkEmail } from "@/utils/validator.js";
+import {  checkAgree, checkEmail } from "@/utils/validator.js";
 // 数据 获取的接口
 import { setToken } from "@/utils/token.js";
 // 导入头像上传地址
@@ -156,15 +156,14 @@ export default {
   data() {
     return {
       logForm: {
-        phone: "18888888888",
+        name: "18888888888",
         password: "88888888",
         code: "1234",
         checked: false
       },
       rules: {
-        phone: [
-          { required: true, message: "手机号不能为空" },
-          { validator: checkMobile }
+        name: [
+          { required: true, message: "用户名不能为空" },
         ],
         email: [
           { required: true, message: "邮箱号不能为空" },
@@ -176,7 +175,7 @@ export default {
         ],
         password: [
           { required: true, message: "密码不能为空" },
-          { min: 6, max: 12, message: "密码长度为6~12个字符" }
+          { min: 4, max: 12, message: "密码长度为4~12个字符" }
         ],
         code: [
           { required: true, message: "验证码不能为空" },
@@ -184,7 +183,7 @@ export default {
         ],
         rcode: [
           { required: true, message: "短信验证码不能为空" },
-          { min: 4, max: 4, message: "短信验证码长度为4" }
+          { min: 6, max: 6, message: "短信验证码长度为6" }
         ],
         checked: [{ validator: checkAgree }]
       },
@@ -201,7 +200,7 @@ export default {
       },
       imageUrl: "",
       // 验证码
-      actions: process.env.VUE_APP_BASEURL + "/captcha?type=login",
+      actions: process.env.VUE_APP_BASEURL + "admin/acount/makeCaptcha",
       // 注册验证码
       regActions: process.env.VUE_APP_BASEURL + "/captcha?type=sendsms",
       // 头像上传地址
@@ -272,7 +271,7 @@ export default {
       // 通过时间戳来重新获取验证码
       this.actions = `${
         process.env.VUE_APP_BASEURL
-      }/captcha?type=login&t=${Date.now()}`;
+      }admin/acount/makeCaptcha?t=${Date.now()}`;
     },
     // 重新获取注册验证码
     randomRegisterCaptcha() {
@@ -286,12 +285,13 @@ export default {
         if (valid) {
           // 登录接口
           login(this.logForm).then(res => {
+            console.log(res)
             // 判断状态
             if (res.code === 200) {
               // 提示用户
               this.$message.success("登录成功")
               // 保存token
-              setToken(res.data.token);
+              setToken(res.data.authorization);
               // 跳转到首页
               this.$router.push("/index");
             }else{

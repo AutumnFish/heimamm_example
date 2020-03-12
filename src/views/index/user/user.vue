@@ -17,11 +17,13 @@
         <el-form-item label="用户邮箱" prop="email">
           <el-input v-model="filterForm.email"></el-input>
         </el-form-item>
+          <el-form-item label="用户手机" prop="phone">
+          <el-input v-model="filterForm.phone"></el-input>
+        </el-form-item>
         <el-form-item label="角色" prop="role_id">
           <el-select v-model="filterForm.role_id" placeholder="请选择状态">
             <el-option label="管理员" :value="2"></el-option>
             <el-option label="老师" :value="3"></el-option>
-            <el-option label="学生" :value="4"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -31,7 +33,7 @@
             type="primary"
             @click="addFormVisible = true"
             icon="el-icon-plus"
-            v-power="['超级管理员']"
+          
             >新增用户</el-button
           >
         </el-form-item>
@@ -45,7 +47,7 @@
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="phone" label="电话"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column prop="role" label="角色"></el-table-column>
+        <el-table-column prop="roleName" label="角色"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
@@ -55,13 +57,13 @@
         </el-table-column>
         <el-table-column prop="h" label="操作" >
           <template slot-scope="scope">
-            <el-button type="text" v-power="['超级管理员']" @click="enterEdit(scope.row)"
+            <el-button type="text"  @click="enterEdit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="text" v-if="scope.row.role_id>$store.state.userInfo.role_id" @click="changeStatus(scope.row)">{{
+            <el-button type="text"  @click="changeStatus(scope.row)">{{
               scope.row.status === 0 ? "启用" : "禁用"
             }}</el-button>
-            <el-button type="text" v-power="['超级管理员']" @click="removeUser(scope.row)"
+            <el-button type="text"  @click="removeUser(scope.row)"
               >删除</el-button
             >
           </template>
@@ -105,7 +107,8 @@ export default {
       filterForm: {
         email:"",
         username:"",
-        role_id:""
+        role_id:"",
+        phone:''
       },
       userTable: [],
       // 是否显示新增框

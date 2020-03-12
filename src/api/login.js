@@ -4,7 +4,7 @@ import request from "./request.js";
 // 暴露 登录接口
 export function login(data) {
   return request({
-    url: "/login",
+    url: "/admin/acount/login",
     method: "post",
     data
   });

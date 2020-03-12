@@ -20,13 +20,12 @@
       </el-form-item>
       <el-form-item
         label="所属角色"
-        prop="role_id"
+        prop="roleId"
         :label-width="formLabelWidth"
       >
-        <el-select v-model="editForm.role_id" placeholder="请选择角色">
+        <el-select v-model="editForm.roleId" placeholder="请选择角色">
           <el-option label="管理员" :value="2"></el-option>
           <el-option label="老师" :value="3"></el-option>
-          <el-option label="学生" :value="4"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item
@@ -60,7 +59,7 @@ import {userEdit} from '@/api/user.js'
 // 导入验证函数
 import {checkMobile,checkEmail} from '@/utils/validator.js'
 export default {
-  name: "user-add",
+  name: "user-edit",
   data() {
     return {
       editForm: {

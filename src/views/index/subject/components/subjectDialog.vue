@@ -5,7 +5,7 @@
     :visible.sync="$parent.addFormVisible"
   >
     <el-form :model="addForm" ref="addForm" :rules="rules">
-      <el-form-item label="学科编号" prop="rid" :label-width="formLabelWidth">
+      <el-form-item  label="学科编号" prop="rid" :label-width="formLabelWidth">
         <el-input v-model="addForm.rid" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="学科名称" prop="name" :label-width="formLabelWidth">

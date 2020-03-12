@@ -7,7 +7,7 @@ import request from "./request";
 // 暴露接口 用户列表
 export function userList(params) {
   return request({
-    url: "/user/list",
+    url: "/admin/admin/find",
     method: "get",
     params
   });
@@ -15,7 +15,7 @@ export function userList(params) {
 // 暴露接口 添加用户
 export function userAdd(data) {
   return request({
-    url: "/user/add",
+    url: "/admin/admin/add",
     method: "post",
     data
   });
@@ -24,7 +24,7 @@ export function userAdd(data) {
 // 暴露接口 用户状态
 export function userStatus(data) {
   return request({
-    url: "/user/status",
+    url: "/admin/admin/setstatus",
     method: "post",
     data
   });
@@ -33,7 +33,7 @@ export function userStatus(data) {
 // 暴露接口 用户编辑
 export function userEdit(data) {
   return request({
-    url: "/user/edit",
+    url: "/admin/admin/edit",
     method: "post",
     data
   });
@@ -42,7 +42,7 @@ export function userEdit(data) {
 // 暴露接口 用户删除
 export function userRemove(data) {
   return request({
-    url: "/user/remove",
+    url: "/admin/admin/remove",
     method: "post",
     data
   });

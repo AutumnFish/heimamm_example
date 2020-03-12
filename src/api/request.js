@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from 'axios'
 // 携带token
-import { getToken, removeToken } from "@/utils/token.js";
+import { getToken, removeToken } from '@/utils/token.js'
 // 导入路由
-import router from "@/router/index.js";
+import router from '@/router/index.js'
 // 导入Element-ui的弹框
-import { Message } from "element-ui";
+import { Message } from 'element-ui'
 
 // 创建副本
 const instance = axios.create({
@@ -12,7 +12,7 @@ const instance = axios.create({
   baseURL: process.env.VUE_APP_BASEURL,
   // 跨域携带cookie
   withCredentials: true
-});
+})
 
 // 拦截器
 // Add a request interceptor
@@ -21,16 +21,16 @@ instance.interceptors.request.use(
     // 设置token
     if (getToken()) {
       // 如果有token 就携带token
-      config.headers.token = getToken();
+      config.headers.authorization = getToken()
     }
     // Do something before request is sent
-    return config;
+    return config
   },
   function(error) {
     // Do something with request error
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
 // Add a response interceptor
 instance.interceptors.response.use(
@@ -38,22 +38,26 @@ instance.interceptors.response.use(
     // 如果token无效 去登录页
     if (response.data.code === 206) {
       // 提示用户
-      Message.warning(response.data.message);
+      Message.warning(response.data.message)
       // 移除token
-      removeToken();
+      removeToken()
       // 去登录页
-      router.push("/login");
+      router.push('/login')
     }
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response.data;
+    console.log(response)
+    if (response.headers.Authorizatio) {
+      response.data.Authorizatio = response.headers.Authorizatio
+    }
+    return response.data
   },
   function(error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
 // 返回 创建的axios对象
-export default instance;
+export default instance
