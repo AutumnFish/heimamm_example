@@ -11,9 +11,6 @@
         <el-form-item label="学科名称" prop="name">
           <el-input v-model="filterForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="学科阶段" prop="step">
-          <el-input v-model="filterForm.step"></el-input>
-        </el-form-item>
         <el-form-item label="创建者" prop="username">
           <el-input
             v-model="filterForm.username"
@@ -45,8 +42,8 @@
       <el-table :data="subjectTable" @expand-change="expandChange" ref="table">
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <!-- s123 -->
-            <stepTags v-model="scope.row.steps"></stepTags>
+            <!-- 阶段组件 -->
+            <stepTags :subjectId="scope.row.id" v-model="scope.row.step"></stepTags>
             <!-- <stepTags :value="scope.row.steps" @change="e=>scope.row.steps=e"></stepTags> -->
           </template>
         </el-table-column>
@@ -75,7 +72,6 @@
             <!-- <el-button type="text" v-if="['超级管理员'].includes($store.state.userInfo.role)" @click="removeSubject(scope.row)"> -->
             <el-button
               type="text"
-              v-power="['超级管理员']"
               @click="removeSubject(scope.row)"
             >
               删除
@@ -121,11 +117,9 @@
     data() {
       return {
         filterForm: {
-          rid: '',
           name: '',
           username: '',
           status: '',
-          step: ''
         },
         subjectTable: [
           {
@@ -216,6 +210,8 @@
       },
       resetFilter() {
         this.$refs.filterForm.resetFields()
+        // 重新获取数据
+        this.getList()
       },
       // 修改状态
       changeState(item) {
@@ -239,9 +235,6 @@
           limit: this.limit,
           ...this.filterForm
         }).then(res => {
-          res.data.items.forEach(v => {
-            v.steps = [parseInt(Math.random()*100), parseInt(Math.random()*100), parseInt(Math.random()*100)]
-          })
           // 表格数据
           this.subjectTable = res.data.items
           // 总条数

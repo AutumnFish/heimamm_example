@@ -10,13 +10,23 @@
       </el-form-item>
       <el-form-item
         label="企业简称"
-        prop="short_name"
+        prop="shortName"
         :label-width="formLabelWidth"
       >
-        <el-input v-model="addForm.short_name" autocomplete="off"></el-input>
+        <el-input v-model="addForm.shortName" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="所处城市" prop="city" :label-width="formLabelWidth">
         <cityCascader v-model="addForm.city"></cityCascader>
+      </el-form-item>
+      <el-form-item
+        label="企业状态"
+        prop="status"
+        :label-width="formLabelWidth"
+      >
+        <el-select v-model="addForm.status" placeholder="请选择状态">
+          <el-option label="启用" value="1"></el-option>
+          <el-option label="禁用" value="0"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="企业简介" prop="intro" :label-width="formLabelWidth">
         <el-input
@@ -56,13 +66,7 @@
           name: [
             { required: true, message: '企业名称不能为空', trigger: 'blur' }
           ],
-          short_name: [
-            { required: true, message: '企业简称不能为空', trigger: 'blur' }
-          ],
-          intro: [
-            { required: true, message: '企业简介不能为空', trigger: 'blur' }
-          ],
-          city:[
+          city: [
             { required: true, message: '所处城市不能为空', trigger: 'blur' }
           ]
         }

@@ -5,18 +5,15 @@
     :visible.sync="$parent.editFormVisible"
   >
     <el-form :model="editForm" ref="editForm" :rules="rules">
-      <el-form-item label="学科编号" prop="rid" :label-width="formLabelWidth">
-        <el-input v-model="editForm.rid" autocomplete="off"></el-input>
-      </el-form-item>
       <el-form-item label="学科名称" prop="name" :label-width="formLabelWidth">
         <el-input v-model="editForm.name" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item
         label="学科简称"
-        prop="short_name"
+        prop="shortName"
         :label-width="formLabelWidth"
       >
-        <el-input v-model="editForm.short_name" autocomplete="off"></el-input>
+        <el-input v-model="editForm.shortName" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="学科简介" :label-width="formLabelWidth">
         <el-input
@@ -25,6 +22,12 @@
           v-model="editForm.intro"
           autocomplete="off"
         ></el-input>
+      </el-form-item>
+      <el-form-item label="学科状态" prop="status" :label-width="formLabelWidth">
+        <el-select v-model="editForm.status" placeholder="请选择状态">
+          <el-option label="启用" :value="1"></el-option>
+          <el-option label="禁用" :value="0"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="学科备注" :label-width="formLabelWidth">
         <el-input v-model="editForm.remark" autocomplete="off"></el-input>

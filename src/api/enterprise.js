@@ -4,7 +4,7 @@ import request from "./request.js";
 // 暴露接口 学科列表
 export function enterpriseList(params) {
   return request({
-    url: "/enterprise/list",
+    url: "/admin/enterprise/find",
     method: "get",
     params
   });
@@ -12,7 +12,7 @@ export function enterpriseList(params) {
 // 暴露接口 添加学科
 export function enterpriseAdd(data) {
   return request({
-    url: "/enterprise/add",
+    url: "/admin/enterprise/add",
     method: "post",
     data
   });
@@ -21,7 +21,7 @@ export function enterpriseAdd(data) {
 // 暴露接口 学科状态
 export function enterpriseStatus(data) {
   return request({
-    url: "/enterprise/status",
+    url: "/admin/enterprise/setstatus",
     method: "post",
     data
   });
@@ -30,7 +30,7 @@ export function enterpriseStatus(data) {
 // 暴露接口 学科编辑
 export function enterpriseEdit(data) {
   return request({
-    url: "/enterprise/edit",
+    url: "/admin/enterprise/edit",
     method: "post",
     data
   });
@@ -39,7 +39,7 @@ export function enterpriseEdit(data) {
 // 暴露接口 学科删除
 export function enterpriseRemove(data) {
   return request({
-    url: "/enterprise/remove",
+    url: "/admin/enterprise/remove",
     method: "post",
     data
   });

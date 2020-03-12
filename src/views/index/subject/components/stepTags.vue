@@ -1,53 +1,31 @@
 <template>
   <div class="step-tag-container">
-    <draggable
-      v-model="selfSteps"
-      group="people"
-      @start="drag = true"
-      @end="drag = false"
+    <el-tag
+      :key="item.id"
+      v-for="item in selfSteps"
+      :disable-transitions="false"
     >
-      <el-tag
-        :key="tag"
-        v-for="(tag, index) in selfSteps"
-        closable
-        :disable-transitions="false"
-        @close="handleClose(index)"
-      >
-        {{ tag }}
-      </el-tag>
-    </draggable>
-    <el-input
-      class="input-new-tag"
-      v-if="inputVisible"
-      v-model="inputValue"
-      ref="saveTagInput"
-      size="small"
-      @keyup.enter.native="handleInputConfirm"
-      @blur="inputVisible = false"
-    ></el-input>
-    <el-button
-      v-else
-      class="button-new-tag"
-      size="small"
-      @click="inputVisible = true"
-    >
-      + New Tag
+      {{ item.name }}
+      <i @click="editStep(item)" class="el-icon-edit"></i>
+      <i @click="removeStep(item)" class="el-icon-delete"></i>
+    </el-tag>
+    <el-button class="button-new-tag" size="small" @click="addStep">
+      +
     </el-button>
   </div>
 </template>
 
 <script>
-  import draggable from 'vuedraggable'
-  // 导入拖动组件
+  // 导入 新增阶段接口
+  import { stepAdd, stepFind, stepEdit,stepRemove } from '@/api/step.js'
   export default {
-    components: {
-      draggable
-    },
     props: {
       // 定义传入的数据
       value: {
         type: Array
-      }
+      },
+      // 学科id，增删改查都需要使用
+      subjectId: Number
     },
     data() {
       return {
@@ -76,16 +54,104 @@
       }
     },
     methods: {
+      // 根据学科id获取学科
+      getSteps() {
+        // 重新获取数据
+        stepFind({
+          subjectId: this.subjectId
+        }).then(res => {
+          this.selfSteps = res.data.items
+        })
+      },
       // 新增内容
-      handleInputConfirm() {
-        this.selfSteps.push(this.inputValue)
-        // 清空输入的内容
-        this.inputValue = ''
-        this.inputVisible = false
+      addStep() {
+        this.$prompt('请输入阶段名', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+          .then(({ value }) => {
+            if (value == '') {
+              return this.$message.warning('学科名不能为空哦')
+            }
+            console.log(value)
+            stepAdd({
+              name: value,
+              subjectId: this.subjectId
+            }).then(res => {
+              // console.log(res)
+              if (res.code === 200) {
+                this.$message.success('新增成功')
+                // 重新获取数据
+               this.getSteps()
+              } else {
+                this.$message.warning(res.message)
+              }
+            })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '取消输入'
+            })
+          })
+      },
+      // 点击编辑
+      editStep(item) {
+        this.$prompt('请输入新的阶段名', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputValue: item.name
+        })
+          .then(({ value }) => {
+            if (value == '') {
+              return this.$message.warning('学科名不能为空哦')
+            }
+            stepEdit({
+              name: value,
+              id: item.id
+            }).then(res => {
+              if(res.code===200){
+                this.$message.success('学科修改成功')
+                this.getSteps()
+              }else{
+                this.$message.warning(res.message)
+              }
+            })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '取消编辑'
+            })
+          })
       },
       // 点击删除
-      handleClose(index) {
-        this.selfSteps.splice(index, 1)
+      removeStep(item) {
+        this.$confirm('此操作将永久删除该阶段, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            // 接口调用
+            stepRemove({
+              id:item.id
+            }).then(res=>{
+              console.log(res)
+              if(res.code===200){
+                this.$message.success("删除成功")
+                this.getSteps()
+              }else{
+                this.$message.warning(res.message)
+              }
+            })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
       }
     }
   }
@@ -109,6 +175,17 @@
       width: 90px;
       margin-left: 10px;
       vertical-align: bottom;
+    }
+    i {
+      cursor: pointer;
+      border-radius: 50%;
+      padding: 5px;
+      margin-left: 10px;
+      transition: 0.5s;
+      &:hover {
+        background-color: #5a9cf8;
+        color: white;
+      }
     }
   }
 </style>

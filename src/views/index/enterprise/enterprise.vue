@@ -12,7 +12,7 @@
           <el-input v-model="filterForm.name"></el-input>
         </el-form-item>
         <el-form-item label="所处城市" prop="city">
-          <cityCascader v-model="filterForm.city"></cityCascader>
+          <el-input v-model="filterForm.city"></el-input>
         </el-form-item>
 
         <el-form-item label="创建者" prop="username">
@@ -47,6 +47,7 @@
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column prop="name" label="企业名称"></el-table-column>
         <el-table-column prop="username" label="创建者"></el-table-column>
+        <el-table-column prop="city" label="创建者"></el-table-column>
         <el-table-column label="创建日期">
           <template slot-scope="scope">
             {{ scope.row.create_time | formatTime }}
@@ -117,22 +118,7 @@
           city: []
         },
         enterpriseTable: [
-          {
-            b: 'enterprise1',
-            c: '黑马程序员',
-            d: '互联网',
-            e: '管理员',
-            f: '2019-12-4',
-            g: 0
-          },
-          {
-            b: 'enterprise2',
-            c: '阿里巴巴',
-            d: '金融',
-            e: '管理员',
-            f: '2019-12-5',
-            g: 1
-          }
+         
         ],
         // 是否显示新增框
         addFormVisible: false,

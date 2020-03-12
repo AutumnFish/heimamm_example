@@ -11,10 +11,10 @@
 
       <el-form-item
         label="企业简称"
-        prop="short_name"
+        prop="shortName"
         :label-width="formLabelWidth"
       >
-        <el-input v-model="editForm.short_name" autocomplete="off"></el-input>
+        <el-input v-model="editForm.shortName" autocomplete="off"></el-input>
       </el-form-item>
        <el-form-item label="所处城市" prop="city" :label-width="formLabelWidth">
         <cityCascader v-model="editForm.city"></cityCascader>
@@ -56,12 +56,6 @@ export default {
       rules: {
         name: [
           { required: true, message: "企业名称不能为空", trigger: "blur" }
-        ],
-        short_name: [
-          { required: true, message: "企业简称不能为空", trigger: "blur" }
-        ],
-        intro: [
-          { required: true, message: "企业简介不能为空", trigger: "blur" }
         ],
          city:[
             { required: true, message: '所处城市不能为空', trigger: 'blur' }

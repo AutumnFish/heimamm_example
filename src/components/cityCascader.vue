@@ -33,7 +33,7 @@
        // 因为是复杂类型的数据 使用 deep的方式进行监听
        deep:true,
        handler(){
-         this.$emit('change',this.cityValue)
+         this.$emit('input',this.cityValue)
        }
      }
    }
