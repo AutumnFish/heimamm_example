@@ -10,6 +10,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     SETINFO(state, info) {
+      console.log('info',info)
       state.userInfo = info;
     }
   }

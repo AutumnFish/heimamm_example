@@ -115,7 +115,7 @@
           username: '',
           name: '',
           status: '',
-          city: []
+          city: ''
         },
         enterpriseTable: [
          

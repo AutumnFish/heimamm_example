@@ -25,7 +25,7 @@
           :collapse="isCollapse"
         >
           <template v-for="(item, index) in routes[2].children">
-            <el-menu-item v-if="item.meta.roles.includes($store.state.userInfo.role)" :key="index" :index="item.meta.fullPath">
+            <el-menu-item v-if="item.meta.roles.includes($store.state.userInfo.roleName)" :key="index" :index="item.meta.fullPath">
               <i :class="item.meta.icon"></i>
               <span slot="title">{{ item.meta.title }}</span>
             </el-menu-item>

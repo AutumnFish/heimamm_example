@@ -1,10 +1,6 @@
 import axios from 'axios'
 // 携带token
-import { getToken, removeToken } from '@/utils/token.js'
-// 导入路由
-import router from '@/router/index.js'
-// 导入Element-ui的弹框
-import { Message } from 'element-ui'
+import { getToken } from '@/utils/token.js'
 
 // 创建副本
 const instance = axios.create({
@@ -35,20 +31,6 @@ instance.interceptors.request.use(
 // Add a response interceptor
 instance.interceptors.response.use(
   function(response) {
-    // 如果token无效 去登录页
-    if (response.data.code === 206) {
-      // 提示用户
-      Message.warning(response.data.message)
-      // 移除token
-      removeToken()
-      // 去登录页
-      router.push('/login')
-    }
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    if (response.headers.Authorizatio) {
-      response.data.Authorizatio = response.headers.Authorizatio
-    }
     return response.data
   },
   function(error) {
