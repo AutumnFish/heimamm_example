@@ -4,27 +4,27 @@
     <el-card class="card-header">
       <ul class="circle-box">
         <li class="circle-item">
-          <div class="circle primary">{{ titleData.increment_users }}</div>
+          <div class="circle primary">{{ titleData.incrementUsers }}</div>
           <span>今日新增用户</span>
         </li>
         <li class="circle-item">
-          <div class="circle primary">{{ titleData.total_users }}</div>
+          <div class="circle primary">{{ titleData.totalUsers }}</div>
           <span>总用户量</span>
         </li>
         <li class="circle-item">
-          <div class="circle warning">{{ titleData.increment_questions }}</div>
+          <div class="circle warning">{{ titleData.incrementQuestions }}</div>
           <span>新增试题</span>
         </li>
         <li class="circle-item">
-          <div class="circle warning">{{ titleData.total_questions }}</div>
+          <div class="circle warning">{{ titleData.totalQuestions }}</div>
           <span>总试题量</span>
         </li>
         <li class="circle-item">
-          <div class="circle success">{{ titleData.total_done_questions }}</div>
+          <div class="circle success">{{ titleData.totalDoneQuestions }}</div>
           <span>总刷题量</span>
         </li>
         <li class="circle-item">
-          <div class="circle success">{{ titleData.personal_questions }}</div>
+          <div class="circle success">{{ titleData.personalQuestions }}</div>
           <span>人均刷题量</span>
         </li>
       </ul>

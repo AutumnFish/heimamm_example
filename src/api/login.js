@@ -12,7 +12,7 @@ export function login(data) {
 // 暴露 用户信息方法
 export function userInfo() {
   return request({
-    url: "/info",
+    url: "/admin/admin/getinfo",
     method: "get"
   });
 }

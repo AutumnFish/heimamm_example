@@ -118,7 +118,9 @@
             <el-button type="text" @click="changeStatus(scope.row)">
               {{ scope.row.status === 0 ? '启用' : '禁用' }}
             </el-button>
-            <el-button type="text">删除</el-button>
+            <el-button @click="removeQuestion(scope.row)" type="text">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -147,7 +149,12 @@
   // 编辑框
   import questionEditDialog from './components/questionEditDialog.vue'
   // 导入题库接口
-  import { questionList, questionStatus, stepList } from '@/api/question.js'
+  import {
+    questionList,
+    questionStatus,
+    stepList,
+    questionRemove
+  } from '@/api/question.js'
   // 导入企业接口
   import { enterpriseList } from '@/api/enterprise.js'
   // 导入学科接口
@@ -203,6 +210,27 @@
       }
     },
     methods: {
+      // 删除试题
+      removeQuestion(item) {
+        this.$confirm('是否删除改试题', '提示', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            questionRemove({
+              id: item.id
+            }).then(res => {
+              if(res.code==200){
+                this.$message.success('删除成功')
+                this.getList()
+              }else{
+                this.$message.warning(res.message)
+              }
+            })
+          })
+          .catch(() => {})
+      },
       // 进入编辑状态
       enterEdit(item) {
         const editForm = JSON.parse(JSON.stringify(item))

@@ -39,7 +39,7 @@ export function questionEdit(data) {
 // 暴露接口 题库删除
 export function questionRemove(data) {
   return request({
-    url: "/question/remove",
+    url: "/admin/question/remove",
     method: "post",
     data
   });
