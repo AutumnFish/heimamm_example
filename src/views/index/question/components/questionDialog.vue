@@ -178,30 +178,30 @@
         })
       },
       // 如果从简答变成了单选或者多选 需要判断选项是否存在
-      'form.type'(){
+      'form.type'() {
         // 如果没有选项 就进行特殊处理
-        if(this.form.type!=3){
-          if(this.form.option.length!=4){
-            this.form.option=[
+        if (this.form.type != 3) {
+          if (this.form.option.length != 4) {
+            this.form.option = [
               {
-                label:'A',
-                image:'',
-                text:''
+                label: 'A',
+                image: '',
+                text: ''
               },
-               {
-                label:'B',
-                image:'',
-                text:''
+              {
+                label: 'B',
+                image: '',
+                text: ''
               },
-               {
-                label:'C',
-                image:'',
-                text:''
+              {
+                label: 'C',
+                image: '',
+                text: ''
               },
-               {
-                label:'D',
-                image:'',
-                text:''
+              {
+                label: 'D',
+                image: '',
+                text: ''
               }
             ]
           }

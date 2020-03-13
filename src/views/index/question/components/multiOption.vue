@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import {getToken} from '@/utils/token.js'
+  import { getToken } from '@/utils/token.js'
   export default {
     props: {
       label: String,
