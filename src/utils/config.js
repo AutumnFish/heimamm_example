@@ -1,1 +1,1 @@
-export const uploadURL = process.env.VUE_APP_BASEURL+"/uploads"
+export const adminUploadURL = process.env.VUE_APP_BASEURL+"/admin/admin/uploadimg"

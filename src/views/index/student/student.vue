@@ -75,7 +75,7 @@
 
 <script>
   // 导入数据接口
-  import { studentList, studentStatus } from '@/api/student.js'
+  import { studentList, studentStatus } from '@/api/adminStudent.js'
   export default {
     data() {
       return {

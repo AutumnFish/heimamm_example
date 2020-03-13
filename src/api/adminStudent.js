@@ -1,7 +1,7 @@
 // 导入请求对象
 import request from "./request.js";
 
-// 暴露接口 学科列表
+// 暴露接口 学员信息列表
 export function studentList(params) {
   return request({
     url: "/admin/user/find",

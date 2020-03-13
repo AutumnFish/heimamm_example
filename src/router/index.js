@@ -42,7 +42,6 @@ router.beforeEach((to, from, next) => {
     if (!store.state.userInfo) {
       // 用户信息获取 并且 token正确性判断
       userInfo().then(res => {
-        console.log(res)
         if (res.code === 207) {
           // token验证失效
           Message.error('登录状态有误，请重新登录')
