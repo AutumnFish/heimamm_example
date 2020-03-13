@@ -1,6 +1,6 @@
 <template>
   <div class="radio-box">
-    <el-checkbox :label="label">{{label}}</el-checkbox>
+    <el-checkbox :label="label">{{ label }}</el-checkbox>
     <el-input v-model="selfValue" placeholder=""></el-input>
     <el-upload
       class="avatar-uploader"
@@ -8,6 +8,7 @@
       :show-file-list="false"
       :on-success="handleASuccess"
       :before-upload="beforeAvatarUpload"
+      :headers="headers"
     >
       <img v-if="previewURL" :src="previewURL" class="avatar" />
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+  import {getToken} from '@/utils/token.js'
   export default {
     props: {
       label: String,
@@ -25,31 +27,44 @@
     data() {
       return {
         // 图片的上传地址
-        uploadAction: process.env.VUE_APP_BASEURL + '/question/upload',
+        uploadAction:
+          process.env.VUE_APP_BASEURL + '/admin/question/uploadFile',
         // 图片预览地址
-        previewURL: '',
+        previewURL:
+          this.image != ''
+            ? process.env.VUE_APP_BASEURL + '/' + this.image
+            : this.image,
         // 内部的value
-        selfValue:'',
+        selfValue: this.value,
         // 内部的图片地址
-        selfImage:''
+        selfImage: this.iamge,
+        headers: {
+          authorization: getToken()
+        }
       }
     },
     // 侦听器检测数据的改变
-    watch:{
-        // 通知父组件 value改变了
-        selfValue(){
-            this.$emit('input',this.selfValue)
-        },
-        // 通知父组件 图片地址改变了
-        selfImage(){
-            this.$emit('update:image',this.selfImage)
-        }
+    watch: {
+      value() {
+        this.selfValue = this.value
+      },
+      // 通知父组件 value改变了
+      selfValue() {
+        this.$emit('input', this.selfValue)
+      },
+      image() {
+        this.selfImage = this.image
+      },
+      // 通知父组件 图片地址改变了
+      selfImage() {
+        this.$emit('update:image', this.selfImage)
+      }
     },
     methods: {
       // 上传成功
       handleASuccess(res, file) {
         this.previewURL = URL.createObjectURL(file.raw)
-        this.selfImage = res.data.url
+        this.selfImage = res.data.filePath
       },
       // 上传之前的校验
       beforeAvatarUpload(file) {

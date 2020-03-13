@@ -11,36 +11,25 @@
       ref="editForm"
       :rules="rules"
     >
-      <el-form-item label="学科" prop="subject" :label-width="formLabelWidth">
-        <el-select v-model="editForm.subject" placeholder="请选择学科">
+      <el-form-item label="学科" prop="subjectId" :label-width="formLabelWidth">
+        <subjectSelect v-model="editForm.subjectId"></subjectSelect>
+      </el-form-item>
+      <el-form-item label="阶段" prop="stepId" :label-width="formLabelWidth">
+        <el-select v-model="editForm.stepId" placeholder="请选择阶段">
           <el-option
-            v-for="item in $parent.subjectList"
-            :key="item.id"
+            v-for="(item, index) in currentStep"
             :label="item.name"
             :value="item.id"
+            :key="index"
           ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="阶段" prop="step" :label-width="formLabelWidth">
-        <el-select v-model="editForm.step" placeholder="请选择阶段">
-          <el-option label="初级" :value="1"></el-option>
-          <el-option label="中级" :value="2"></el-option>
-          <el-option label="高级" :value="3"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item
         label="企业"
-        prop="enterprise"
+        prop="enterpriseId"
         :label-width="formLabelWidth"
       >
-        <el-select v-model="editForm.enterprise" placeholder="请选择企业">
-          <el-option
-            v-for="item in $parent.enterpriseList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
+        <enterpriseSelect v-model="editForm.enterpriseId"></enterpriseSelect>
       </el-form-item>
       <!-- 题型 -->
       <el-form-item label="题型" prop="type" :label-width="formLabelWidth">
@@ -64,7 +53,7 @@
       <!-- 时间线 -->
       <el-divider></el-divider>
       <!-- 试题标题 -->
-      <el-form-item label="试题标题" prop="title">
+      <el-form-item label="标题" prop="title"    :label-width="formLabelWidth">
         <el-input v-model="editForm.title"></el-input>
       </el-form-item>
 
@@ -73,12 +62,12 @@
         label="单选"
         class="single-item"
         :label-width="formLabelWidth"
-        v-if="editForm.type === 1"
-        prop="single_select_answer"
+        v-if="editForm.type == '1'"
+        prop="singleSelectAnswer"
       >
-        <el-radio-group v-model="editForm.single_select_answer">
+        <el-radio-group v-model="editForm.singleSelectAnswer">
           <singleOption
-            v-for="(item, index) in editForm.select_options"
+            v-for="(item, index) in editForm.option"
             :key="index"
             v-model="item.text"
             :image.sync="item.image"
@@ -91,13 +80,13 @@
         label="多选"
         class="multiple-item"
         :label-width="formLabelWidth"
-        v-else-if="editForm.type === 2"
-        prop="multiple_select_answer"
+        v-else-if="editForm.type == '2'"
+        prop="multipleSelectAnswer"
       >
-        <el-checkbox-group v-model="editForm.multiple_select_answer">
+        <el-checkbox-group v-model="editForm.multipleSelectAnswer">
           <!-- 多选选项 -->
           <multiOption
-            v-for="item in editForm.select_options"
+            v-for="item in editForm.option"
             :key="item.label"
             v-model="item.text"
             :image.sync="item.image"
@@ -108,7 +97,7 @@
       <!-- 简答 -->
       <el-form-item v-else label="简答" class="answer-item" prop="short_answer">
         <el-input
-          v-model="editForm.short_answer"
+          v-model="editForm.shortAnswer"
           type="textarea"
           rows="3"
           placeholder=""
@@ -140,12 +129,13 @@
       <!-- 时间线 -->
       <el-divider></el-divider>
       <!-- 答案解析 -->
-      <el-form-item label="答案解析" prop="answer_analyze"></el-form-item>
+      <el-form-item label="答案解析" prop="answerAnalyze"></el-form-item>
       <quill-editor
-        v-model="editForm.answer_analyze"
+        v-model="editForm.answerAnalyze"
         ref="myQuillEditor"
-        @blur="onEditorFocus"
+        @blur="onEditorBlur"
       ></quill-editor>
+
       <!-- 简答 -->
       <el-form-item label="试题备注" prop="remark" class="answer-item">
         <el-input
@@ -164,10 +154,9 @@
 </template>
 
 <script>
-
   // 导入数据接口
-  import { questionEdit } from '@/api/question.js'
-   // 导入 单选组件
+  import { questionEdit, stepList } from '@/api/question.js'
+  // 导入 单选组件
   import singleOption from './singleOption.vue'
   // 导入 多选组件
   import multiOption from './multiOption.vue'
@@ -189,39 +178,69 @@
         rules: {
           title: { required: true, message: '标题不能为空' },
           type: { required: true, message: '类型不能为空' },
-          subject: { required: true, message: '学科不能为空' },
-          step: { required: true, message: '阶段不能为空' },
-          enterprise: { required: true, message: '企业不能为空' },
-          difficulty: { required: true, message: '难度不能为空' },
-          single_select_answer: {
-            required: true,
-            message: '单选题答案不能为空'
-          },
-          multiple_select_answer: {
-            required: true,
-            message: '多选题答案不能为空'
-          },
-          // video: { required: true, message: "视频不能为空" },
-          remark: { required: true, message: '备注不能为空' },
-          city: { required: true, message: '城市不能为空' },
-          short_answer: { required: true, message: '简答题答案不能为空' },
-          answer_analyze: { required: true, message: '答案解析不能为空' },
-          select_options: { required: true, message: '选项不能为空' }
+          subjectId: { required: true, message: '学科不能为空' },
+          stepId: { required: true, message: '阶段不能为空' },
+          enterpriseId: { required: true, message: '企业不能为空' },
+          difficulty: { required: true, message: '难度不能为空' }
         },
+        currentStep: [],
         // 图片的上传地址
-        uploadAction: process.env.VUE_APP_BASEURL + '/question/upload',
+        uploadAction:
+          process.env.VUE_APP_BASEURL + '/admin/question/uploadFile',
         formLabelWidth: '80px',
         // 图片预览地址
         // 视频预览地址
         videoUrl: ''
       }
     },
-
+    watch: {
+      'editForm.subjectId'(val) {
+        stepList({
+          subjectId: val
+        }).then(res => {
+          // console.log(res)
+          this.currentStep = res.data
+        })
+      },
+      // 如果从简答变成了单选或者多选 需要判断选项是否存在
+      'editForm.type'() {
+        // 如果没有选项 就进行特殊处理
+        if (this.editForm.type != 3) {
+          // 如果没有选项属性  就为他设置选项属性
+          this.editForm.option = this.editForm.option||[]
+          // 如果有选项属性，但是长度不对 重新赋值
+          if (this.editForm.option.length != 4) {
+            this.editForm.option = [
+              {
+                label: 'A',
+                image: '',
+                text: ''
+              },
+              {
+                label: 'B',
+                image: '',
+                text: ''
+              },
+              {
+                label: 'C',
+                image: '',
+                text: ''
+              },
+              {
+                label: 'D',
+                image: '',
+                text: ''
+              }
+            ]
+          }
+        }
+      }
+    },
     methods: {
-         // 富文本编辑器失去焦点
-      onEditorFocus(){
-        if(this.editForm.answer_analyze!=''){
-          this.$refs.editForm.validateField('answer_analyze')
+      // 富文本编辑器失去焦点
+      onEditorBlur() {
+        if (this.editForm.answerAnalyze != '') {
+          this.$refs.editForm.validateField('answerAnalyze')
         }
       },
       // 提交数据

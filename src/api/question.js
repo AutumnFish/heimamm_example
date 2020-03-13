@@ -4,7 +4,7 @@ import request from "./request.js";
 // 暴露接口 题库列表
 export function questionList(params) {
   return request({
-    url: "/question/list",
+    url: "/admin/question/find",
     method: "get",
     params
   });
@@ -12,7 +12,7 @@ export function questionList(params) {
 // 暴露接口 添加题库
 export function questionAdd(data) {
   return request({
-    url: "/question/add",
+    url: "/admin/question/add",
     method: "post",
     data
   });
@@ -21,7 +21,7 @@ export function questionAdd(data) {
 // 暴露接口 题库状态
 export function questionStatus(data) {
   return request({
-    url: "/question/status",
+    url: "/admin/question/setstatus",
     method: "post",
     data
   });
@@ -30,7 +30,7 @@ export function questionStatus(data) {
 // 暴露接口 题库编辑
 export function questionEdit(data) {
   return request({
-    url: "/question/edit",
+    url: "/admin/question/edit",
     method: "post",
     data
   });
@@ -43,4 +43,26 @@ export function questionRemove(data) {
     method: "post",
     data
   });
+}
+// 获取企业列表
+export function enterpriseList(){
+  return request({
+    url:'/admin/enterprise/short',
+    method:'get'
+  })
+}
+// 获取学科列表
+export function subjectList(){
+  return request({
+    url:'/admin/subject/short',
+    method:'get'
+  })
+}
+// 获取学科阶段
+export function stepList(params){
+  return request({
+    url:'/admin/step/short',
+    method:'get',
+    params
+  })
 }

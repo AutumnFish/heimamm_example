@@ -8,6 +8,7 @@
       :show-file-list="false"
       :on-success="handleASuccess"
       :before-upload="beforeAvatarUpload"
+      :headers="headers"
     >
       <img v-if="previewURL" :src="previewURL" class="avatar" />
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -16,68 +17,71 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      label: String,
-      value: String,
-      image: String
-    },
-    data() {
-      return {
-        // 图片的上传地址
-        uploadAction: process.env.VUE_APP_BASEURL + '/question/upload',
-        // 图片预览地址
-        previewURL: this.image!=""?process.env.VUE_APP_BASEURL+'/'+this.image:this.image,
-        // 内部的value
-        selfValue: this.value,
-        // 内部的图片地址
-        selfImage: this.iamge
-      }
-    },
-    // 侦听器检测数据的改变
-    watch: {
-      value() {
-        console.log('value-change')
-        this.selfValue = this.value
+  import {getToken} from '@/utils/token.js'
+    export default {
+      props: {
+        label: String,
+        value: String,
+        image: String
       },
-      image() {
-        console.log('image-change')
-        this.selfImage = this.image
-        this.previewURL=this.image!=""?process.env.VUE_APP_BASEURL+'/'+this.image:this.image
+      data() {
+        return {
+          // 图片的上传地址
+          uploadAction: process.env.VUE_APP_BASEURL + '/admin/question/uploadFile',
+          // 图片预览地址
+          previewURL: this.image!=""?process.env.VUE_APP_BASEURL+'/'+this.image:this.image,
+          // 内部的value
+          selfValue: this.value,
+          // 内部的图片地址
+          selfImage: this.iamge,
+          headers:{
+            authorization:getToken()
+          },
+        }
       },
-      // 通知父组件 value改变了
-      selfValue() {
-        this.$emit('input', this.selfValue)
+      // 侦听器检测数据的改变
+      watch: {
+        value() {
+          console.log('value-change')
+          this.selfValue = this.value
+        },
+        image() {
+          this.selfImage = this.image
+          this.previewURL=this.image!=""?process.env.VUE_APP_BASEURL+'/'+this.image:this.image
+        },
+        // 通知父组件 value改变了
+        selfValue() {
+          this.$emit('input', this.selfValue)
+        },
+        // 通知父组件 图片地址改变了
+        selfImage() {
+          this.$emit('update:image', this.selfImage)
+        }
       },
-      // 通知父组件 图片地址改变了
-      selfImage() {
-        this.$emit('update:image', this.selfImage)
-      }
-    },
-    methods: {
-      // 上传成功
-      handleASuccess(res, file) {
-        this.previewURL = URL.createObjectURL(file.raw)
-        this.selfImage = res.data.url
-      },
-      // 上传之前的校验
-      beforeAvatarUpload(file) {
-        const isJPG =
-          file.type === 'image/jpeg' ||
-          file.type === 'image/png' ||
-          file.type === 'image/gif'
-        const isLt2M = file.size / 1024 / 1024 < 2
+      methods: {
+        // 上传成功
+        handleASuccess(res, file) {
+          this.previewURL = URL.createObjectURL(file.raw)
+          this.selfImage = res.data.filePath
+        },
+        // 上传之前的校验
+        beforeAvatarUpload(file) {
+          const isJPG =
+            file.type === 'image/jpeg' ||
+            file.type === 'image/png' ||
+            file.type === 'image/gif'
+          const isLt2M = file.size / 1024 / 1024 < 2
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 或 PNG 或 GIF 格式!')
+          if (!isJPG) {
+            this.$message.error('上传头像图片只能是 JPG 或 PNG 或 GIF 格式!')
+          }
+          if (!isLt2M) {
+            this.$message.error('上传头像图片大小不能超过 2MB!')
+          }
+          return isJPG && isLt2M
         }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!')
-        }
-        return isJPG && isLt2M
       }
     }
-  }
 </script>
 
 <style lang="less">
