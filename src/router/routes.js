@@ -12,6 +12,8 @@ const user = () => import("@/views/index/user/user.vue");
 const chart = () => import("@/views/index/chart/chart.vue");
 // 导入  嵌套路由 题库页面
 const question = () => import("@/views/index/question/question.vue");
+// 导入  嵌套路由 学生页面
+const student = () => import("@/views/index/student/student.vue");
 // 导入嵌套路由 测试页面
 // const exam = () => import("@/views/index/exam/exam.vue");
 // 导入嵌套路由 审核
@@ -83,6 +85,16 @@ export default [
         meta: {
           title: "学科列表",
           fullPath: "/index/subject",
+          icon: "el-icon-office-building",
+          roles: ["超级管理员", "管理员", "老师"]
+        }
+      },
+      {
+        path: "student",
+        component: student,
+        meta: {
+          title: "学员管理",
+          fullPath: "/index/student",
           icon: "el-icon-office-building",
           roles: ["超级管理员", "管理员", "老师"]
         }

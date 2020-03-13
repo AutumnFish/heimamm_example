@@ -5,7 +5,7 @@ import request from "./request.js";
 export function subjectList(params) {
   return request({
     url: "/admin/subject/find",
-    method: "get",
+  method: "get",
     params
   });
 }
