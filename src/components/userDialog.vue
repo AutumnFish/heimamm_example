@@ -91,7 +91,7 @@
           this.userForm[key] = this.$store.state.userInfo[key]
         }
         if (this.userForm.avatar) {
-          this.imageUrl = this.userForm.avatar
+          this.imageUrl = process.env.VUE_APP_BASEURL+ this.userForm.avatar
         }
       },
       // 关闭注册框
@@ -108,7 +108,8 @@
               username: this.userForm.username,
               email: this.userForm.email,
               phone: this.userForm.phone,
-              avatar: this.userForm.avatar
+              avatar: this.userForm.avatar,
+              password:this.userForm.password
             }).then(res => {
               // console.log(res);
               if (res.code === 200) {

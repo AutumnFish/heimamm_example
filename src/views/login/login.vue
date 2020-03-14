@@ -90,6 +90,8 @@
 <script>
   // 导入登录接口
   import { login } from '@/api/login.js'
+  // 导入学员登录接口
+  import {studentLogin,studentInfo} from '@/api/student.js'
   // 验证逻辑的导入
   import { checkAgree, checkEmail } from '@/utils/validator.js'
   // 数据 获取的接口
@@ -149,35 +151,56 @@
       // 重新获取管理员登录验证码
       randomAdminCaptcha() {
         // 通过时间戳来重新获取验证码
-        this.adminActions = `${process.env.VUE_APP_BASEURL}admin/acount/makeCaptcha?t=${Date.now()}`
+        this.adminActions = `${
+          process.env.VUE_APP_BASEURL
+        }admin/acount/makeCaptcha?t=${Date.now()}`
       },
       // 重新获取学生验证码
       randomStudentCaptcha() {
         // 通过时间戳来重新获取验证码
-        this.studentActions = `${process.env.VUE_APP_BASEURL}index/acount/makecaptcha?type=user_login&t=${Date.now()}`
+        this.studentActions = `${
+          process.env.VUE_APP_BASEURL
+        }index/acount/makecaptcha?type=user_login&t=${Date.now()}`
       },
 
       // 用户登录
       submitForm(formName) {
         this.$refs[formName].validate(valid => {
           if (valid) {
-            // 登录接口
-            login(this.logForm).then(res => {
-              console.log(res)
-              // 判断状态
-              if (res.code === 200) {
-                // 提示用户
-                this.$message.success('登录成功')
-                // 保存token
-                setToken(res.data.authorization)
-                // 跳转到首页
-                this.$router.push('/index')
-              } else {
-                this.$message.warning(res.message)
-                // 刷新验证码
-                this.randomLoginCaptcha()
-              }
-            })
+            if(this.isStudent){
+              studentLogin(this.logForm).then(res=>{
+                if(res.code==200){
+                  this.$message.success('登录成功')
+                  // this.$router.push('/exam')
+                  setToken(res.data.authorization)
+                  studentInfo().then(res=>{
+                    console.log(res)
+                  })
+
+                }else{
+                  this.$message.warning(res.message)
+                }
+                console.log(res)
+              })
+            }else{
+              // 登录接口
+              login(this.logForm).then(res => {
+                console.log(res)
+                // 判断状态
+                if (res.code === 200) {
+                  // 提示用户
+                  this.$message.success('登录成功')
+                  // 保存token
+                  setToken(res.data.authorization)
+                  // 跳转到首页
+                  this.$router.push('/index')
+                } else {
+                  this.$message.warning(res.message)
+                  // 刷新验证码
+                  this.randomLoginCaptcha()
+                }
+              })
+            }
           } else {
             this.$message.warning('请检查输入的内容')
             return false

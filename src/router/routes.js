@@ -15,7 +15,7 @@ const question = () => import("@/views/index/question/question.vue");
 // 导入  嵌套路由 学生页面
 const student = () => import("@/views/index/student/student.vue");
 // 导入嵌套路由 测试页面
-// const exam = () => import("@/views/index/exam/exam.vue");
+const exam = () => import("@/views/index/exam/exam.vue");
 // 导入嵌套路由 审核
 // const check = () => import("@/views/index/check/check.vue");
 
@@ -28,9 +28,11 @@ export default [
   {
     path: "/login",
     component: login,
-    meta: {
-      roles: ["超级管理员", "管理员", "老师", "学生"]
-    }
+   
+  },
+  {
+    path: "/exam",
+    component: exam,
   },
   {
     path: "/index",

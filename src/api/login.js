@@ -16,30 +16,3 @@ export function userInfo() {
     method: "get"
   });
 }
-
-// 暴露短信接口
-export function sendsms(data) {
-  return request({
-    url: "/sendsms",
-    method: "post",
-    data
-  });
-}
-
-// 暴露注册接口
-export function register(data) {
-  return request({
-    url: "/register",
-    method: "post",
-    data
-  });
-}
-
-// 暴露退出接口
-export function logout() {
-  return request({
-    url: "/logout",
-    method: "get",
-    
-  });
-}

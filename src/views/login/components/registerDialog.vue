@@ -15,7 +15,7 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
-          name="image"
+          name="img"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -77,18 +77,17 @@
 
 <script>
   // 导入登录接口
-  import { register, sendsms } from '@/api/login.js'
+  import { studentRegister, studentSms } from '@/api/student.js'
   // 验证逻辑的导入
   import { checkAgree, checkEmail } from '@/utils/validator.js'
-  // 导入头像上传地址
-  import { adminUploadURL } from '@/utils/config.js'
+
   export default {
     data() {
       return {
         // 注册验证码
-        regActions: process.env.VUE_APP_BASEURL + '/captcha?type=sendsms',
+        regActions: process.env.VUE_APP_BASEURL + '/index/acount/makecaptcha?type=send_sms',
         // 头像上传地址
-        avatarAction: adminUploadURL,
+        avatarAction: process.env.VUE_APP_BASEURL+'/index/acount/uploadimg',
         formLabelWidth: '80px',
         regForm: {
           phone: '',
@@ -120,7 +119,7 @@
           ],
           rcode: [
             { required: true, message: '短信验证码不能为空' },
-            { min: 6, max: 6, message: '短信验证码长度为6' }
+            { min: 4, max: 4, message: '短信验证码长度为4' }
           ],
           checked: [{ validator: checkAgree }]
         },
@@ -143,15 +142,17 @@
         this.$refs.regForm.validate(valid => {
           if (valid) {
             // 登录接口
-            register(this.regForm).then(res => {
+            studentRegister(this.regForm).then(res => {
               // console.log(res);
-              if (res.data.code === 200) {
+              if (res.code === 200) {
                 // 头像也要清空哦
                 this.imageUrl = ''
                 // 关闭弹框
                 this.registerFormVisible = false
                 // 提示用户
                 this.$message.success('注册成功')
+              }else{
+                this.$message.warning(res.message)
               }
             })
           } else {
@@ -180,12 +181,16 @@
             }
           }, 100)
           // 调用短信接口
-          sendsms({
+          studentSms({
             code: this.regForm.imgCode,
             phone: this.regForm.phone
           }).then(res => {
             // console.log(res)
-            this.$message.info('短信验证码是:' + res.data.captcha)
+            if(res.code==200){
+              this.$message.info('短信验证码是:' + res.data.captcha)
+            }else{
+              this.$message.warning(res.message)
+            }
           })
         }
       },
@@ -194,20 +199,20 @@
         // 通过时间戳来重新获取验证码
         this.regActions = `${
           process.env.VUE_APP_BASEURL
-        }/captcha?type=sendsms&t=${Date.now()}`
+        }/index/acount/makecaptcha?type=send_sms&t=${Date.now()}`
       },
       handleAvatarSuccess(res, file) {
         // 生成本地的预览
         this.imageUrl = URL.createObjectURL(file.raw)
         // 准备提交的数据
-        this.regForm.avatar = res.data.file_path
+        this.regForm.avatar = res.data.filePath
       },
       beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg'
+        const isJPG = file.type === 'image/jpeg' || 'image/png' || 'image/gif'
         const isLt2M = file.size / 1024 / 1024 < 2
 
         if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!')
+          this.$message.error('上传头像图片只能是 JPG PNG GIF 格式!')
         }
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!')

@@ -11,8 +11,8 @@
           <span class="title">黑马面面</span>
         </div>
         <div class="right">
-          <img @click="enterEdit" :src="userInfo.avatar" alt="" />
-          <span class="name">{{ userInfo.username }},您好</span>
+          <img @click="enterEdit" :src="userInfoAvatar" alt="" />
+          <span class="name">{{ userInfoUsername }},您好</span>
           <el-button size="mini" type="primary" @click="logout">退出</el-button>
         </div>
       </el-header>
@@ -25,7 +25,7 @@
             router
             :collapse="isCollapse"
           >
-            <template v-for="(item, index) in routes[2].children">
+            <template v-for="(item, index) in routes[3].children">
               <el-menu-item
                 v-if="item.meta.roles.includes($store.state.userInfo.roleName)"
                 :key="index"
@@ -68,9 +68,13 @@
       userDialog
     },
     computed: {
-      userInfo() {
-        return this.$store.state.userInfo
+      userInfoAvatar() {
+        return process.env.VUE_APP_BASEURL+ this.$store.state.userInfo.avatar
+      },
+      userInfoUsername() {
+        return this.$store.state.userInfo.username
       }
+
     },
     methods: {
       enterEdit() {
