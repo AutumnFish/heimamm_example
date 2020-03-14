@@ -13,7 +13,7 @@ export function studentLogin(data) {
 // 暴露接口 学科阶段新增
 export function studentInfo() {
   return request({
-    url: "/index/user/getinfo",
+    url: "/index/user/getuserinfo",
     method: "post",
   });
 }

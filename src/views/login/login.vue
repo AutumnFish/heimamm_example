@@ -168,24 +168,27 @@
         this.$refs[formName].validate(valid => {
           if (valid) {
             if(this.isStudent){
+              // 学员登录接口
               studentLogin(this.logForm).then(res=>{
                 if(res.code==200){
                   this.$message.success('登录成功')
                   // this.$router.push('/exam')
                   setToken(res.data.authorization)
                   studentInfo().then(res=>{
-                    console.log(res)
+                    // console.log(res)
+                    if(res.code==200){
+                      this.$message.success(`欢迎你${res.data.username}，后续功能开发中！！`)
+                    }
                   })
 
                 }else{
                   this.$message.warning(res.message)
+                  this.randomStudentCaptcha()
                 }
-                console.log(res)
               })
             }else{
               // 登录接口
               login(this.logForm).then(res => {
-                console.log(res)
                 // 判断状态
                 if (res.code === 200) {
                   // 提示用户
